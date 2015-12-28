@@ -103,6 +103,12 @@ community, listed below.
 * [MongoDB](https://github.com/niahmiah/kad-mongo)
 * [File System](https://github.com/gordonwritescode/kad-fs)
 
+## Sybil and Spartacus Attack Mitigation
+
+You can use [kad-spartacus](https://github.com/gordonwritescode/kad-spartacus)
+to mitigate 2 types of attacks to which a Kademlia DHT may be vulnerable: the
+**Sybil** attack and it's variant **Spartacus**.
+
 ## NAT Traversal and Hole Punching
 
 If your program runs on a user's personal computer, it's very likely that you
