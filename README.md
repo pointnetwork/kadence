@@ -103,36 +103,23 @@ community, listed below.
 * [MongoDB](https://github.com/niahmiah/kad-mongo)
 * [File System](https://github.com/gordonwritescode/kad-fs)
 
-## Sybil and Spartacus Attack Mitigation
+## Extensions
+
+### Sybil/Spartacus Mitigation
 
 You can use [kad-spartacus](https://github.com/gordonwritescode/kad-spartacus)
 to mitigate 2 types of attacks to which a Kademlia DHT may be vulnerable: the
-**Sybil** attack and it's variant **Spartacus**.
+Sybil attack and it's variant, Spartacus.
 
-## NAT Traversal and Hole Punching
+[Read More →](https://github.com/gordonwritescode/kad-spartacus/blob/master/README.md)
 
-If your program runs on a user's personal computer, it's very likely that you
-will need to forward a port on their router so peers can communicate when
-behind a firewall. This is easy to do, using Indutny's
-[node-nat-upnp](https://github.com/indutny/node-nat-upnp) module.
+### NAT Traversal
 
-You'll want to do this *before* instantiating the Kademlia node.
+You can use [kad-traverse](https://github.com/gordonwritescode/kad-traverse)
+to ensure your nodes are able to communicate when behind a NAT or firewall. The
+extension will use different strategies based on the network configuration.
 
-```js
-var dht, nat = require('nat-upnp').createClient();
-
-nat.portMapping({ public: 65535, private: 65535, ttl: 0 }, function(err) {
-  nat.externalIp(function(err, ip) {
-    dht = kad.Node(options);
-  });
-});
-```
-
-## Projects Using Kad
-
-* [BYRD](https://gitlab.com/counterpoint/byrd)
-* [Kad-REST](https://github.com/niahmiah/kad-rest)
-* [Muttr](https://gitlab.com/muttr/libmuttr)
+[Read More →](https://github.com/gordonwritescode/kad-traverse/blob/master/README.md)
 
 ## License
 
