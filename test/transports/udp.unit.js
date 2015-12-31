@@ -201,4 +201,14 @@ describe('Transports/UDP', function() {
 
   });
 
+  describe('#_open', function() {
+
+    it('should bind to all interfaces if address unavailable', function(done) {
+      var contact = new AddressPortContact({ address: '8.8.8.8', port: 0 });
+      var rpc = new RPC(contact);
+      rpc.on('ready', done);
+    });
+
+  });
+
 });
