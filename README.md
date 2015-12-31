@@ -15,7 +15,7 @@ hash table for Node.js and the browser.
 [read the documentation](doc/).**
 
 ```bash
-npm install kad@1.2.0-beta
+npm install kad
 ```
 
 Create your node, plug in your storage adapter, join the network, and party!
