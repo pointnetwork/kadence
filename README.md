@@ -1,8 +1,8 @@
 Kad
 ===
 
-[![Build Status](https://img.shields.io/travis/gordonwritescode/kad.svg?style=flat-square)](https://travis-ci.org/gordonwritescode/kad)
-[![Coverage Status](https://img.shields.io/coveralls/gordonwritescode/kad.svg?style=flat-square)](https://coveralls.io/r/gordonwritescode/kad)
+[![Build Status](https://img.shields.io/travis/kadtools/kad.svg?style=flat-square)](https://travis-ci.org/kadtools/kad)
+[![Coverage Status](https://img.shields.io/coveralls/kadtools/kad.svg?style=flat-square)](https://coveralls.io/r/kadtools/kad)
 [![NPM](https://img.shields.io/npm/v/kad.svg?style=flat-square)](https://www.npmjs.com/package/kad)
 
 Extensible implementation of the
