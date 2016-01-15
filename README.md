@@ -21,21 +21,19 @@ npm install kad
 Create your node, plug in your storage adapter, join the network, and party!
 
 ```js
-var kademlia = require('kad');
+var kad = require('kad');
 
 var seed = {
   address: '127.0.0.1',
   port: 1338
 };
 
-var dht = new kademlia.Node({
-  transport: kademlia.transports.UDP(
-    kademlia.contacts.AddressPortContact({
-      address: '127.0.0.1',
-      port: 1337
-    })
-  ),
-  storage: kademlia.storage.FS('path/to/datadir')
+var dht = new kad.Node({
+  transport: kad.transports.UDP(kad.contacts.AddressPortContact({
+    address: '127.0.0.1',
+    port: 1337
+  })),
+  storage: kad.storage.FS('path/to/datadir')
 });
 
 dht.connect(seed, function(err) {
