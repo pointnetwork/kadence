@@ -49,4 +49,17 @@ describe('Message', function() {
 
   });
 
+  describe('#fromBuffer', function() {
+
+    var contact = new AddressPortContact({ address: '0.0.0.0', port: 1337 });
+
+    it('should convert byte arrays into buffer objects', function() {
+      expect(Message.fromBuffer(Message({
+        method: 'PING',
+        params: { contact: contact, test: new Buffer('test') },
+      }).serialize()).params.test).to.be.instanceOf(Buffer);
+    });
+
+  });
+
 });
