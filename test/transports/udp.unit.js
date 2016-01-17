@@ -211,4 +211,23 @@ describe('Transports/UDP', function() {
 
   });
 
+  describe('#_receive', function() {
+
+    it('should parse message not encoded with msgpack', function(done) {
+      var contact = new AddressPortContact({ address: '8.8.8.8', port: 0 });
+      var rpc = new RPC(contact);
+      rpc.on('PING', function() {
+        done();
+      });
+      rpc.on('ready', function() {
+        var stdmessage = new Message({
+          method: 'PING',
+          params: { contact: contact }
+        }).serialize();
+        rpc._receive(stdmessage);
+      });
+    });
+
+  });
+
 });
