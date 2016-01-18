@@ -1,7 +1,7 @@
 Contributing
 ============
 
-[![Stories in Ready](https://badge.waffle.io/kadtools/kad.svg?label=ready&title=Ready)](http://waffle.io/kadtools/kad)
+Want to contribute? Check out our [issue board](http://waffle.io/kadtools/kad)!
 
 This document outlines general patterns and conventions for contributing
 to the project. **For in-depth documentation on Kad, see the [`doc/`](doc/)
