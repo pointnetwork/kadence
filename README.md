@@ -77,11 +77,11 @@ var dht = new kademlia.Node({
 ```
 
 If you would like to author your own transport adapter, see
-[kad-transport-boilerplate](https://github.com/gordonwritescode/kad-transport-boilerplate).
+[kad-transport-boilerplate](https://github.com/kadtools/kad-transport-boilerplate).
 
 ### Community Transport Adapters
 
-* [WebRTC](https://github.com/omphalos/kad-webrtc)
+* [WebRTC](https://github.com/kadtools/kad-webrtc)
 
 ## Persistence
 
@@ -97,27 +97,35 @@ community, listed below.
 
 ### Community Storage Adapters
 
-* [Local Storage](https://github.com/omphalos/kad-localstorage)
-* [MongoDB](https://github.com/niahmiah/kad-mongo)
-* [File System](https://github.com/gordonwritescode/kad-fs)
+* [Local Storage](https://github.com/kadtools/kad-localstorage)
+* [MongoDB](https://github.com/kadtools/kad-mongo)
+* [File System](https://github.com/kadtools/kad-fs)
 
 ## Extensions
 
 ### Sybil/Spartacus Mitigation
 
-You can use [kad-spartacus](https://github.com/gordonwritescode/kad-spartacus)
+You can use [kad-spartacus](https://github.com/kadtools/kad-spartacus)
 to mitigate 2 types of attacks to which a Kademlia DHT may be vulnerable: the
 Sybil attack and it's variant, Spartacus.
 
-[Read More →](https://github.com/gordonwritescode/kad-spartacus/blob/master/README.md)
+[Read More →](https://github.com/kadtools/kad-spartacus/blob/master/README.md)
 
 ### NAT Traversal
 
-You can use [kad-traverse](https://github.com/gordonwritescode/kad-traverse)
+You can use [kad-traverse](https://github.com/kadtools/kad-traverse)
 to ensure your nodes are able to communicate when behind a NAT or firewall. The
 extension will use different strategies based on the network configuration.
 
-[Read More →](https://github.com/gordonwritescode/kad-traverse/blob/master/README.md)
+[Read More →](https://github.com/kadtools/kad-traverse/blob/master/README.md)
+
+### Performance Monitoring
+
+You can use [kad-telemetry](https://github.com/kadtools/kad-telemetry) to track
+the performance of your peers and extend the default routing algorithm to
+prioritize the selection of nodes with a higher score.
+
+[Read More →](https://github.com/kadtools/kad-telemetry/blob/master/README.md)
 
 ## License
 
