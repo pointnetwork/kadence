@@ -39,7 +39,7 @@ shown throughout the source code.
 Test Coverage
 -------------
 
-At the time of writing, Kad has almost complete code coverage (>95%) through
+At the time of writing, Kad has complete code coverage (100%) through
 it's test suite. It is important to never decrease coverage, so be sure to
 include tests for any new code.
 
