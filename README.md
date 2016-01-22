@@ -127,6 +127,13 @@ prioritize the selection of nodes with a higher score.
 
 [Read More →](https://github.com/kadtools/kad-telemetry/blob/master/README.md)
 
+### Publish & Subscribe
+
+You can use [kad-quasar](https://github.com/kadtools/kad-quasar) to extend kad
+with support for *probabilistic*, topic-based publish/subscribe capabilities.
+
+[Read More →](https://github.com/kadtools/kad-quasar/blob/master/README.md)
+
 ## License
 
 This program is free software: you can redistribute it and/or modify
