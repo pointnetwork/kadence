@@ -230,11 +230,11 @@ describe('Transports/TCP', function() {
       var contact = new AddressPortContact({ address: '0.0.0.0', port: 0 });
       var rpc = new RPC(contact);
       var socket = new EventEmitter();
-      socket.close = sinon.stub();
+      socket.end = sinon.stub();
       rpc._handleConnection(socket);
       setImmediate(function() {
         socket.emit('data', 'not a json string');
-        expect(socket.close.called).to.equal(true);
+        expect(socket.end.called).to.equal(true);
         done();
       });
     });
