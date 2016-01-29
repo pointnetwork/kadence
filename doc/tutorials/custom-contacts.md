@@ -1,19 +1,3 @@
-Class: Contact(options)
-=======================
-
-The base class from which custom contacts inherit; used by the included
-`AddressPortContact`. Nodes provide each other with contact information which
-indicates how others should communicate with them.
-
-## contact.seen()
-
-Updates the `lastSeen` property to the current UNIX time. Used by the `Router`
-for organizing the routing table.
-
----
-
-## API for Contact Implementors
-
 Creating a custom contact is very simple. You need only to:
 
 1. Define a constructor function that accepts a dictionary

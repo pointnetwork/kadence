@@ -1,5 +1,5 @@
-Kad
-===
+![Kad](https://avatars1.githubusercontent.com/u/16706596?v=3&s=200)
+===================================================================
 
 [![Build Status](https://img.shields.io/travis/kadtools/kad.svg?style=flat-square)](https://travis-ci.org/kadtools/kad)
 [![Coverage Status](https://img.shields.io/coveralls/kadtools/kad.svg?style=flat-square)](https://coveralls.io/r/kadtools/kad)
@@ -12,7 +12,7 @@ hash table for Node.js and the browser.
 ## Quick Start
 
 **For complete documentation on using and extending Kad,
-[read the documentation](doc/).**
+[read the documentation](http://kadtools.github.io).**
 
 ```bash
 npm install kad
