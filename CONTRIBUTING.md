@@ -4,8 +4,8 @@ Contributing
 Want to contribute? Check out our [issue board](http://waffle.io/kadtools/kad)!
 
 This document outlines general patterns and conventions for contributing
-to the project. **For in-depth documentation on Kad, see the [`doc/`](doc/)
-directory.**
+to the project. **For in-depth documentation on Kad,
+[read the documentation](http://kadtools.github.io).**
 
 Coding Style
 ------------
@@ -19,19 +19,7 @@ Conventions
 As you may have noticed, Kad takes a very OOP approach, making use of the
 prototype chain to abstract shared behaviors and extend things that are often
 different between projects. A good example of this is how
-[transports](doc/transports) inherit from [`kad.RPC`](doc/rpc.md) so that a
-[`Node`](doc/node.md) and it's lib/` directory and should be constructed so
-that they can be created with or *without* the `new` keyword. This is as simple
-as adding a condition to the first line of your constructor function:
-
-```js
-function MyClass(options) {
-  if (!(this instanceof MyClass)) {
-    return new MyClass(options);
-  }
-  // write class definition here...
-}
-```
+[transports](doc/custom-transports.md) inherit from `RPC`.
 
 You should also make the best use of [JSDoc](http://usejsdoc.org/) comments as
 shown throughout the source code.

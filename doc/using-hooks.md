@@ -58,7 +58,7 @@ transport.on('error', function(err) {
 
 The middleware stack gets applied to both requests **and** responses. If you
 need your middleware to only apply to one or the other, use the
-[`Message`](message.md) module to check the type of message:
+{@link Message} module to check the type of message:
 
 ```js
 var Message = kademlia.Message;

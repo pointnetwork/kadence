@@ -1,8 +1,8 @@
 Creating a custom contact is very simple. You need only to:
 
 1. Define a constructor function that accepts a dictionary
-2. Inherit from `kademlia.Contact`
-3. Implement `_createNodeID`
+2. Inherit from {@link Contact}
+3. Implement {@link Contact#\_createNodeID}
 4. Call super class at bottom of your constructor
 
 ### Example: Address/Port Contact
