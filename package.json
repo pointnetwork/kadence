@@ -16,7 +16,7 @@
     "linter": "./node_modules/.bin/jshint --config .jshintrc ./index.js ./lib ./test",
     "build": "./node_modules/.bin/browserify index.js -s kad -o dist/kad.browser.js",
     "simulation": "node script/simulation.js",
-    "makedoc": "./node_modules/.bin/jsdoc index.js lib -r -p -R README.md -u doc/tutorials"
+    "makedoc": "./node_modules/.bin/jsdoc index.js lib -r -p -R README.md -u doc -c .jsdoc.json --verbose -d ../kadtools.github.io"
   },
   "keywords": [
     "dht",
@@ -59,6 +59,7 @@
     "istanbul": "^0.3.13",
     "jsdoc": "^3.4.0",
     "jshint": "2.8.0",
+    "minami": "^1.1.1",
     "mocha": "^2.2.4",
     "proxyquire": "^1.7.3",
     "sinon": "^1.14.1"
