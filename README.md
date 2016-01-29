@@ -66,8 +66,7 @@ npm run simulation 128
 
 Kad ships with support for UDP, TCP, and HTTP transports. To explicitly define
 the transport to use, set the `transport` option to the appropriate value. See
-the documentation on [`kad.RPC`](doc/rpc.md) and [`kad.Contact`](doc/contact.md)
-for more information.
+the documentation on {@link RPC} and {@link Contact} for more information.
 
 ```js
 var dht = new kademlia.Node({

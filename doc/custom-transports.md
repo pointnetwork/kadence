@@ -7,8 +7,8 @@ communicate with peers and it will handle the rest.
 
 When building a custom transport, there are a few simple steps:
 
-1. Implement a custom [`kad.Contact`](contact.md)
-3. Inherit your transport from `kademlia.RPC`
+1. Implement a custom {@link Contact}
+3. Inherit your transport from {@link RPC}
 4. Implement `_open`, `_send`, and `_close` methods
 
 A `Contact` contains the information your transport adapter needs to talk to
