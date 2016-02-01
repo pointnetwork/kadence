@@ -206,6 +206,7 @@ describe('Transports/TCP', function() {
     it('should log an error if once is encountered', function() {
       var emitter = new EventEmitter();
       emitter.write = sinon.stub();
+      emitter.pipe = sinon.stub().returns(emitter);
       var contact = new AddressPortContact({ address: '0.0.0.0', port: 0 });
       var TCP = proxyquire('../../lib/transports/tcp', {
         net: {
@@ -231,6 +232,7 @@ describe('Transports/TCP', function() {
       var rpc = new RPC(contact);
       var socket = new EventEmitter();
       socket.end = sinon.stub();
+      socket.pipe = sinon.stub().returns(socket);
       rpc._handleConnection(socket);
       setImmediate(function() {
         socket.emit('data', 'not a json string');
