@@ -313,7 +313,7 @@ describe('Node', function() {
 
   describe('#get', function() {
 
-    it('should pass along error if _findValue fails', function(done) {
+    it('should try from local storage if _findNode fails', function(done) {
       var node = KNode({
         transport: transports.UDP(AddressPortContact({
           address: '0.0.0.0',
@@ -326,7 +326,7 @@ describe('Node', function() {
         cb(new Error('Failed for some reason'));
       });
       node.get('beep', function(err) {
-        expect(err.message).to.equal('Failed for some reason');
+        expect(err.message).to.equal('not found');
         _findValue.restore();
         done();
       });

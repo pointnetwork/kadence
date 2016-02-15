@@ -260,14 +260,14 @@ describe('Node+Router', function() {
 
     it('should succeed in setting the value to the dht', function(done) {
       node1.put('beep', 'boop', function(err) {
-        expect(err).to.equal(undefined);
+        expect(err).to.equal(null);
         done();
       });
     });
 
     it('should succeed in setting the value to the dht', function(done) {
       node10.put('beep', 'boop', function(err) {
-        expect(err).to.equal(undefined);
+        expect(err).to.equal(null);
         done();
       });
     });
@@ -283,7 +283,7 @@ describe('Node+Router', function() {
       });
     });
 
-    it('should callback with an error if _findNode fails', function(done) {
+    it('should store locally if _findNode fails', function(done) {
       var node = KNode({
         transport: transports.UDP(AddressPortContact({
           address: '127.0.0.1',
@@ -293,7 +293,60 @@ describe('Node+Router', function() {
         logger: new Logger(0)
       });
       node.put('beep', 'boop', function(err) {
-        expect(err.message).to.equal('Not connected to any peers');
+        expect(err).to.equal(null);
+        done();
+      });
+    });
+
+    it('should not store item locally if ALPHA contacts found', function(done) {
+      var storage = new FakeStorage();
+      var node = KNode({
+        transport: transports.UDP(AddressPortContact({
+          address: '127.0.0.1',
+          port: 65529
+        })),
+        storage: storage,
+        logger: new Logger(0)
+      });
+      var findNode = sinon.stub(node._router, 'findNode').callsArgWith(1, null,
+        [
+          AddressPortContact({ address: '127.0.0.1', port: 65530 }),
+          AddressPortContact({ address: '127.0.0.1', port: 65531 }),
+          AddressPortContact({ address: '127.0.0.1', port: 65532 })
+        ]
+      );
+      node.put('beep', 'boop', function(err) {
+        expect(!!err).to.equal(false);
+        storage.get('beep', function(err, item) {
+          expect(!!item).to.equal(false);
+          findNode.restore();
+          done();
+        });
+      });
+    });
+
+    it('should bubble error if a critical error from RPC', function(done) {
+      var node = KNode({
+        transport: transports.UDP(AddressPortContact({
+          address: '127.0.0.1',
+          port: 65528
+        })),
+        storage: new FakeStorage(),
+        logger: new Logger(0)
+      });
+      var error = new Error('Failed');
+      var send = sinon.stub(node._rpc, 'send').callsArgWith(2, error);
+      var findNode = sinon.stub(node._router, 'findNode').callsArgWith(1, null,
+        [
+          AddressPortContact({ address: '127.0.0.1', port: 65530 }),
+          AddressPortContact({ address: '127.0.0.1', port: 65531 }),
+          AddressPortContact({ address: '127.0.0.1', port: 65532 })
+        ]
+      );
+      node.put('beep', 'boop', function(err) {
+        expect(err.message).to.equal('Failed');
+        send.restore();
+        findNode.restore();
         done();
       });
     });
