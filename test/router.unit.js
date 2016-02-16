@@ -66,7 +66,8 @@ describe('Router', function() {
       var _bucket = {
         getContact: sinon.stub().returns({}),
         removeContact: sinon.stub(),
-        addContact: sinon.stub()
+        addContact: sinon.stub(),
+        indexOf: sinon.stub()
       };
       router._pingContactAtHead({}, _bucket);
       expect(_bucket.removeContact.called).to.equal(true);
