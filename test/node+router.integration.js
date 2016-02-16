@@ -233,26 +233,6 @@ describe('Node+Router', function() {
       });
     });
 
-    it('should not require a callback', function(done) {
-      var node = KNode({
-        transport: transports.UDP(AddressPortContact({
-          address: '127.0.0.1',
-          port: 65531
-        })),
-        storage: new FakeStorage(),
-        logger: new Logger(0)
-      });
-      var _findNode = sinon.stub(node._router, 'findNode', function(id, cb) {
-        return cb(new Error('fatal error'));
-      });
-      node.on('error', function(err) {
-        expect(err.message).to.equal('fatal error');
-        _findNode.restore();
-        done();
-      });
-      node.connect({ address: '127.0.0.1', port: 3333 });
-    });
-
   });
 
 
@@ -315,11 +295,13 @@ describe('Node+Router', function() {
           AddressPortContact({ address: '127.0.0.1', port: 65532 })
         ]
       );
+      var send = sinon.stub(node._rpc, 'send').callsArg(2);
       node.put('beep', 'boop', function(err) {
         expect(!!err).to.equal(false);
         storage.get('beep', function(err, item) {
           expect(!!item).to.equal(false);
           findNode.restore();
+          send.restore();
           done();
         });
       });
