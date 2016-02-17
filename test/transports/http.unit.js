@@ -3,6 +3,7 @@
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var proxyquire = require('proxyquire');
+var http = require('http');
 var EventEmitter = require('events').EventEmitter;
 var RPC = require('../../lib/transports/http');
 var AddressPortContact = require('../../lib/contacts/address-port-contact');
@@ -32,6 +33,12 @@ describe('Transports/HTTP', function() {
         expect(typeof rpc._server.address().port).to.equal('number');
         done();
       });
+    });
+
+    it('should set the cors option if supplied', function() {
+      var contact = new AddressPortContact({ address: '0.0.0.0', port: 0 });
+      var rpc = RPC(contact, { cors: true });
+      expect(rpc._cors).to.equal(true);
     });
 
     it('should pass null the handleMessage if parsing fails', function(done) {
@@ -106,16 +113,16 @@ describe('Transports/HTTP', function() {
 
     before(function(done) {
       var count = 0;
-      function inc() {
-        count++;
-        ready();
-      }
       function ready() {
         if (count === 2) {
           done();
         }
       }
-      rpc1 = new RPC(contact1);
+      function inc() {
+        count++;
+        ready();
+      }
+      rpc1 = new RPC(contact1, { cors: true });
       rpc2 = new RPC(contact2);
       rpc1.on('ready', inc);
       rpc2.on('ready', inc);
@@ -131,6 +138,22 @@ describe('Transports/HTTP', function() {
       expect(function() {
         rpc1.send(contact, {});
       }).to.throw(Error, 'Invalid message supplied');
+    });
+
+    it('should call _addCrossOriginHeaders if cors option', function(done) {
+      sinon.spy(rpc1, '_addCrossOriginHeaders');
+      var options = {
+        hostname: rpc1._server.address().address,
+        port: rpc1._server.address().port,
+        method: 'OPTIONS'
+      };
+      http.request(options, function(res) {
+        expect(rpc1._addCrossOriginHeaders.called).to.equal(true);
+        expect(res.headers['access-control-allow-origin']).to.equal('*');
+        expect(res.headers['access-control-allow-methods']).to.equal('*');
+        expect(res.headers['access-control-allow-headers']).to.equal('*');
+        done();
+      }).end();
     });
 
     it('should send a message and create a response handler', function() {
