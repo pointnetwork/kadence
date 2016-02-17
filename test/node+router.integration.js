@@ -157,19 +157,29 @@ describe('Node+Router', function() {
 
   describe('#connect', function() {
 
-    it('should connect node2 to node1 over udp', function(done) {
+    it('should connect node2 to node1 over udp and emit join', function(done) {
+      var tests = 0;
+      function finished() {
+        tests++;
+        if (tests === 2) {
+          done();
+        }
+      }
       node1 = KNode(node1opts);
+      node1.on('join', finished);
       node2 = KNode(node2opts);
       node2.connect(node1._self, function() {
         expect(Object.keys(node2._router._buckets)).to.have.lengthOf(1);
-        done();
+        finished();
       });
     });
 
-    it('should connect node3 to node2 over udp', function(done) {
+    it('should connect node3 to node2 and update connected', function(done) {
       node3 = KNode(node3opts);
-      node3.connect(node2._self, function() {
-        expect(Object.keys(node3._router._buckets)).to.have.lengthOf(2);
+      expect(node3.connected).to.equal(false);
+      node3.connect(node2._self).once('join', function() {
+        expect(Object.keys(node3._router._buckets)).to.have.lengthOf(1);
+        expect(node3.connected).to.equal(true);
         done();
       });
     });
@@ -214,6 +224,15 @@ describe('Node+Router', function() {
       });
     });
 
+    it('should reopen the transport if closed', function(done) {
+      node11.disconnect(function() {
+        node11.connect(node10._self, function(err) {
+          expect(err).to.equal(null);
+          done();
+        });
+      });
+    });
+
     it('should emit an error if the connection fails', function(done) {
       var node = KNode({
         transport: transports.UDP(AddressPortContact({
@@ -235,6 +254,25 @@ describe('Node+Router', function() {
 
   });
 
+  describe('#disconnect', function() {
+
+    it('should close transport, empty router, and emit leave', function(done) {
+      node10.once('leave', function() {
+        expect(node10._router.length).to.equal(0);
+        expect(node10._rpc.readyState).to.equal(0);
+        done();
+      }).disconnect();
+    });
+
+    it('should immediately callback if already closed', function(done) {
+      expect(node10._rpc.readyState).to.equal(0);
+      node10.disconnect(function() {
+        expect(node10._rpc.readyState).to.equal(0);
+        done();
+      });
+    });
+
+  });
 
   describe('#put', function() {
 
