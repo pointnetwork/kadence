@@ -7,7 +7,7 @@ Creating a custom contact is very simple. You need only to:
 
 ### Example: Address/Port Contact
 
-```js
+```
 var kademlia = require('kad');
 var inherits = require('util').inherits;
 var utils = require('../utils');

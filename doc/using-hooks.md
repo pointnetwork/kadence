@@ -30,7 +30,7 @@ The `kademlia.RPC` class triggers hooks for the following events:
 
 ### Example: Simple Blacklist Hook
 
-```js
+```
 // array of blacklisted nodeID's
 var blacklist = [];
 // use a logger to print when a blacklisted node talks
@@ -60,7 +60,7 @@ The middleware stack gets applied to both requests **and** responses. If you
 need your middleware to only apply to one or the other, use the
 {@link Message} module to check the type of message:
 
-```js
+```
 var Message = kademlia.Message;
 
 // only apply this middleware to requests

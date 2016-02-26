@@ -19,7 +19,7 @@ The `createReadStream()` method should return a `stream.Readable` with
 the stored items have been enumerated. The `data` event should include an
 object with the following format:
 
-```js
+```
 {
   key: '<item_key>',
   value: '<json_serialized_item_object>'

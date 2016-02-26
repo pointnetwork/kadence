@@ -16,7 +16,7 @@ other peers. A `Transport` defines how those peers communicate.
 
 ### Example: Simple UDP Transport
 
-```js
+```
 var kademlia = require('kademlia');
 var inherits = require('util').inherits;
 var dgram = require('dgram');

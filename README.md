@@ -14,13 +14,13 @@ hash table for Node.js and the browser.
 **For complete documentation on using and extending Kad,
 [read the documentation](http://kadtools.github.io).**
 
-```bash
+```
 npm install kad
 ```
 
 Create your node, plug in your storage adapter, join the network, and party!
 
-```js
+```
 var kad = require('kad');
 
 var seed = {
@@ -55,7 +55,7 @@ You can run a network simulation locally using the included simulator. This
 will create `n` nodes (as you define) and connect them to each other, sending
 `STORE` messages on an interval and printing information to the console.
 
-```bash
+```
 # use the default of 6 nodes
 npm run simulation
 # specify as many nodes as you like
@@ -68,7 +68,7 @@ Kad ships with support for UDP, TCP, and HTTP transports. To explicitly define
 the transport to use, set the `transport` option to the appropriate value. See
 the documentation on {@link RPC} and {@link Contact} for more information.
 
-```js
+```
 var dht = new kademlia.Node({
   // ...
   transport: kademlia.transports.TCP(contact, options)
