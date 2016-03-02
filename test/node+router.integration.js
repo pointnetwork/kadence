@@ -53,7 +53,7 @@ var node11;
 var node1opts = {
   transport: transports.UDP(AddressPortContact({
     address: '127.0.0.1',
-    port: 65520
+    port: 65526
   })),
   storage: storage1,
   logger: new Logger(0)
@@ -61,7 +61,7 @@ var node1opts = {
 var node2opts = {
   transport: transports.UDP(AddressPortContact({
     address: '127.0.0.1',
-    port: 65521
+    port: 65527
   })),
   storage: storage2,
   logger: new Logger(0)
@@ -284,7 +284,7 @@ describe('Node+Router', function() {
     });
 
     it('should succeed in setting the value to the dht', function(done) {
-      node10.put('beep', 'boop', function(err) {
+      node10.put('object', { beep: 'boop' }, function(err) {
         expect(err).to.equal(null);
         done();
       });
@@ -384,9 +384,9 @@ describe('Node+Router', function() {
     });
 
     it('should succeed in getting the value from the dht', function(done) {
-      node10.get('beep', function(err, value) {
+      node10.get('object', function(err, value) {
         expect(err).to.equal(null);
-        expect(value).to.equal('boop');
+        expect(value.beep).to.equal('boop');
         done();
       });
     });

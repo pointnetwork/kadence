@@ -203,28 +203,13 @@ describe('Transports/UDP', function() {
 
   describe('#_open', function() {
 
-    it('should bind to all interfaces if address unavailable', function(done) {
-      var contact = new AddressPortContact({ address: '8.8.8.8', port: 0 });
+    it('should emit an error if failed to bind to ip or port', function(done) {
+      var contact = new AddressPortContact({ address: 'bad.host', port: 0 });
       var rpc = new RPC(contact);
-      rpc.on('ready', done);
-    });
-
-  });
-
-  describe('#_receive', function() {
-
-    it('should parse message not encoded with msgpack', function(done) {
-      var contact = new AddressPortContact({ address: '8.8.8.8', port: 0 });
-      var rpc = new RPC(contact);
-      rpc.on('PING', function() {
+      rpc.on('error', function(err) {
+        expect(err).to.not.equal(null);
+        expect(err).to.not.equal(undefined);
         done();
-      });
-      rpc.on('ready', function() {
-        var stdmessage = new Message({
-          method: 'PING',
-          params: { contact: contact }
-        }).serialize();
-        rpc._receive(stdmessage);
       });
     });
 
