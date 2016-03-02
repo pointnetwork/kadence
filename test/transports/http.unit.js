@@ -8,6 +8,7 @@ var EventEmitter = require('events').EventEmitter;
 var RPC = require('../../lib/transports/http');
 var AddressPortContact = require('../../lib/contacts/address-port-contact');
 var Message = require('../../lib/message');
+var pem = require('pem');
 
 describe('Transports/HTTP', function() {
 
@@ -32,6 +33,23 @@ describe('Transports/HTTP', function() {
         expect(rpc._server.address().address).to.equal('0.0.0.0');
         expect(typeof rpc._server.address().port).to.equal('number');
         done();
+      });
+    });
+
+    it('should use SSL if option is specified', function(done) {
+      pem.createCertificate({ days: 1, selfSigned: true}, function(err, keys) {
+        var contact = new AddressPortContact({ address: '0.0.0.0', port: 0 });
+        var rpc = RPC(contact, {
+          ssl: {
+            key: keys.serviceKey,
+            cert: keys.certificate
+          }
+        });
+        rpc.on('ready', function() {
+          expect(rpc._server.address().address).to.equal('0.0.0.0');
+          expect(typeof rpc._server.address().port).to.equal('number');
+          done();
+        });
       });
     });
 
