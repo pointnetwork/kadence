@@ -28,12 +28,6 @@ describe('Item', function() {
       }).to.throw(Error);
     });
 
-    it('should throw without a value', function() {
-      expect(function() {
-        Item('beep', null, publisher);
-      }).to.throw(Error);
-    });
-
     it('should throw without a valid publisher', function() {
       expect(function() {
         Item(utils.createID('beep'), 'boop', '0.0.0.0:1337');
