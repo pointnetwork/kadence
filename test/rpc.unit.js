@@ -62,6 +62,14 @@ describe('RPC', function() {
       rpc.receive(message.serialize());
     });
 
+    it('should drop empty replies', function(done) {
+      var rpc = new FakeTransport(AddressPortContact({
+        address: '0.0.0.0', port: 8080
+      }));
+      rpc.on('MESSAGE_DROP', done);
+      rpc.receive(null);
+    });
+
   });
 
   describe('#_execPendingCallback', function() {
