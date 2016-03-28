@@ -308,4 +308,38 @@ describe('Router', function() {
 
   });
 
+  describe('#getContactByNodeID', function() {
+
+    it('should return the contact by node ID', function() {
+      var node = new KNode({
+        transport: transports.UDP(AddressPortContact({
+          address: '127.0.0.1',
+          port: 0
+        })),
+        storage: new FakeStorage(),
+        logger: new Logger(0)
+      });
+      var router = node._router;
+      var contact = new AddressPortContact({ address: '0.0.0.0', port: 1234 });
+      router.updateContact(contact);
+      expect(router.getContactByNodeID(contact.nodeID)).to.equal(contact);
+    });
+
+    it('should return null if contact not in table', function() {
+      var node = new KNode({
+        transport: transports.UDP(AddressPortContact({
+          address: '127.0.0.1',
+          port: 0
+        })),
+        storage: new FakeStorage(),
+        logger: new Logger(0)
+      });
+      var router = node._router;
+      var contact = new AddressPortContact({ address: '0.0.0.0', port: 1234 });
+      router.updateContact(contact);
+      expect(router.getContactByNodeID('123412341234')).to.equal(null);
+    });
+
+  });
+
 });
