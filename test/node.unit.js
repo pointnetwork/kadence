@@ -111,7 +111,7 @@ describe('Node', function() {
       var counter = 0;
       var bucketContact;
       node._router._buckets[159] = new Bucket();
-      for (var i = 0; i < constants.B; i++) {
+      for (var i = 0; i < constants.K; i++) {
         bucketContact = AddressPortContact({
           address: '127.0.0.1',
           port: counter
