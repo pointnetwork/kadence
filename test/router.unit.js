@@ -1,5 +1,6 @@
 'use strict';
 
+var async = require('async');
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var utils = require('../lib/utils');
@@ -304,6 +305,36 @@ describe('Router', function() {
         expect(_send.calledWith(contact1)).to.equal(true);
         done();
       });
+    });
+
+  });
+
+  describe('#updateContact', function() {
+
+    it('should not overfill a bucket', function(done) {
+      this.timeout(10000);
+      constants.T_RESPONSETIMEOUT = 10;
+      expect(function() {
+        var node = new KNode({
+          transport: transports.UDP(AddressPortContact({
+            address: '127.0.0.1',
+            port: 0
+          })),
+          storage: new FakeStorage(),
+          logger: new Logger(0)
+        });
+        var router = node._router;
+        async.times(500, function(i, next) {
+          router.updateContact(AddressPortContact({
+            address: '127.0.0.' + i,
+            port: 8080
+          }), next);
+        }, function(err) {
+          constants.T_RESPONSETIMEOUT = 10;
+          expect(err).to.not.be.instanceOf(Error);
+          done();
+        });
+      }).to.not.throw(Error);
     });
 
   });
