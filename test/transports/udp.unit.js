@@ -26,7 +26,6 @@ describe('Transports/UDP', function() {
       var contact = new AddressPortContact({ address: '0.0.0.0', port: 0 });
       var rpc = RPC(contact);
       rpc.on('ready', function() {
-        expect(rpc._socket.address().address).to.equal('0.0.0.0');
         expect(typeof rpc._socket.address().port).to.equal('number');
         done();
       });
@@ -51,14 +50,14 @@ describe('Transports/UDP', function() {
 
     before(function(done) {
       var count = 0;
-      function inc() {
-        count++;
-        ready();
-      }
       function ready() {
         if (count === 2) {
           done();
         }
+      }
+      function inc() {
+        count++;
+        ready();
       }
       rpc1 = new RPC(contact1);
       rpc2 = new RPC(contact2);
@@ -204,13 +203,17 @@ describe('Transports/UDP', function() {
   describe('#_open', function() {
 
     it('should emit an error if failed to bind to ip or port', function(done) {
-      var contact = new AddressPortContact({ address: 'bad.host', port: 0 });
+      var contact = new AddressPortContact({
+        address: 'some.host',
+        port: 0
+      });
       var rpc = new RPC(contact);
       rpc.on('error', function(err) {
         expect(err).to.not.equal(null);
         expect(err).to.not.equal(undefined);
         done();
       });
+      rpc._socket.emit('error', new Error('Failed to do something'));
     });
 
   });

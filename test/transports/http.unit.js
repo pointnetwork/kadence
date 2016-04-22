@@ -30,7 +30,6 @@ describe('Transports/HTTP', function() {
       var contact = new AddressPortContact({ address: '0.0.0.0', port: 0 });
       var rpc = RPC(contact);
       rpc.on('ready', function() {
-        expect(rpc._server.address().address).to.equal('0.0.0.0');
         expect(typeof rpc._server.address().port).to.equal('number');
         done();
       });
@@ -46,7 +45,6 @@ describe('Transports/HTTP', function() {
           }
         });
         rpc.on('ready', function() {
-          expect(rpc._server.address().address).to.equal('0.0.0.0');
           expect(typeof rpc._server.address().port).to.equal('number');
           done();
         });
