@@ -61,6 +61,25 @@ describe('AddressPortContact', function() {
 
   });
 
+  describe('#valid', function() {
+
+    it('should return false if port is 0', function() {
+      var c = AddressPortContact({ address: '0.0.0.0', port: 0 });
+      expect(c.valid()).to.equal(false);
+    });
+
+    it('should return false if port is greater than 65535', function() {
+      var c = AddressPortContact({ address: '0.0.0.0', port: 65536 });
+      expect(c.valid()).to.equal(false);
+    });
+
+    it('should return true if port is okay', function() {
+      var c = AddressPortContact({ address: '0.0.0.0', port: 65535 });
+      expect(c.valid()).to.equal(true);
+    });
+
+  });
+
   describe('#_createNodeID', function() {
 
     it('should compute the SHA1 digest of the address and port', function() {
