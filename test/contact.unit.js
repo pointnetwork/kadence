@@ -32,4 +32,14 @@ describe('Contact', function() {
 
   });
 
+  describe('#valid', function() {
+
+    it('should return true by default', function() {
+      expect(Contact({
+        nodeID: utils.createID('test')
+      }).valid()).to.equal(true);
+    });
+
+  });
+
 });
