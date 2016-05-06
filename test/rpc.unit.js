@@ -145,26 +145,4 @@ describe('RPC', function() {
 
   });
 
-  describe('#send', function() {
-
-    it('should return an error if the contact is not valid', function(done) {
-      var rpc = new FakeTransport(AddressPortContact({
-        address: '0.0.0.0', port: 8080
-      }));
-      rpc.send(AddressPortContact({
-        address: '0.0.0.0', port: 0
-      }), Message({
-        method: 'PING',
-        params: { contact: { address: '0.0.0.0', port: 8080 } },
-        id: 'test'
-      }), function(err) {
-        expect(err.message).to.equal(
-          'Refusing to send message to invalid contact'
-        );
-        done();
-      });
-    });
-
-  });
-
 });

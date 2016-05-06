@@ -202,6 +202,21 @@ describe('Transports/HTTP', function() {
       expect(calls).to.have.lengthOf(0);
     });
 
+    it('should return an error if the contact is not valid', function(done) {
+      rpc2.send(AddressPortContact({
+        address: '0.0.0.0', port: 0
+      }), Message({
+        method: 'PING',
+        params: { contact: { address: '0.0.0.0', port: 8080 } },
+        id: 'test'
+      }), function(err) {
+        expect(err.message).to.equal(
+          'RPC with ID `test` timed out'
+        );
+        done();
+      });
+    });
+
   });
 
   describe('#close', function() {
