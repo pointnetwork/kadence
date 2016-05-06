@@ -109,6 +109,21 @@ describe('Transports/TCP', function() {
       expect(calls).to.have.lengthOf(0);
     });
 
+    it('should return an error if the contact is not valid', function(done) {
+      rpc2.send(AddressPortContact({
+        address: '0.0.0.0', port: 0
+      }), Message({
+        method: 'PING',
+        params: { contact: { address: '0.0.0.0', port: 8080 } },
+        id: 'test'
+      }), function(err) {
+        expect(err.message).to.equal(
+          'RPC with ID `test` timed out'
+        );
+        done();
+      });
+    });
+
   });
 
   describe('#close', function() {
@@ -216,7 +231,7 @@ describe('Transports/TCP', function() {
       });
       var rpc = new TCP(contact);
       var _log = sinon.stub(rpc._log, 'error');
-      rpc._send(new Buffer(JSON.stringify({id:'id'})), {});
+      rpc._send(new Buffer(JSON.stringify({id:'id'})), contact);
       setImmediate(function() {
         emitter.emit('error', new Error('failed'));
         expect(_log.called).to.equal(true);
