@@ -34,11 +34,13 @@ while (created < NUM_NODES) {
     port: port--
   });
 
-  nodes.push(kademlia.Node({
+  var node = kademlia.Node({
     storage: kademlia.storage.MemStore(),
-    transport: kademlia.transports.UDP(contact),
+    transport: kademlia.transports.HTTP(contact),
     logger: kademlia.Logger(3, 'NODE ' + created++)
-  }));
+  });
+
+  nodes.push(node);
 }
 
 // When a simulation node connects to another simulation node, store a random
