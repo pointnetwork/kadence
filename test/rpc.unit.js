@@ -145,4 +145,20 @@ describe('RPC', function() {
 
   });
 
+  describe('#_close', function() {
+
+    it('should throw a not implemented error', function() {
+      expect(RPC.prototype._close).to.throw(Error, 'Method not implemented');
+    });
+
+  });
+
+  describe('#_send', function() {
+
+    it('should throw a not implemented error', function() {
+      expect(RPC.prototype._send).to.throw(Error, 'Method not implemented');
+    });
+
+  });
+
 });

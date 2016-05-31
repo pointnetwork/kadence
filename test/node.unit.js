@@ -10,6 +10,7 @@ var Bucket = require('../lib/bucket');
 var EventEmitter = require('events').EventEmitter;
 var Logger = require('../lib/logger');
 var transports = require('../lib/transports');
+var Item = require('../lib/item');
 
 function FakeStorage() {
   this.data = {};
@@ -37,6 +38,29 @@ FakeStorage.prototype.createReadStream = function() {
 };
 
 describe('Node', function() {
+
+  describe('#_ensureTransportState', function() {
+
+    it('should wait for ready to callback', function(done) {
+      var node = KNode({
+        transport: transports.UDP(AddressPortContact({
+          address: '0.0.0.0',
+          port: 0
+        })),
+        storage: new FakeStorage(),
+        logger: new Logger(0)
+      });
+      var _on = sinon.stub(node._rpc, 'on');
+      node._rpc.readyState = 1;
+      node._ensureTransportState(sinon.stub());
+      setImmediate(function() {
+        _on.restore();
+        expect(_on.called).to.equal(true);
+        done();
+      });
+    });
+
+  });
 
   describe('#_put', function() {
 
@@ -369,7 +393,7 @@ describe('Node', function() {
     };
 
     it('should replicate item did not publish after T_EXPIRE', function(done) {
-      var _put = sinon.stub(node, 'put', function(k, v, cb) {
+      var _put = sinon.stub(node, '_putValidatedKeyValue', function(i, cb) {
         cb(null);
         _put.restore();
         stream.removeAllListeners();
@@ -464,7 +488,7 @@ describe('Node', function() {
     });
 
     it('should log error if failed to replicate', function(done) {
-      var _put = sinon.stub(node, 'put', function(k, v, cb) {
+      var _put = sinon.stub(node, '_putValidatedKeyValue', function(i, cb) {
         cb(new Error('FAIL'));
         _put.restore();
       });
@@ -613,12 +637,15 @@ describe('Node', function() {
       var _getNearestContacts = sinon.stub(
         node._router, 'getNearestContacts'
       ).returns([]);
-      node._putValidatedKeyValue('key', 'value', function() {
-        expect(_getNearestContacts.called).to.equal(true);
-        _findNode.restore();
-        _getNearestContacts.restore();
-        done();
-      });
+      node._putValidatedKeyValue(
+        Item('key', 'value', rpc._contact.nodeID),
+        function() {
+          expect(_getNearestContacts.called).to.equal(true);
+          _findNode.restore();
+          _getNearestContacts.restore();
+          done();
+        }
+      );
     });
 
   });

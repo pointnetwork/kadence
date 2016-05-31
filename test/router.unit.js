@@ -11,6 +11,7 @@ var KNode = require('../lib/node');
 var Logger = require('../lib/logger');
 var transports = require('../lib/transports');
 var Router = require('../lib/router');
+var proxyquire = require('proxyquire');
 
 function FakeStorage() {
   this.data = {};
@@ -249,6 +250,42 @@ describe('Router', function() {
         id: utils.createID('test')
       }, contact, expect.fail);
     });
+
+    it('should set the closest node and distance to current', function(done) {
+      var StubRouter = proxyquire('../lib/router', {
+        './utils': {
+          compareKeys: sinon.stub().returns(-1),
+          getDistance: sinon.stub().returns('2')
+        }
+      });
+      var router = new StubRouter({
+        transport: transports.UDP(AddressPortContact({
+          address: '127.0.0.1',
+          port: 0
+        })),
+        logger: new Logger(0)
+      });
+      var state = router._createLookupState('VALUE', 'foo');
+      var contact = new AddressPortContact({ address: '0.0.0.0', port: 1234 });
+      var _validate = sinon.stub(
+        router,
+        '_validateFindResult'
+      ).callsArg(3);
+      state.closestNode = '1';
+      router._handleFindResult(state, {
+        result: {
+          item: {}
+        },
+        id: utils.createID('test')
+      }, contact, function() {
+        _validate.restore();
+        expect(state.previousClosestNode).to.equal('1');
+        expect(state.closestNode).to.equal(contact);
+        expect(state.closestNodeDistance).to.equal('2');
+        done();
+      });
+    });
+
   });
 
   describe('#_handleQueryResults', function() {
@@ -369,6 +406,21 @@ describe('Router', function() {
       var contact = new AddressPortContact({ address: '0.0.0.0', port: 1234 });
       router.updateContact(contact);
       expect(router.getContactByNodeID('123412341234')).to.equal(null);
+    });
+
+    it('should return null if no contacts in table', function() {
+      var node = new KNode({
+        transport: transports.UDP(AddressPortContact({
+          address: '127.0.0.1',
+          port: 0
+        })),
+        storage: new FakeStorage(),
+        logger: new Logger(0)
+      });
+      var router = node._router;
+      var _nearest = sinon.stub(router, 'getNearestContacts').returns([]);
+      expect(router.getContactByNodeID('123412341234')).to.equal(null);
+      _nearest.restore();
     });
 
   });
