@@ -316,6 +316,10 @@ describe('Transports/HTTP', function() {
       var emitter = new EventEmitter();
       emitter.end = sinon.stub();
       var contact = new AddressPortContact({ address: '0.0.0.0', port: 0 });
+      var recipient = new AddressPortContact({
+        address: '127.0.0.1',
+        port: 8080
+      });
       var HTTP = proxyquire('../../lib/transports/http', {
         http: {
           request: function() {
@@ -332,7 +336,7 @@ describe('Transports/HTTP', function() {
         receive.restore();
         done();
       });
-      rpc._send(new Buffer(JSON.stringify({})), contact);
+      rpc._send(new Buffer(JSON.stringify({})), recipient);
       setImmediate(function() {
         emitter.emit('error', new Error('Fail'));
       });

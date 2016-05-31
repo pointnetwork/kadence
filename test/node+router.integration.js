@@ -316,7 +316,7 @@ describe('Node+Router', function() {
       });
     });
 
-    it('should not store item locally if ALPHA contacts found', function(done) {
+    it('should always store item locally', function(done) {
       var storage = new FakeStorage();
       var node = KNode({
         transport: transports.UDP(AddressPortContact({
@@ -337,7 +337,7 @@ describe('Node+Router', function() {
       node.put('beep', 'boop', function(err) {
         expect(!!err).to.equal(false);
         storage.get('beep', function(err, item) {
-          expect(!!item).to.equal(false);
+          expect(!!item).to.equal(true);
           findNode.restore();
           send.restore();
           done();
@@ -345,14 +345,16 @@ describe('Node+Router', function() {
       });
     });
 
-    it('should bubble error if a critical error from RPC', function(done) {
+    it('should log error if a critical error from RPC', function(done) {
+      var logger = new Logger(0);
+      logger.error = sinon.stub();
       var node = KNode({
         transport: transports.UDP(AddressPortContact({
           address: '127.0.0.1',
           port: 65528
         })),
         storage: new FakeStorage(),
-        logger: new Logger(0)
+        logger: logger
       });
       var error = new Error('Failed');
       var send = sinon.stub(node._rpc, 'send').callsArgWith(2, error);
@@ -363,8 +365,8 @@ describe('Node+Router', function() {
           AddressPortContact({ address: '127.0.0.1', port: 65532 })
         ]
       );
-      node.put('beep', 'boop', function(err) {
-        expect(err.message).to.equal('Failed');
+      node.put('beep', 'boop', function() {
+        expect(logger.error.called).to.equal(true);
         send.restore();
         findNode.restore();
         done();
