@@ -101,6 +101,36 @@ describe('Router', function() {
 
   });
 
+  describe('#_iterativeFind', function() {
+
+    it('should error if all contacts fail query', function(done) {
+      var node = KNode({
+        transport: transports.UDP(AddressPortContact({
+          address: '0.0.0.0',
+          port: 0
+        })),
+        storage: new FakeStorage(),
+        logger: new Logger(0)
+      });
+      var _queryContact = sinon.stub(
+        node._router,
+        '_queryContact'
+      ).callsArgWith(2, new Error('Not reachable'));
+      node._router._iterativeFind({}, [{
+        address: '127.0.0.1',
+        port: 1337,
+        nodeID: utils.createID('nodeid')
+      }], function(err) {
+        _queryContact.restore();
+        expect(err.message).to.equal(
+          'Lookup operation failed to return results'
+        );
+        done();
+      });
+    });
+
+  });
+
   describe('#_queryContact', function() {
 
     it('should remove the contact from the shortlist on error', function(done) {
