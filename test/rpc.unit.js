@@ -89,6 +89,24 @@ describe('RPC', function() {
       rpc._execPendingCallback(message);
     });
 
+    it('should should warn about unsupported message', function(done) {
+      var rpc = new FakeTransport(AddressPortContact({
+        address: '0.0.0.0', port: 8080
+      }));
+      var message = Message({
+        method: 'INVALID',
+        params: { contact: { address: '0.0.0.0', port: 8080 } },
+        id: 'test'
+      });
+      var _log = sinon.stub(rpc._log, 'warn', function(str, arg) {
+        expect(str).to.equal('message references unsupported method %s');
+        expect(arg).to.equal('INVALID');
+        _log.restore();
+        done();
+      });
+      rpc._execPendingCallback(message);
+    });
+
   });
 
   describe('#before', function() {
