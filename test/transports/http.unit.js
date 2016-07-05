@@ -344,4 +344,38 @@ describe('Transports/HTTP', function() {
 
   });
 
+  describe('#_handleDroppedMessage', function() {
+
+    it('should return false if no data', function() {
+      expect(
+        RPC.prototype._handleDroppedMessage.call({}, null)
+      ).to.equal(false);
+    });
+
+    it('should clean the queued message', function() {
+      var _end = sinon.stub();
+      expect(RPC.prototype._handleDroppedMessage.call({
+        _queuedResponses: {
+          test: { end: _end }
+        }
+      }, Message({
+        method: 'PING',
+        params: {},
+        id: 'test'
+      }).serialize())).to.equal(true);
+      expect(_end.called).to.equal(true);
+    });
+
+    it('should return true if nothing to clean', function() {
+      expect(RPC.prototype._handleDroppedMessage.call({
+        _queuedResponses: {}
+      }, Message({
+        method: 'PING',
+        params: {},
+        id: 'test'
+      }).serialize())).to.equal(true);
+    });
+
+  });
+
 });
