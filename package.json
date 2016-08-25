@@ -1,6 +1,6 @@
 {
   "name": "kad",
-  "version": "1.5.16",
+  "version": "1.5.17",
   "description": "implementation of the kademlia dht for node",
   "main": "index.js",
   "directories": {
@@ -32,6 +32,10 @@
     {
       "name": "omphalos",
       "url": "https://github.com/omphalos"
+    },
+    {
+      "name": "Alexander Leitner",
+      "url": "https://github.com/aleitner"
     }
   ],
   "license": "GPL-3.0",
