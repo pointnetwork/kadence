@@ -188,6 +188,38 @@ describe('Transports/HTTP', function() {
       expect(rpc1._pendingCalls[calls[0]].callback).to.equal(handler);
     });
 
+    it('should emit an error if response contains an error', function(done) {
+      var addr1 = rpc1._server.address();
+      var addr2 = rpc2._server.address();
+      var contactRpc1 = new AddressPortContact(addr1);
+      var contactRpc2 = new AddressPortContact(addr2);
+      var msg = new Message({
+        method: 'PING',
+        params: { contact: contactRpc1 },
+      });
+
+      var emitter = new EventEmitter();
+      var emitter2 = new EventEmitter();
+      emitter2.end = sinon.stub();
+
+      var _request = sinon.stub(
+        rpc1._protocol,
+        'request'
+      ).callsArgWith(1, emitter).returns(emitter2);
+
+      var receive = sinon.stub(rpc1, 'receive', function(data) {
+        expect(data).to.equal(null);
+        _request.restore();
+        receive.restore();
+        done();
+      });
+      var handler = sinon.stub();
+      rpc1.send(contactRpc2, msg, handler);
+      setImmediate(function() {
+        emitter.emit('error', new Error('error'));
+      });
+    });
+
     it('should send a message and forget it', function() {
       var addr1 = rpc1._server.address();
       var addr2 = rpc2._server.address();
