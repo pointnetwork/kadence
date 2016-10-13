@@ -290,7 +290,8 @@ describe('Node', function() {
         params: {
           item: {
             key: utils.createID('key'),
-            value: 'value'
+            value: 'value',
+            publisher: utils.createID('publisher')
           },
           contact: {
             nodeID: utils.createID('publisher')
@@ -590,11 +591,11 @@ describe('Node', function() {
       setImmediate(function() {
         stream.emit('data', {
           key: utils.createID('beep'),
-          value: {
+          value: JSON.stringify({
             value: 'boop',
-            timestamp: Date.now() - 10000000000,
+            timestamp: Date.now(),
             publisher: utils.createID('some_other_node_id')
-          }
+          })
         });
         expect(_del.called).to.equal(false);
         _del.restore();
