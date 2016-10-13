@@ -6,31 +6,7 @@ var KNode = require('../lib/node');
 var transports = require('../lib/transports');
 var Logger = require('../lib/logger');
 var AddressPortContact = require('../lib/contacts/address-port-contact');
-
-function FakeStorage() {
-  this.data = {};
-}
-
-FakeStorage.prototype.get = function(key, cb) {
-  if (!this.data[key]) {
-    return cb(new Error('not found'));
-  }
-  cb(null, this.data[key]);
-};
-
-FakeStorage.prototype.put = function(key, val, cb) {
-  this.data[key] = val;
-  cb(null);
-};
-
-FakeStorage.prototype.del = function(key, cb) {
-  delete this.data[key];
-  cb(null);
-};
-
-FakeStorage.prototype.createReadStream = function() {
-
-};
+var FakeStorage = require('kad-memstore');
 
 var storage1 = new FakeStorage();
 var storage2 = new FakeStorage();
@@ -274,18 +250,43 @@ describe('Node+Router', function() {
 
   });
 
+  describe('#_replicate', function() {
+
+    it('publisher should be consistent after replication', function(done) {
+      node10.connect(node11._self, function() {
+        node10.put('some-key', 'some-val', function(err) {
+          expect(err).to.equal(undefined);
+          var replicate = node11._replicate.bind(node2);
+          replicate();
+          setTimeout(function () {
+            node10._storage.get('some-key', function(err, data1) {
+              node11._storage.get('some-key', function(err, data2) {
+                var parsed1 = JSON.parse(data1);
+                var parsed2 = JSON.parse(data2);
+                expect(parsed1.publisher).to.be.equal(node10._self.nodeID);
+                expect(parsed2.publisher).to.be.equal(node10._self.nodeID);
+                done();
+              });
+            });
+          }, 300);
+        });
+      });
+    });
+
+  });
+
   describe('#put', function() {
 
     it('should succeed in setting the value to the dht', function(done) {
       node1.put('beep', 'boop', function(err) {
-        expect(err).to.equal(null);
+        expect(err).to.equal(undefined);
         done();
       });
     });
 
     it('should succeed in setting the value to the dht', function(done) {
       node10.put('object', { beep: 'boop' }, function(err) {
-        expect(err).to.equal(null);
+        expect(err).to.equal(undefined);
         done();
       });
     });
@@ -311,7 +312,7 @@ describe('Node+Router', function() {
         logger: new Logger(0)
       });
       node.put('beep', 'boop', function(err) {
-        expect(err).to.equal(null);
+        expect(err).to.equal(undefined);
         done();
       });
     });
