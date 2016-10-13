@@ -537,19 +537,19 @@ describe('Node', function() {
       setImmediate(function() {
         stream.emit('data', {
           key: utils.createID('beep'),
-          value: {
+          value: JSON.stringify({
             value: 'boop',
             timestamp: Date.now(),
             publisher: utils.createID('some_other_node_id')
-          }
+          })
         });
         stream.emit('data', {
           key: utils.createID('beep'),
-          value: {
+          value: JSON.stringify({
             value: 'boop',
             timestamp: Date.now() - constants.T_EXPIRE,
             publisher: utils.createID('some_other_node_id')
-          }
+          })
         });
       });
     });
@@ -557,10 +557,10 @@ describe('Node', function() {
     it('should log error on expiration failure', function(done) {
       var _del = sinon.stub(node._storage, 'del', function(k, cb) {
         cb(new Error('Fail'));
-        _del.restore();
       });
       var _log = sinon.stub(node._log, 'error', function() {
         _log.restore();
+        _del.restore();
         done();
       });
       node._expire();
