@@ -65,7 +65,10 @@ describe('Transports/HTTP', function() {
         http: {
           createServer: function(onConnect) {
             onConnect(req, res);
-            return { listen: sinon.stub() };
+            return {
+              listen: sinon.stub(),
+              on: sinon.stub()
+            };
           }
         }
       });
@@ -88,7 +91,10 @@ describe('Transports/HTTP', function() {
         http: {
           createServer: function(onConnect) {
             onConnect(req, res);
-            return { listen: sinon.stub() };
+            return {
+              listen: sinon.stub(),
+              on: sinon.stub()
+            };
           }
         }
       });
@@ -201,6 +207,7 @@ describe('Transports/HTTP', function() {
       var emitter = new EventEmitter();
       var emitter2 = new EventEmitter();
       emitter2.end = sinon.stub();
+      emitter2.setNoDelay = sinon.stub();
 
       var _request = sinon.stub(
         rpc1._protocol,
@@ -347,6 +354,7 @@ describe('Transports/HTTP', function() {
     it('should pass null to handleMessage on request error', function(done) {
       var emitter = new EventEmitter();
       emitter.end = sinon.stub();
+      emitter.setNoDelay = sinon.stub();
       var contact = new AddressPortContact({ address: '0.0.0.0', port: 0 });
       var recipient = new AddressPortContact({
         address: '127.0.0.1',
@@ -358,7 +366,9 @@ describe('Transports/HTTP', function() {
             return emitter;
           },
           createServer: function() {
-            return { listen: sinon.stub() };
+            return { listen: sinon.stub(),
+              on: sinon.stub()
+            };
           }
         }
       });
