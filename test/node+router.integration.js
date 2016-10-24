@@ -218,7 +218,7 @@ describe('Node+Router', function() {
         storage: new FakeStorage(),
         logger: new Logger(0)
       });
-      var _findNode = sinon.stub(node._router, 'findNode', function(id, cb) {
+      var _findNode = sinon.stub(node._router, 'findNode', function(id, o, cb) {
         return cb(new Error('fatal error'));
       });
       node.connect({ address: '127.0.0.1', port: 3333 }, function(err) {
