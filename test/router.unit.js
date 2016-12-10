@@ -67,8 +67,9 @@ describe('Router', function() {
     it('should replace contact at head with new if ping fails', function() {
       var _rpc = { send: sinon.stub().callsArgWith(2, new Error()) };
       var router = new Router({ transport: _rpc, logger: new Logger(0) });
+      var seen = sinon.stub();
       var _bucket = {
-        getContact: sinon.stub().returns({}),
+        getContact: sinon.stub().returns({ seen: seen }),
         removeContact: sinon.stub(),
         addContact: sinon.stub(),
         indexOf: sinon.stub()
@@ -76,6 +77,7 @@ describe('Router', function() {
       router._pingContactAtHead({}, _bucket, function() {});
       expect(_bucket.removeContact.called).to.equal(true);
       expect(_bucket.addContact.called).to.equal(true);
+      expect(seen.called).to.equal(true);
     });
 
     it('should callback false if there is no contact at head', function(done) {
