@@ -42,7 +42,7 @@ describe('RPC', function() {
 
   describe('#receive', function() {
 
-    it('should emit an error if a middleware breaks', function(done) {
+    it('should emit an message drop if a middleware breaks', function(done) {
       var rpc = new FakeTransport(AddressPortContact({
         address: '0.0.0.0', port: 8080
       }));
@@ -55,8 +55,8 @@ describe('RPC', function() {
         params: { contact: { address: '0.0.0.0', port: 8080 } },
         id: 'test'
       });
-      rpc.on('error', function(err) {
-        expect(err.message).to.equal('FAIL');
+      rpc.on('MESSAGE_DROP', function(buffer) {
+        expect(JSON.parse(buffer.toString()).id).to.equal('test');
         done();
       });
       rpc.receive(message.serialize());
