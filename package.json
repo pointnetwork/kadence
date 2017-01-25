@@ -1,7 +1,7 @@
 {
   "name": "kad",
-  "version": "1.6.4",
-  "description": "implementation of the kademlia dht for node",
+  "version": "2.0.0-rc.0",
+  "description": "extensible implementation of the kademlia dht",
   "main": "index.js",
   "directories": {
     "test": "test",
@@ -10,13 +10,13 @@
     "example": "example"
   },
   "scripts": {
-    "test": "npm run testsuite && npm run linter",
-    "testsuite": "./node_modules/.bin/mocha test/** --recursive",
-    "coverage": "./node_modules/.bin/istanbul cover -x 'lib/logger.js' ./node_modules/.bin/_mocha -- --recursive",
-    "linter": "./node_modules/.bin/jshint --config .jshintrc ./index.js ./lib ./test",
-    "build": "./node_modules/.bin/browserify index.js -s kad -o dist/kad.browser.js",
+    "test": "npm run test-suite && npm run linter",
+    "test-suite": "mocha test/** --recursive",
+    "coverage": "istanbul cover _mocha -- --recursive",
+    "linter": "eslint index.js lib test",
+    "build": "browserify index.js -s kad -o dist/kad.browser.js",
     "simulation": "node script/simulation.js",
-    "makedoc": "./node_modules/.bin/jsdoc index.js lib -r -R README.md -u doc -c .jsdoc.json --verbose -d ../kadtools.github.io"
+    "make-docs": "jsdoc index.js lib -r -R README.md -u doc -c .jsdoc.json --verbose -d ../kadtools.github.io"
   },
   "keywords": [
     "dht",
@@ -40,7 +40,7 @@
   ],
   "license": "GPL-3.0",
   "engines": {
-    "node": "4.x.x 6.x.x"
+    "node": "6.9.x"
   },
   "dependencies": {
     "async": "^0.9.0",
@@ -58,11 +58,11 @@
     "browserify": "^11.1.0",
     "chai": "^2.2.0",
     "coveralls": "^2.11.2",
+    "eslint": "^3.14.0",
     "faker": "^2.1.2",
     "ink-docstrap": "^1.1.2",
     "istanbul": "^0.3.13",
     "jsdoc": "^3.4.0",
-    "jshint": "2.8.0",
     "mocha": "^2.2.4",
     "pem": "^1.8.1",
     "proxyquire": "^1.7.3",
