@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created by diasvg.py -->
+<svg width="58.020cm" height="24.150cm" viewBox="1.950 -0.050 58.020 24.150"
+ xmlns="http://www.w3.org/2000/svg"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Layer: Background -->
+<g id="Background">
+<!-- Flowchart - Parallelogram -->
+<polygon fill="#FFFFFF" stroke="#000000" stroke-width="0.100"  points="46.871,10.000 58.000,10.000 56.198,14.950 45.069,14.950 "/>
+<text x="51.535" y="12.270"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+RPC PROCESSOR</text>
+<text x="51.535" y="13.070"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+[DUPLEX STREAM]</text>
+<!-- Flowchart - Parallelogram -->
+<polygon fill="#FFFFFF" stroke="#000000" stroke-width="0.100"  points="39.853,10.000 44.920,10.000 43.137,14.900 38.069,14.900 "/>
+<text x="41.495" y="11.845"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+RULES</text>
+<text x="41.495" y="12.645"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+ENGINE</text>
+<text x="41.495" y="13.445"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+(GLOBAL)</text>
+<!-- Flowchart - Parallelogram -->
+<polygon fill="#FFFFFF" stroke="#000000" stroke-width="0.100"  points="32.447,10.000 38.090,10.000 36.306,14.900 30.664,14.900 "/>
+<text x="34.377" y="11.845"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+RULES</text>
+<text x="34.377" y="12.645"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+ENGINE</text>
+<text x="34.377" y="13.445"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+(BASE)</text>
+<!-- Flowchart - Parallelogram -->
+<polygon fill="#FFFFFF" stroke="#000000" stroke-width="0.100"  points="23.556,10.000 30.130,10.000 28.347,14.900 21.773,14.900 "/>
+<text x="25.952" y="11.845"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+RULES</text>
+<text x="25.952" y="12.645"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+ENGINE</text>
+<text x="25.952" y="13.445"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+(EXTENSIONS)</text>
+<!-- Standard - Text -->
+<!-- Standard - Line -->
+<line x1="45.520" y1="13.712" x2="44.070" y2="13.684" stroke="#000000" stroke-width="0.100" />
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="43.695,13.677 44.199,13.437 44.070,13.684 44.190,13.937 "/>
+<!-- Standard - Line -->
+<line x1="38.515" y1="13.675" x2="37.239" y2="13.675" stroke="#000000" stroke-width="0.100" />
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="36.864,13.675 37.364,13.425 37.239,13.675 37.364,13.925 "/>
+<!-- Standard - Line -->
+<line x1="31.110" y1="13.675" x2="29.279" y2="13.675" stroke="#000000" stroke-width="0.100" />
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="28.904,13.675 29.404,13.425 29.279,13.675 29.404,13.925 "/>
+<!-- Standard - ZigZagLine -->
+<polyline fill="none" stroke="#000000" stroke-width="0.100"  points="38.090,10.000 37.000,10.000 37.000,9.000 46.871,9.000 46.871,9.513 "/>
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="46.871,9.888 46.621,9.388 46.871,9.513 47.121,9.388 "/>
+<!-- Standard - ZigZagLine -->
+<polyline fill="none" stroke="#000000" stroke-width="0.100"  points="28.487,10.000 29.000,10.000 29.000,8.000 49.653,8.000 49.653,9.513 "/>
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="49.653,9.888 49.403,9.388 49.653,9.513 49.903,9.388 "/>
+<!-- Standard - ZigZagLine -->
+<polyline fill="none" stroke="#000000" stroke-width="0.100"  points="21.239,2.250 21.239,0.025 58.000,0.025 58.000,9.513 "/>
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="58.000,9.888 57.750,9.388 58.000,9.513 58.250,9.388 "/>
+<!-- Standard - ZigZagLine -->
+<polyline fill="none" stroke="#000000" stroke-width="0.100"  points="29.349,2.290 29.349,1.075 55.218,1.075 55.218,9.513 "/>
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="55.218,9.888 54.968,9.388 55.218,9.513 55.468,9.388 "/>
+<!-- Standard - Text -->
+<!-- Standard - Line -->
+<line x1="21.719" y1="3.500" x2="22.624" y2="3.526" stroke="#000000" stroke-width="0.100" />
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="22.999,3.537 22.492,3.772 22.624,3.526 22.506,3.273 "/>
+<!-- Standard - ZigZagLine -->
+<polyline fill="none" stroke="#000000" stroke-width="0.100"  points="47.339,18.350 44.000,18.350 44.000,16.045 47.852,16.045 47.852,15.437 "/>
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="47.852,15.062 48.102,15.562 47.852,15.437 47.602,15.562 "/>
+<!-- Group -->
+<!-- Flowchart - Preparation -->
+<path stroke="#000000" fill="#FFFFFF" stroke-width="0.100"  d="M 15.960,1.000 L 20.759,1.000 L 21.719,3.500 L 20.759,6.000 L 15.960,6.000 L 15.000,3.500 L 15.960,1.000 z"/>
+<text x="18.359" y="3.300"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+APPLICATION</text>
+<text x="18.359" y="4.100"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+(USERLAND)</text>
+<!-- Flowchart - Preparation -->
+<path stroke="#000000" fill="#FFFFFF" stroke-width="0.100"  d="M 24.070,1.040 L 28.869,1.040 L 29.829,3.540 L 28.869,6.040 L 24.070,6.040 L 23.111,3.540 L 24.070,1.040 z"/>
+<text x="26.470" y="3.340"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+APPLICATION</text>
+<text x="26.470" y="4.140"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+(BASE NODE)</text>
+<!-- Standard - Text -->
+<!-- Standard - Text -->
+<!-- Flowchart - Box -->
+<rect x="54.210" y="17.000" width="5.710" height="2.700" fill="#FFFFFF" stroke="#000000" stroke-width="0.100"  rx="0.000" />
+<text x="57.065" y="18.145"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+MESSAGE</text>
+<text x="57.065" y="18.945"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+SERIALIZER</text>
+<!-- Flowchart - Box -->
+<rect x="41.622" y="17.000" width="5.718" height="2.700" fill="#FFFFFF" stroke="#000000" stroke-width="0.100"  rx="0.000" />
+<text x="44.480" y="18.145"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+MESSAGE</text>
+<text x="44.480" y="18.945"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+DESERIALIZER</text>
+<!-- Flowchart - Terminal -->
+<path stroke="#000000" fill="#FFFFFF" stroke-width="0.100"  d="M 48.258,21.000 L 53.292,21.000 C 53.987,21.000 54.550,21.627 54.550,22.400 C 54.550,23.173 53.987,23.800 53.292,23.800 L 48.258,23.800 C 47.563,23.800 47.000,23.173 47.000,22.400 C 47.000,21.627 47.563,21.000 48.258,21.000 z"/>
+<text x="50.775" y="22.200"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+TRANSPORT</text>
+<text x="50.775" y="23.000"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+ADAPTER</text>
+<!-- Standard - ZigZagLine -->
+<polyline fill="none" stroke="#000000" stroke-width="0.100"  points="47.000,22.400 44.480,22.400 44.480,20.187 "/>
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="44.480,19.812 44.730,20.312 44.480,20.187 44.230,20.312 "/>
+<!-- Standard - ZigZagLine -->
+<polyline fill="none" stroke="#000000" stroke-width="0.100"  points="57.065,19.700 57.065,22.400 55.037,22.400 "/>
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="54.662,22.400 55.162,22.150 55.037,22.400 55.162,22.650 "/>
+<!-- Standard - Text -->
+<!-- Standard - Text -->
+<!-- Flowchart - Box -->
+<rect x="2.000" y="0.000" width="10.900" height="24.050" fill="#FFFFFF" stroke="#000000" stroke-width="0.100"  rx="0.000" />
+<!-- Flowchart - Predefined Process -->
+<rect x="3.000" y="10.000" width="9.050" height="4.250" fill="#FFFFFF" stroke="#000000" stroke-width="0.100"  rx="0.000" />
+<line x1="3.905" y1="10.000" x2="3.905" y2="14.250" stroke="#000000" stroke-width="0.100" />
+<line x1="11.145" y1="10.000" x2="11.145" y2="14.250" stroke="#000000" stroke-width="0.100" />
+<text x="7.525" y="11.925"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+ROUTING TABLE</text>
+<text x="7.525" y="12.725"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+[0...B-1 K-BUCKETS]</text>
+<!-- Flowchart - Magnetic Disk -->
+<path stroke="#000000" fill="#FFFFFF" stroke-width="0.100"  d="M 4.000,3.833 C 5.410,3.208 6.115,3.000 7.525,3.000 C 8.935,3.000 9.640,3.208 11.050,3.833 L 11.050,7.167 C 9.640,7.792 8.935,8.000 7.525,8.000 C 6.115,8.000 5.410,7.792 4.000,7.167 L 4.000,3.833 z"/>
+<path stroke="#000000" fill="none" stroke-width="0.100"  d="M 4.000,3.833 C 5.410,4.458 6.115,4.667 7.525,4.667 C 8.935,4.667 9.640,4.458 11.050,3.833 "/>
+<text x="7.525" y="5.717"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+STORAGE</text>
+<text x="7.525" y="6.517"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+ADAPTER</text>
+<!-- Standard - Text -->
+<!-- Standard - Text -->
+<text x="4.250" y="1.600"  fill="#000000" text-anchor="start" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+(SHARED CONTEXT)</text>
+<!-- Flowchart - Ellipse -->
+<ellipse cx="7.500" cy="19.732" rx="3.500" ry="2.881" fill="#FFFFFF" stroke="#000000"  stroke-width="0.100" />
+<text x="7.500" y="19.527"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+IDENTITY</text>
+<text x="7.500" y="20.327"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+[NODE ID/KEY]</text>
+<!-- Standard - Line -->
+<line x1="7.520" y1="14.737" x2="7.505" y2="16.365" stroke="#000000" stroke-width="0.100" />
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="7.524,14.362 7.769,14.864 7.520,14.737 7.269,14.859 "/>
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="7.501,16.740 7.256,16.237 7.505,16.365 7.756,16.242 "/>
+<!-- Flowchart - Parallelogram -->
+<polygon fill="#FFFFFF" stroke="#000000" stroke-width="0.100"  points="15.783,10.000 21.764,10.000 19.981,14.900 14.000,14.900 "/>
+<text x="17.882" y="11.845"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+RULES</text>
+<text x="17.882" y="12.645"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+ENGINE</text>
+<text x="17.882" y="13.445"  fill="#000000" text-anchor="middle" font-size="0.80" font-family="sans" font-style="normal" font-weight="400">
+(USERLAND)</text>
+<!-- Standard - Text -->
+<!-- Standard - Line -->
+<line x1="22.219" y1="13.675" x2="20.914" y2="13.675" stroke="#000000" stroke-width="0.100" />
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="20.539,13.675 21.039,13.425 20.914,13.675 21.039,13.925 "/>
+<!-- Standard - Line -->
+<line x1="44.475" y1="11.225" x2="45.934" y2="11.234" stroke="#000000" stroke-width="0.100" />
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="46.309,11.237 45.807,11.484 45.934,11.234 45.810,10.984 "/>
+<!-- Standard - ZigZagLine -->
+<polyline fill="none" stroke="#000000" stroke-width="0.100"  points="20.269,10.000 20.513,10.000 20.513,7.000 52.435,7.000 52.435,9.513 "/>
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="52.435,9.888 52.185,9.388 52.435,9.513 52.685,9.388 "/>
+<!-- Standard - ZigZagLine -->
+<polyline fill="none" stroke="#000000" stroke-width="0.100"  points="53.416,14.950 53.416,15.975 57.065,15.975 57.065,16.513 "/>
+<polygon fill="#000000" stroke="#000000" stroke-width="0.100"  points="57.065,16.888 56.815,16.388 57.065,16.513 57.315,16.388 "/>
+</g>
+</svg>
