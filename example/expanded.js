@@ -73,7 +73,7 @@ node.use((err, request, response, next) => {
 // rule name as the first argument
 node.use('ECHO', (err, request, response, next) => {
   response.send({
-    error: err.message.replace(request.content, '[redacted]')
+    error: err.message.replace(request.content.message, '[redacted]')
   });
 });
 
