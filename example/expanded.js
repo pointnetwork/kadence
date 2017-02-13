@@ -57,7 +57,9 @@ node.use('STORE', (request, response, next) => {
 // Use "userland" (that's you!) rules to create your own protocols
 node.use('ECHO', (request, response, next) => {
   if ([/* some naughty words */].includes(request.content.message)) {
-    return next(new Error(`Oh goodness, I dare not say "${request.content}"`));
+    return next(new Error(
+      `Oh goodness, I dare not say "${request.content.message}"`
+    ));
   }
 
   response.send(request.content.message);
