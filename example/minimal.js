@@ -1,5 +1,5 @@
 /**
- * @example kad/example/basic
+ * @example kad/example/minimal
  */
 
 'use strict';
