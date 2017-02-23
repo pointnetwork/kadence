@@ -1,6 +1,6 @@
 {
   "name": "kad",
-  "version": "2.0.0-rc.0",
+  "version": "2.0.0-alpha.0",
   "description": "extensible implementation of the kademlia dht",
   "main": "index.js",
   "directories": {
@@ -14,9 +14,7 @@
     "test-suite": "mocha test/** --recursive",
     "coverage": "istanbul cover _mocha -- --recursive",
     "linter": "eslint index.js lib test",
-    "build": "browserify index.js -s kad -o dist/kad.browser.js",
-    "simulation": "node script/simulation.js",
-    "make-docs": "jsdoc index.js lib -r -R README.md -u doc -c .jsdoc.json --verbose -d ../kadtools.github.io"
+    "jsdoc": "jsdoc index.js lib -r -R README.md -u doc -c .jsdoc.json --verbose -d ../kadtools.github.io"
   },
   "keywords": [
     "dht",
@@ -27,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/kadtools/kad.git"
   },
-  "author": "Gordon Hall <gordon@gordonwritescode.com>",
+  "author": "Gordon Hall <gordonh@member.fsf.org>",
   "contributors": [
     {
       "name": "omphalos",
@@ -38,25 +36,23 @@
       "url": "https://github.com/aleitner"
     }
   ],
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0",
   "engines": {
-    "node": "6.9.x"
+    "node": ">=6.9.1"
   },
   "dependencies": {
     "async": "^2.1.4",
+    "bunyan": "^1.8.5",
     "merge": "^1.2.0"
   },
   "devDependencies": {
-    "browserify": "^11.1.0",
     "chai": "^2.2.0",
     "coveralls": "^2.11.2",
     "eslint": "^3.14.0",
-    "faker": "^2.1.2",
     "ink-docstrap": "^1.1.2",
     "istanbul": "^0.3.13",
     "jsdoc": "^3.4.0",
     "mocha": "^2.2.4",
-    "pem": "^1.8.1",
     "proxyquire": "^1.7.3",
     "sinon": "^1.14.1"
   }

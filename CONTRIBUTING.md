@@ -13,17 +13,6 @@ Coding Style
 Kad adheres to
 [Felix's Node.js Style Guide](https://github.com/felixge/node-style-guide).
 
-Conventions
------------
-
-As you may have noticed, Kad takes a very OOP approach, making use of the
-prototype chain to abstract shared behaviors and extend things that are often
-different between projects. A good example of this is how
-[transports](doc/custom-transports.md) inherit from `RPC`.
-
-You should also make the best use of [JSDoc](http://usejsdoc.org/) comments as
-shown throughout the source code.
-
 Test Coverage
 -------------
 
@@ -41,7 +30,7 @@ Linting
 -------
 
 To help maintain consistent expectations for code quality and enforcing these
-conventions, there is an included `.jshintrc` file. Most editors support using
+conventions, there is an included `.eslintrc` file. Most editors support using
 this to alert you of offending code in real time but, if your editor does not,
 you can run the linter with:
 
