@@ -43,7 +43,9 @@
   "dependencies": {
     "async": "^2.1.4",
     "bunyan": "^1.8.5",
-    "merge": "^1.2.0"
+    "jsonrpc-lite": "^1.2.3",
+    "merge": "^1.2.0",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
     "chai": "^2.2.0",
