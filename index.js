@@ -29,11 +29,20 @@ module.exports.KademliaNode = require('./lib/node-kademlia');
 /** {@link KademliaRules} */
 module.exports.KademliaRules = require('./lib/rules-kademlia');
 
-/** {@link MessageProcessor} */
-module.exports.MessageProcessor = require('./lib/message-processor');
+/** {@link Messenger} */
+module.exports.Messenger = require('./lib/messenger');
 
 /** {@link RoutingTable} */
 module.exports.RoutingTable = require('./lib/routing-table');
+
+/** {@link UDPTransport} */
+module.exports.UDPTransport = require('./lib/transport-udp');
+
+/** {@link HTTPTransport} */
+module.exports.HTTPTransport = require('./lib/transport-http');
+
+/** {@link HTTPSTransport} */
+module.exports.HTTPSTransport = require('./lib/transport-https');
 
 /** {@link module:utils} */
 module.exports.utils = require('./lib/utils');
