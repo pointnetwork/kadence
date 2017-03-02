@@ -23,6 +23,9 @@ module.exports.Bucket = require('./lib/bucket');
 /** {@link module:constants} */
 module.exports.constants = require('./lib/constants');
 
+/** {@link ErrorRules} */
+module.exports.ErrorRules = require('./lib/rules-errors');
+
 /** {@link KademliaNode} */
 module.exports.KademliaNode = require('./lib/node-kademlia');
 
