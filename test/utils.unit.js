@@ -44,6 +44,10 @@ describe('@module utils', function() {
       )).to.equal(false);
     });
 
+    it('should return false for valid key string', function() {
+      expect(utils.keyStringIsValid('0')).to.equal(false);
+    });
+
   });
 
   describe('@function keyBufferIsValid', function() {
@@ -154,7 +158,8 @@ describe('@module utils', function() {
       ['6fc1c73fd70671c4d2b046ee91029c734959b0cb', 150],
       ['2015bc8a0faf52a5d673981ac119fc3c5e9db4d0', 158],
       ['64d2122805e25ccb4556475a7fcedaf16e0c6697', 155],
-      ['6f8901bbec3df42cb187b60cfa0b9de838ce9d8f', 124]
+      ['6f8901bbec3df42cb187b60cfa0b9de838ce9d8f', 124],
+      [reference, 0]
     ];
 
     it('should return the correct index based on distance', function() {
@@ -179,7 +184,7 @@ describe('@module utils', function() {
         'b9eae665761df8106d8655d0255be793f481c0ba'
       ],
       [
-        'e4c1000352253152453cc069ab9ae71a8bb4e8e8',
+        Buffer.from('e4c1000352253152453cc069ab9ae71a8bb4e8e8', 'hex'),
         150,
         'e440000352253152453cc069ab9ae71a8bb4e8e8'
       ]
