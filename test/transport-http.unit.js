@@ -251,6 +251,7 @@ describe('@class HTTPTransport', function() {
           response.push(null);
           setImmediate(() => {
             expect(httpTransport.read().toString()).to.equal('test');
+            _createRequest.restore();
             done();
           });
         });
@@ -273,6 +274,7 @@ describe('@class HTTPTransport', function() {
         setImmediate(() => {
           httpTransport.once('error', (err) => {
             expect(err.message).to.equal('Response error');
+            _createRequest.restore();
             done();
           });
           setImmediate(() => {
@@ -294,6 +296,7 @@ describe('@class HTTPTransport', function() {
       }]);
       httpTransport.once('error', (err) => {
         expect(err.message).to.equal('Request error');
+        _createRequest.restore();
         done();
       });
       setImmediate(() => {

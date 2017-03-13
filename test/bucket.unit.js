@@ -112,7 +112,9 @@ describe('@class Bucket', function() {
   describe('@property head', function() {
 
     it('should return the head contact', function() {
-      expect(bucket.head[0]).to.equal('0000000000000000000000000000000000000019');
+      expect(bucket.head[0]).to.equal(
+        '0000000000000000000000000000000000000019'
+      );
     });
 
   });
@@ -120,7 +122,9 @@ describe('@class Bucket', function() {
   describe('@property tail', function() {
 
     it('should return the tail contact', function() {
-      expect(bucket.tail[0]).to.equal('0000000000000000000000000000000000000004');
+      expect(bucket.tail[0]).to.equal(
+        '0000000000000000000000000000000000000004'
+      );
     });
 
   });
