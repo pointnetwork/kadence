@@ -95,12 +95,12 @@ describe('@static Messenger#JsonRpcDeserializer', function() {
   it('should deserialize the buffer as a json object', function(done) {
     Messenger.JsonRpcDeserializer(Buffer.from(JSON.stringify([
       { jsonrpc: '2.0', id: 'x', method: 'TEST', params: ['test'] },
-      { jsonrpc: '2.0', method: 'IDENTIFY', params: { identity: 'SENDER' } }
+      { jsonrpc: '2.0', method: 'IDENTIFY', params: ['SENDER', {}] }
     ])), (err, [message, contact]) => {
       expect(message.payload.params[0]).to.equal('test');
       expect(message.payload.id).to.equal('x');
       expect(message.payload.method).to.equal('TEST');
-      expect(contact.payload.params.identity).to.equal('SENDER');
+      expect(contact.payload.params[0]).to.equal('SENDER');
       done();
     });
   });
@@ -108,7 +108,7 @@ describe('@static Messenger#JsonRpcDeserializer', function() {
   it('should callback error with invalid data', function(done) {
     Messenger.JsonRpcDeserializer(Buffer.from(JSON.stringify([
       { invalid: { data: 'object' } },
-      { jsonrpc: '2.0', method: 'IDENTIFY', params: { identity: 'SENDER' } }
+      { jsonrpc: '2.0', method: 'IDENTIFY', params: ['SENDER', {}] }
     ])), (err) => {
       expect(err.message).to.equal('Invalid message type "invalid"');
       done();

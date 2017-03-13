@@ -4,7 +4,6 @@ const { EventEmitter } = require('events');
 const { expect } = require('chai');
 const { stub } = require('sinon');
 const proxyquire = require('proxyquire');
-const UDPTransport = require('../lib/transport-udp');
 
 
 describe('@class UDPTransport', function() {
