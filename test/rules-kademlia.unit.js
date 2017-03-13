@@ -201,7 +201,8 @@ describe('@class KademliaRules', function() {
     });
 
     it('should send result router#getClosestContactsToKey', function(done) {
-      let contacts = [];
+      let contacts = new Map();
+      contacts.set('node id', { hostname: 'localhost', port: 8080 });
       let rules = new KademliaRules({
         router: {
           getClosestContactsToKey: () => contacts
@@ -213,7 +214,10 @@ describe('@class KademliaRules', function() {
         params: [utils.getRandomKeyString()]
       }, {
         send: (result) => {
-          expect(result).to.equal(contacts);
+          expect(Array.isArray(result)).to.equal(true);
+          expect(result[0][0]).to.equal('node id');
+          expect(result[0][1].hostname).to.equal('localhost');
+          expect(result[0][1].port).to.equal(8080);
           done();
         }
       });
@@ -238,7 +242,8 @@ describe('@class KademliaRules', function() {
     });
 
     it('should call findNode if item not found', function(done) {
-      let contacts = [];
+      let contacts = new Map();
+      contacts.set('node id', { hostname: 'localhost', port: 8080 });
       let rules = new KademliaRules({
         storage: {
           get: stub().callsArgWith(1, new Error('Not found'))
@@ -253,7 +258,10 @@ describe('@class KademliaRules', function() {
         params: [utils.getRandomKeyString()]
       }, {
         send: (result) => {
-          expect(result).to.equal(contacts);
+          expect(Array.isArray(result)).to.equal(true);
+          expect(result[0][0]).to.equal('node id');
+          expect(result[0][1].hostname).to.equal('localhost');
+          expect(result[0][1].port).to.equal(8080);
           done();
         }
       });
