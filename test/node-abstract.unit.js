@@ -76,7 +76,142 @@ describe('@class AbstractNode', function() {
 
   describe('@private _process', function() {
 
+    it('should call receive with arguments', function(done) {
+      let _updateContact = sinon.stub(abstractNode, '_updateContact');
+      let write = sinon.stub(abstractNode.rpc.serializer, 'write');
+      let receive = sinon.stub(abstractNode, 'receive', function(req, res) {
+        receive.restore();
+        _updateContact.restore();
+        expect(_updateContact.called).to.equal(true);
+        expect(req.method).to.equal('PING');
+        expect(req.id).to.equal('message id');
+        expect(req.params).to.have.lengthOf(0);
+        expect(req.contact[0]).to.equal('SENDERID');
+        expect(req.contact[1].hostname).to.equal('localhost');
+        expect(req.contact[1].port).to.equal(8080);
+        res.send([]);
+        write.restore();
+        let writeArgs = write.args[0][0];
+        expect(writeArgs[0].id).to.equal('message id');
+        expect(writeArgs[0].result).to.have.lengthOf(0);
+        expect(typeof writeArgs[1][0]).to.equal('string');
+        expect(writeArgs[1][1].name).to.equal('test:node-abstract:unit');
+        expect(writeArgs[2][1].hostname).to.equal('localhost');
+        expect(writeArgs[2][1].port).to.equal(8080);
+        done();
+      });
+      abstractNode._process([
+        {
+          type: 'request',
+          payload: {
+            id: 'message id',
+            method: 'PING',
+            params: []
+          }
+        },
+        {
+          params: [
+            'SENDERID',
+            {
+              hostname: 'localhost',
+              port: 8080
+            }
+          ]
+        }
+      ]);
+    });
 
+    it('should log a warning if not expecting response', function(done) {
+      let _updateContact = sinon.stub(abstractNode, '_updateContact');
+      abstractNode._process([
+        {
+          type: 'success',
+          payload: {
+            id: 'message id',
+            result: []
+          }
+        },
+        {
+          params: [
+            'SENDERID',
+            {
+              hostname: 'localhost',
+              port: 8080
+            }
+          ]
+        }
+      ]);
+      _updateContact.restore();
+      expect(logwarn.called).to.equal(true);
+      logwarn.reset();
+      done();
+    });
+
+    it('should execute the expected handler with an error', function(done) {
+      let _updateContact = sinon.stub(abstractNode, '_updateContact');
+      abstractNode._pending.set('message id', {
+        timestamp: Date.now(),
+        handler: (err, result) => {
+          expect(result).to.equal(null);
+          expect(err.message).to.equal('Error response');
+          done();
+        }
+      });
+      abstractNode._process([
+        {
+          type: 'error',
+          payload: {
+            id: 'message id',
+            error: {
+              code: 0,
+              message: 'Error response'
+            }
+          }
+        },
+        {
+          params: [
+            'SENDERID',
+            {
+              hostname: 'localhost',
+              port: 8080
+            }
+          ]
+        }
+      ]);
+      _updateContact.restore();
+    });
+
+    it('should execute the expected handler with data', function(done) {
+      let _updateContact = sinon.stub(abstractNode, '_updateContact');
+      abstractNode._pending.set('message id', {
+        timestamp: Date.now(),
+        handler: (err, result) => {
+          expect(result).to.have.lengthOf(0);
+          expect(err).to.equal(null);
+          done();
+        }
+      });
+      abstractNode._process([
+        {
+          type: 'success',
+          payload: {
+            id: 'message id',
+            result: []
+          }
+        },
+        {
+          params: [
+            'SENDERID',
+            {
+              hostname: 'localhost',
+              port: 8080
+            }
+          ]
+        }
+      ]);
+      _updateContact.restore();
+
+    });
 
   });
 
