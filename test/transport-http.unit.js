@@ -222,10 +222,13 @@ describe('@class HTTPTransport', function() {
         timestamp: Date.now(),
         response
       });
-      httpTransport.write(['test', Buffer.from('test'), {
-        hostname: 'localhost',
-        port: 8080
-      }]);
+      httpTransport.write(['test', Buffer.from('test'), [
+        'RECEIVER',
+        {
+          hostname: 'localhost',
+          port: 8080
+        }
+      ]]);
       setImmediate(() => {
         expect(response.end.called).to.equal(true);
         expect(httpTransport._pending.size).to.equal(0);
@@ -238,11 +241,11 @@ describe('@class HTTPTransport', function() {
       let request = new EventEmitter();
       let _createRequest = sinon.stub(httpTransport, '_createRequest')
                              .returns(request);
-      httpTransport.write(['test', Buffer.from('test'), {
+      httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
         hostname: 'localhost',
         port: 8080,
         protocol: 'http:'
-      }]);
+      }]]);
       setImmediate(() => {
         let response = new ReadableStream({ read: ()=> null });
         request.emit('response', response);
@@ -263,11 +266,11 @@ describe('@class HTTPTransport', function() {
       let request = new EventEmitter();
       let _createRequest = sinon.stub(httpTransport, '_createRequest')
                              .returns(request);
-      httpTransport.write(['test', Buffer.from('test'), {
+      httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
         hostname: 'localhost',
         port: 8080,
         protocol: 'http:'
-      }]);
+      }]]);
       setImmediate(() => {
         let response = new ReadableStream({ read: ()=> null });
         request.emit('response', response);
@@ -289,11 +292,11 @@ describe('@class HTTPTransport', function() {
       let request = new EventEmitter();
       let _createRequest = sinon.stub(httpTransport, '_createRequest')
                              .returns(request);
-      httpTransport.write(['test', Buffer.from('test'), {
+      httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
         hostname: 'localhost',
         port: 8080,
         protocol: 'http:'
-      }]);
+      }]]);
       httpTransport.once('error', (err) => {
         expect(err.message).to.equal('Request error');
         _createRequest.restore();

@@ -64,15 +64,15 @@ describe('@static Messenger#JsonRpcSerializer', function() {
   it('should serialize the data as a json-rpc payload', function(done) {
     Messenger.JsonRpcSerializer([
       { method: 'TEST', params: ['test'] },
-      { identity: 'SENDER' },
-      { identity: 'RECEIVER' }
+      ['SENDER', {}],
+      { hostname: 'localhost', port: 8080 }
     ], (err, [id, buffer, receiver]) => {
       expect(typeof id).to.equal('string');
       expect(Buffer.isBuffer(buffer)).to.equal(true);
       let [message, identity] = jsonrpc.parse(buffer.toString());
       expect(message.payload.params[0]).to.equal('test');
-      expect(identity.payload.params.identity).to.equal('SENDER');
-      expect(receiver.identity).to.equal('RECEIVER');
+      expect(identity.payload.params[0]).to.equal('SENDER');
+      expect(receiver.hostname).to.equal('localhost');
       done();
     });
   });
