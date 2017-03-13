@@ -70,7 +70,11 @@ describe('@class Bucket', function() {
 
     it('should return a sorted list of contacts by distance', function() {
       expect(JSON.stringify(
-        bucket.getClosestToKey('0000000000000000000000000000000000000010')
+        [
+          ...bucket.getClosestToKey(
+            '0000000000000000000000000000000000000010'
+          ).keys()
+        ]
       )).to.equal(JSON.stringify([
         '0000000000000000000000000000000000000011',
         '0000000000000000000000000000000000000012',
