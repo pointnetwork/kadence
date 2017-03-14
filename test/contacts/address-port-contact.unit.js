@@ -1,5 +1,6 @@
 'use strict';
 
+var sinon = require('sinon');
 var expect = require('chai').expect;
 var constants = require('../../lib/constants');
 var crypto = require('crypto');
@@ -49,16 +50,25 @@ describe('AddressPortContact', function() {
   });
 
   describe('#seen', function() {
+    const sandbox = sinon.sandbox.create();
+    afterEach(() => sandbox.restore());
 
     it('should update the lastSeen property', function() {
       var c = AddressPortContact({ address: '0.0.0.0', port: 1337 });
       var s1 = c.lastSeen;
       setTimeout(function() {
         c.seen();
-        expect((c.lastSeen - s1) >= 10).to.equal(true);
+        expect((c.lastSeen - s1 >= 10)).to.equal(true);
       }, 100);
     });
 
+    it('should not update the lastSeen property on construction', function() {
+      const clock = sandbox.useFakeTimers();
+      clock.tick(100000);
+      var d = AddressPortContact({ address: '127.0.0.1', port: 1337,
+                                   lastSeen: 50000 });
+      expect(d.lastSeen).to.equal(50000);
+    });
   });
 
   describe('#valid', function() {
