@@ -2,6 +2,7 @@
 
 const { expect } = require('chai');
 const sinon = require('sinon');
+const utils = require('../lib/utils');
 const KademliaNode = require('../lib/node-kademlia');
 const FakeTransport = require('./fixtures/transport-fake');
 const levelup = require('levelup');
@@ -28,7 +29,6 @@ describe('@class KademliaNode', function() {
       transport,
       logger
     });
-    console.log(kademliaNode._super)
   });
 
   describe('@private _updateContact', function() {
@@ -237,7 +237,49 @@ describe('@class KademliaNode', function() {
 
   describe('@method iterativeFindNode', function() {
 
-
+    it('should send FIND_NODE to 3 close neighbors', function(done) {
+      let contact = { hostname: 'localhost', port: 8080 };
+      let getClosestContactsToKey = sinon.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns([
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc129', contact]
+      ]);
+      let _updateContact = sinon.stub(kademliaNode, '_updateContact');
+      let send = sinon.stub(kademliaNode, 'send');
+      send.onCall(0).callsArgWith(
+        3,
+        null,
+        Array(20).fill(null).map(() => [utils.getRandomKeyString(), contact])
+      );
+      send.onCall(1).callsArgWith(
+        3,
+        new Error('Lookup failed')
+      );
+      send.onCall(2).callsArgWith(
+        3,
+        null,
+        Array(20).fill(null).map(() => [utils.getRandomKeyString(), contact])
+      );
+      kademliaNode.iterativeFindNode(
+        'ea48d3f07a5241291ed0b4cab6483fa8b8fcc126',
+        (err, results) => {
+          getClosestContactsToKey.restore();
+          _updateContact.restore();
+          send.restore();
+          expect(err).to.equal(null);
+          expect(_updateContact.callCount).to.equal(40);
+          expect(results).to.have.lengthOf(constants.K);
+          results.forEach(([key, c]) => {
+            expect(utils.keyStringIsValid(key)).to.equal(true);
+            expect(contact).to.equal(c);
+          });
+          done();
+        }
+      );
+    });
 
   });
 
