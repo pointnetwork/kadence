@@ -31,6 +31,10 @@ describe('@class AbstractNode', function() {
     });
   });
 
+  after(() => {
+    clock.restore();
+  });
+
   describe('@private _init', function() {
 
     it('should log warnings on messenger error', function(done) {
