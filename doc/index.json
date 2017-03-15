@@ -1,0 +1,17 @@
+{
+  "transport-adapters": {
+    "title": "API for Transport Implementers"
+  },
+  "messengers": {
+    "title": "Customizing Message Format"
+  },
+  "logging": {
+    "title": "Logging and Debugging"
+  },
+  "identities": {
+    "title": "Contacts and Identities"
+  },
+  "storage-adapters": {
+    "title": "Storage Backends"
+  }
+}
