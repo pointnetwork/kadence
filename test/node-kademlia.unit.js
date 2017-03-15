@@ -231,7 +231,66 @@ describe('@class KademliaNode', function() {
 
   describe('@method iterativeStore', function() {
 
+    it('should send store rpc to found contacts and keep copy', function(done) {
+      let sandbox = sinon.sandbox.create();
+      let contact = { hostname: 'localhost', port: 8080 };
+      let iterativeFindNode = sandbox.stub(
+        kademliaNode,
+        'iterativeFindNode'
+      ).callsArgWith(
+        1,
+        null,
+        Array(20).fill(null).map(() => [utils.getRandomKeyString(), contact])
+      );
+      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(3, null);
+      send.onCall(4).callsArgWith(3, new Error('Failed to store'));
+      let put = sandbox.stub(kademliaNode.storage, 'put').callsArg(2);
+      kademliaNode.iterativeStore(
+        utils.getRandomKeyString(),
+        'some storage item data',
+        (err, stored) => {
+          sandbox.restore();
+          expect(stored).to.equal(19);
+          expect(send.callCount).to.equal(20);
+          expect(put.callCount).to.equal(1);
+          done();
+        }
+      );
+    });
 
+    it('should send the store rpc with the existing metadata', function(done) {
+      let sandbox = sinon.sandbox.create();
+      let contact = { hostname: 'localhost', port: 8080 };
+      let iterativeFindNode = sandbox.stub(
+        kademliaNode,
+        'iterativeFindNode'
+      ).callsArgWith(
+        1,
+        null,
+        Array(20).fill(null).map(() => [utils.getRandomKeyString(), contact])
+      );
+      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(3, null);
+      send.onCall(4).callsArgWith(3, new Error('Failed to store'));
+      let put = sandbox.stub(kademliaNode.storage, 'put').callsArg(2);
+      kademliaNode.iterativeStore(
+        utils.getRandomKeyString(),
+        {
+          value: 'some storage item data',
+          publisher: 'ea48d3f07a5241291ed0b4cab6483fa8b8fcc127',
+          timestamp: Date.now()
+        },
+        (err, stored) => {
+          sandbox.restore();
+          expect(send.args[0][1][1].publisher).to.equal(
+            'ea48d3f07a5241291ed0b4cab6483fa8b8fcc127'
+          );
+          expect(stored).to.equal(19);
+          expect(send.callCount).to.equal(20);
+          expect(put.callCount).to.equal(1);
+          done();
+        }
+      );
+    });
 
   });
 
