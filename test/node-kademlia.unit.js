@@ -1,5 +1,6 @@
 'use strict';
 
+const { Readable: ReadableStream } = require('stream');
 const { expect } = require('chai');
 const sinon = require('sinon');
 const utils = require('../lib/utils');
@@ -234,7 +235,7 @@ describe('@class KademliaNode', function() {
     it('should send store rpc to found contacts and keep copy', function(done) {
       let sandbox = sinon.sandbox.create();
       let contact = { hostname: 'localhost', port: 8080 };
-      let iterativeFindNode = sandbox.stub(
+      sandbox.stub(
         kademliaNode,
         'iterativeFindNode'
       ).callsArgWith(
@@ -261,7 +262,7 @@ describe('@class KademliaNode', function() {
     it('should send the store rpc with the existing metadata', function(done) {
       let sandbox = sinon.sandbox.create();
       let contact = { hostname: 'localhost', port: 8080 };
-      let iterativeFindNode = sandbox.stub(
+      sandbox.stub(
         kademliaNode,
         'iterativeFindNode'
       ).callsArgWith(
@@ -347,7 +348,7 @@ describe('@class KademliaNode', function() {
     it('should return a node list if no value is found', function(done) {
       let sandbox = sinon.sandbox.create();
       let contact = { hostname: 'localhost', port: 8080 };
-      let getClosestContactsToKey = sandbox.stub(
+      sandbox.stub(
         kademliaNode.router,
         'getClosestContactsToKey'
       ).returns(new Map(Array(20).fill(null).map(() => [
@@ -374,7 +375,7 @@ describe('@class KademliaNode', function() {
     it('should store the value at the closest missing node', function(done) {
       let sandbox = sinon.sandbox.create();
       let contact = { hostname: 'localhost', port: 8080 };
-      let getClosestContactsToKey = sandbox.stub(
+      sandbox.stub(
         kademliaNode.router,
         'getClosestContactsToKey'
       ).returns(new Map(Array(20).fill(null).map(() => [
@@ -405,7 +406,7 @@ describe('@class KademliaNode', function() {
     it('should immediately callback if value found', function(done) {
       let sandbox = sinon.sandbox.create();
       let contact = { hostname: 'localhost', port: 8080 };
-      let getClosestContactsToKey = sandbox.stub(
+      sandbox.stub(
         kademliaNode.router,
         'getClosestContactsToKey'
       ).returns(new Map(Array(20).fill(null).map(() => [
@@ -433,19 +434,144 @@ describe('@class KademliaNode', function() {
 
   describe('@method replicate', function() {
 
-
+    it('should replicate and republish the correct items', function(done) {
+      let sandbox = sinon.sandbox.create();
+      let items = [
+        {
+          key: utils.getRandomKeyString(),
+          value: {
+            value: 'some value',
+            timestamp: Date.now() - constants.T_REPUBLISH,
+            publisher: kademliaNode.identity.toString('hex')
+          }
+        },
+        {
+          key: utils.getRandomKeyString(),
+          value: {
+            value: 'some value',
+            timestamp: Date.now() - constants.T_REPLICATE,
+            publisher: utils.getRandomKeyString()
+          }
+        },
+        {
+          key: utils.getRandomKeyString(),
+          value: {
+            value: 'some value',
+            timestamp: Date.now() - 1000,
+            publisher: utils.getRandomKeyString()
+          }
+        }
+      ];
+      sandbox.stub(
+        kademliaNode.storage,
+        'createReadStream'
+      ).returns(new ReadableStream({
+        objectMode: true,
+        read: function() {
+          if (items.length) {
+            this.push(items.shift());
+          } else {
+            this.push(null);
+          }
+        }
+      }));
+      let iterativeStore = sandbox.stub(kademliaNode, 'iterativeStore')
+                             .callsArg(2);
+      kademliaNode.replicate((err) => {
+        sandbox.restore();
+        expect(err).to.equal(undefined);
+        expect(iterativeStore.callCount).to.equal(2);
+        done();
+      });
+    });
 
   });
 
   describe('@method expire', function() {
 
-
+    it('should expire the correct items', function(done) {
+      let sandbox = sinon.sandbox.create();
+      let items = [
+        {
+          key: utils.getRandomKeyString(),
+          value: {
+            value: 'some value',
+            timestamp: Date.now() - constants.T_EXPIRE,
+            publisher: kademliaNode.identity.toString('hex')
+          }
+        },
+        {
+          key: utils.getRandomKeyString(),
+          value: {
+            value: 'some value',
+            timestamp: Date.now() - constants.T_EXPIRE,
+            publisher: utils.getRandomKeyString()
+          }
+        },
+        {
+          key: utils.getRandomKeyString(),
+          value: {
+            value: 'some value',
+            timestamp: Date.now() - 1000,
+            publisher: utils.getRandomKeyString()
+          }
+        }
+      ];
+      sandbox.stub(
+        kademliaNode.storage,
+        'createReadStream'
+      ).returns(new ReadableStream({
+        objectMode: true,
+        read: function() {
+          if (items.length) {
+            this.push(items.shift());
+          } else {
+            this.push(null);
+          }
+        }
+      }));
+      let del = sandbox.stub(
+        kademliaNode.storage,
+        'del'
+      ).callsArg(1);
+      kademliaNode.expire((err) => {
+        sandbox.restore();
+        expect(err).to.equal(undefined);
+        expect(del.callCount).to.equal(2);
+        done();
+      });
+    });
 
   });
 
   describe('@method refresh', function() {
 
-
+    it('should refresh the correct buckets', function(done) {
+      let sandbox = sinon.sandbox.create();
+      let iterativeFindNode = sandbox.stub(
+        kademliaNode,
+        'iterativeFindNode'
+      ).callsArg(1);
+      kademliaNode.router.get(0).set(
+        utils.getRandomKeyString(),
+        { hostname: 'localhost', port: 8080 }
+      );
+      kademliaNode.router.get(1).set(
+        utils.getRandomKeyString(),
+        { hostname: 'localhost', port: 8080 }
+      );
+      kademliaNode.router.get(2).set(
+        utils.getRandomKeyString(),
+        { hostname: 'localhost', port: 8080 }
+      );
+      kademliaNode._lookups.set(1, Date.now() - constants.T_REFRESH);
+      kademliaNode._lookups.set(2, Date.now());
+      kademliaNode.refresh(0, () => {
+        sandbox.restore();
+        expect(iterativeFindNode.callCount).to.equal(2);
+        done();
+      });
+    });
 
   });
 
