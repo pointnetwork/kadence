@@ -80,7 +80,52 @@ describe('@class AbstractNode', function() {
 
   describe('@private _process', function() {
 
-    it('should call receive with arguments', function(done) {
+    it('should call receive with error arguments', function(done) {
+      let _updateContact = sinon.stub(abstractNode, '_updateContact');
+      let write = sinon.stub(abstractNode.rpc.serializer, 'write');
+      let receive = sinon.stub(abstractNode, 'receive', function(req, res) {
+        receive.restore();
+        _updateContact.restore();
+        expect(_updateContact.called).to.equal(true);
+        expect(req.method).to.equal('PING');
+        expect(req.id).to.equal('message id');
+        expect(req.params).to.have.lengthOf(0);
+        expect(req.contact[0]).to.equal('SENDERID');
+        expect(req.contact[1].hostname).to.equal('localhost');
+        expect(req.contact[1].port).to.equal(8080);
+        res.error('Error', 500);
+        write.restore();
+        let writeArgs = write.args[0][0];
+        expect(writeArgs[0].id).to.equal('message id');
+        expect(writeArgs[0].error.message).to.equal('Error');
+        expect(typeof writeArgs[1][0]).to.equal('string');
+        expect(writeArgs[1][1].name).to.equal('test:node-abstract:unit');
+        expect(writeArgs[2][1].hostname).to.equal('localhost');
+        expect(writeArgs[2][1].port).to.equal(8080);
+        done();
+      });
+      abstractNode._process([
+        {
+          type: 'request',
+          payload: {
+            id: 'message id',
+            method: 'PING',
+            params: []
+          }
+        },
+        {
+          params: [
+            'SENDERID',
+            {
+              hostname: 'localhost',
+              port: 8080
+            }
+          ]
+        }
+      ]);
+    });
+
+    it('should call receive with success arguments', function(done) {
       let _updateContact = sinon.stub(abstractNode, '_updateContact');
       let write = sinon.stub(abstractNode.rpc.serializer, 'write');
       let receive = sinon.stub(abstractNode, 'receive', function(req, res) {

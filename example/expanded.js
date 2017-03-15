@@ -13,15 +13,16 @@ const kad = require('kad');
 // Prepare required options
 const storage = levelup('path/to/storage.db');
 const logger = bunyan.createLogger({ name: 'kad example' });
-const transport = kad.HttpTransport;
+const transport = new kad.HttpTransport();
 const identity = kad.utils.getRandomKeyBuffer();
+const contact = { hostname: 'localhost', port: 1337 };
 
 // Construct a kademlia node interface; the returned `Node` object exposes:
 // - router
 // - rpc
 // - storage
 // - identity
-const node = kad({ transport, storage, logger, identity });
+const node = kad({ transport, storage, logger, identity, contact });
 
 // Use rule "extensions" from other packages to add additional functionality
 // using plugins. Plugins can also extend the `Node` object with additional
@@ -31,7 +32,7 @@ node.plugin(require('kad-quasar'));
 // Use "global" rules for preprocessing *all* incoming messages
 // This is useful for things like blacklisting certain nodes
 node.use((request, response, next) => {
-  let identityString = request.identity.toString('hex')
+  let [identityString] = request.contact
 
   if ([/* identity blacklist */].includes(identityString)) {
     return next(new Error('You have been blacklisted'));
@@ -43,12 +44,12 @@ node.use((request, response, next) => {
 // Use existing "base" rules to add additional logic to the base kad routes
 // This is useful for things like validating key/value pairs
 node.use('STORE', (request, response, next) => {
-  let {key, val} = request.content;
-  let hash = crypto.createHash('sha1').update(val).digest('hex');
+  let [key, val] = request.params;
+  let hash = crypto.createHash('rmd160').update(val).digest('hex');
 
   // Ensure values are content-addressable
   if (key !== hash) {
-    return next(new Error('Key must be the SHA-1 hash of value'));
+    return next(new Error('Key must be the RMD-160 hash of value'));
   }
 
   next();
@@ -56,13 +57,13 @@ node.use('STORE', (request, response, next) => {
 
 // Use "userland" (that's you!) rules to create your own protocols
 node.use('ECHO', (request, response, next) => {
-  if ([/* some naughty words */].includes(request.content.message)) {
+  if ([/* some naughty words */].includes(request.params.message)) {
     return next(new Error(
-      `Oh goodness, I dare not say "${request.content.message}"`
+      `Oh goodness, I dare not say "${request.params.message}"`
     ));
   }
 
-  response.send(request.content.message);
+  response.send(request.params.message);
 });
 
 // Define a global custom error handler rule, simply by including the `err`
@@ -75,7 +76,7 @@ node.use((err, request, response, next) => {
 // rule name as the first argument
 node.use('ECHO', (err, request, response, next) => {
   response.send({
-    error: err.message.replace(request.content.message, '[redacted]')
+    error: err.message.replace(request.params.message, '[redacted]')
   });
 });
 
@@ -96,8 +97,11 @@ node.plugin(function() {
 // When you are ready, start listening for messages and join the network
 // The Node#listen method takes different arguments based on the transport
 // adapter being used
-node.listen(1337, 'my.host.name', () => {
-  node.join('http://some.known.contact:1337');
+node.listen(1337, () => {
+  node.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', {
+    hostname: 'localhost',
+    port: 8080
+  }]);
 });
 
 // Listen for the 'join' event which indicates peers were discovered and
