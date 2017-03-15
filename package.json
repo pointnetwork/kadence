@@ -52,7 +52,7 @@
     "chai": "^2.2.0",
     "coveralls": "^2.11.2",
     "eslint": "^3.14.0",
-    "ink-docstrap": "^1.1.2",
+    "ink-docstrap": "github:bookchin/docstrap",
     "istanbul": "^0.3.13",
     "jsdoc": "^3.4.0",
     "levelup": "^1.3.5",
