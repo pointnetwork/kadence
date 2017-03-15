@@ -344,7 +344,90 @@ describe('@class KademliaNode', function() {
 
   describe('@method iterativeFindValue', function() {
 
+    it('should return a node list if no value is found', function(done) {
+      let sandbox = sinon.sandbox.create();
+      let contact = { hostname: 'localhost', port: 8080 };
+      let getClosestContactsToKey = sandbox.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns(new Map(Array(20).fill(null).map(() => [
+        utils.getRandomKeyString(),
+        contact
+      ])));
+      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(
+        3,
+        null,
+        Array(20).fill(20).map(() => [utils.getRandomKeyString(), contact])
+      );
+      kademliaNode.iterativeFindValue(
+        utils.getRandomKeyString(),
+        (err, result) => {
+          sandbox.restore();
+          expect(Array.isArray(result)).to.equal(true);
+          expect(result).to.have.lengthOf(constants.K);
+          expect(send.callCount).to.equal(20);
+          done();
+        }
+      );
+    });
 
+    it('should store the value at the closest missing node', function(done) {
+      let sandbox = sinon.sandbox.create();
+      let contact = { hostname: 'localhost', port: 8080 };
+      let getClosestContactsToKey = sandbox.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns(new Map(Array(20).fill(null).map(() => [
+        utils.getRandomKeyString(),
+        contact
+      ])));
+      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(
+        3,
+        null,
+        Array(20).fill(20).map(() => [utils.getRandomKeyString(), contact])
+      );
+      send.onCall(4).callsArgWith(3, null, {
+        value: 'some data value',
+        timestamp: Date.now(),
+        publisher: 'ea48d3f07a5241291ed0b4cab6483fa8b8fcc127'
+      });
+      kademliaNode.iterativeFindValue(
+        utils.getRandomKeyString(),
+        (err, result) => {
+          sandbox.restore();
+          expect(result.value).to.equal('some data value');
+          expect(send.callCount).to.equal(6);
+          done();
+        }
+      );
+    });
+
+    it('should immediately callback if value found', function(done) {
+      let sandbox = sinon.sandbox.create();
+      let contact = { hostname: 'localhost', port: 8080 };
+      let getClosestContactsToKey = sandbox.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns(new Map(Array(20).fill(null).map(() => [
+        utils.getRandomKeyString(),
+        contact
+      ])));
+      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(3, null, {
+        value: 'some data value',
+        timestamp: Date.now(),
+        publisher: 'ea48d3f07a5241291ed0b4cab6483fa8b8fcc127'
+      });
+      send.onCall(0).callsArgWith(3, new Error('Request timeout'));
+      kademliaNode.iterativeFindValue(
+        utils.getRandomKeyString(),
+        (err, result) => {
+          sandbox.restore();
+          expect(result.value).to.equal('some data value');
+          expect(send.callCount).to.equal(2);
+          done();
+        }
+      );
+    });
 
   });
 
