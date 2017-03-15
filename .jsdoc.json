@@ -4,17 +4,18 @@
   },
   "templates": {
     "systemName": "KadTools",
-    "copyright":  "",
+    "copyright":  "Copyright 2017 Gordon Hall",
     "includeDate": false,
     "navType": "vertical",
-    "theme": "lumen",
-    "linenums": true,
+    "logoFile": "img/kadtools.jpg",
+    "theme": "storj",
+    "linenums": false,
     "collapseSymbols": false,
     "inverseNav": false,
     "outputSourceFiles": true,
     "outputSourcePath": true,
     "dateFormat": "",
-    "syntaxTheme": "dark",
-    "sort": "longname"
+    "sort": "longname",
+    "syntaxTheme": "default"
   }
 }

@@ -1,4 +1,4 @@
-![Kad](https://avatars1.githubusercontent.com/u/16706596?v=3&s=200)
+![Kad](https://nodei.co/npm/kad.png?downloads=true)
 ===================================================================
 
 [![Build Status](https://img.shields.io/travis/kadtools/kad/master.svg?style=flat-square)](https://travis-ci.org/kadtools/kad)
