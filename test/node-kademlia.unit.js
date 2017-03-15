@@ -115,19 +115,16 @@ describe('@class KademliaNode', function() {
   describe('@method listen', function() {
 
     it('should use kad rules and setup refresh/replicate', function(done) {
-      let use = sinon.stub(kademliaNode, 'use');
-      let refresh = sinon.stub(kademliaNode, 'refresh');
-      let replicate = sinon.stub(kademliaNode, 'replicate').callsArg(0);
-      let expire = sinon.stub(kademliaNode, 'expire');
-      let listen = sinon.stub(transport, 'listen');
+      let sandbox = sinon.sandbox.create();
+      let use = sandbox.stub(kademliaNode, 'use');
+      let refresh = sandbox.stub(kademliaNode, 'refresh');
+      let replicate = sandbox.stub(kademliaNode, 'replicate').callsArg(0);
+      let expire = sandbox.stub(kademliaNode, 'expire');
+      sandbox.stub(transport, 'listen');
       kademliaNode.listen();
       clock.tick(constants.T_REPLICATE);
       setImmediate(() => {
-        use.restore();
-        refresh.restore();
-        replicate.restore();
-        expire.restore();
-        listen.restore();
+        sandbox.restore();
         expect(use.calledWithMatch('PING')).to.equal(true);
         expect(use.calledWithMatch('STORE')).to.equal(true);
         expect(use.calledWithMatch('FIND_NODE')).to.equal(true);
