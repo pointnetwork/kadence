@@ -171,28 +171,28 @@ desired.
 /**
  * Example "howdy, neighbor" plugin
  * @function
- * @param {KademliaNode} kademliaNode
+ * @param {KademliaNode} node
  */
-module.exports = function(kademliaNode) {
+module.exports = function(node) {
 
-  const { identity } = kademliaNode;
+  const { identity } = node;
 
   /**
    * Respond to HOWDY messages
    */
-  kademliaNode.use('HOWDY', (req, res) => {
+  node.use('HOWDY', (req, res) => {
     res.send(['howdy, neighbor']);
   });
 
   /**
    * Say howdy to our nearest neighbor
    */
-  kademliaNode.sayHowdy = function(callback) {
+  node.sayHowdy = function(callback) {
     let neighbor = [
-      ...kademliaNode.router.getClosestContactsToKey(identity).entries()
+      ...node.router.getClosestContactsToKey(identity).entries()
     ].shift();
     
-    kademliaNode.send('HOWDY', ['howdy, neighbor'], neighbor, callback);
+    node.send('HOWDY', ['howdy, neighbor'], neighbor, callback);
   };
 
 };
