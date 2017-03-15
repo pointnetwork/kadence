@@ -44,6 +44,15 @@ For complete documentation, tutorials, and examples on how to extend the base
 protocol for building your own distributed networks, check out 
 [kadtools.github.io](http://kadtools.github.io).
 
+Storage
+-------
+
+Kad does not implement the actual data store, but uses the 
+[LevelUP](https://github.com/Level/levelup) interface so that you can provide 
+[any compatible backend](https://github.com/Level/levelup/wiki/Modules) you 
+desire.
+
+
 Transports
 ----------
 
@@ -62,54 +71,6 @@ met by these, check out the [API for Transport Implementers]();
 * [kad-webrtc](https://github.com/kadtools/kad-webrtc) | [@omphalos](https://github.com/omphalos)
 
 > Submit a pull request if you'd like yours added to this list!
-
-Plugins
--------
-
-Kad plugins are a simple way to package additional features. A plugin is just 
-a function that receives an instance of {@link KademliaNode} returned from 
-calling `require('kad')(options)`. This function can then apply any decorations 
-desired.
-
-```js
-/**
- * Example "howdy, neighbor" plugin
- * @function
- * @param {KademliaNode} kademliaNode
- */
-module.exports = function(kademliaNode) {
-
-  const { identity } = kademliaNode;
-
-  /**
-   * Respond to HOWDY messages
-   */
-  kademliaNode.use('HOWDY', (req, res) => {
-    res.send(['howdy, neighbor']);
-  });
-
-  /**
-   * Say howdy to our nearest neighbor
-   */
-  kademliaNode.sayHowdy = function(callback) {
-    let neighbor = [
-      ...kademliaNode.router.getClosestContactsToKey(identity).entries()
-    ].shift();
-    
-    kademliaNode.send('HOWDY', ['howdy, neighbor'], neighbor, callback);
-  };
-
-};
-```
-
-### Contributed Plugins
-
-* [kad-quasar](https://github.com/kadtools/kad-quasar) | [@bookchin](https://github.com/bookchin)
-* [kad-spartacus](https://github.com/kadtools/kad-spartacus) | [@bookchin](https://github.com/bookchin)
-* [kad-traverse](https://github.com/kadtools/kad-traverse) | [@bookchin](https://github.com/bookchin)
-
-
-> Submit a pull request if you;d like yours added to this list!
 
 Middleware
 ----------
@@ -198,13 +159,53 @@ node.use('ECHO', function(err, request, response, next) {
 });
 ```
 
-Storage
+Plugins
 -------
 
-Kad does not implement the actual data store, but uses the 
-[LevelUP](https://github.com/Level/levelup) interface so that you can provide 
-[any compatible backend](https://github.com/Level/levelup/wiki/Modules) you 
-desire.
+Kad plugins are a simple way to package additional features. A plugin is just 
+a function that receives an instance of {@link KademliaNode} returned from 
+calling `require('kad')(options)`. This function can then apply any decorations 
+desired.
+
+```js
+/**
+ * Example "howdy, neighbor" plugin
+ * @function
+ * @param {KademliaNode} kademliaNode
+ */
+module.exports = function(kademliaNode) {
+
+  const { identity } = kademliaNode;
+
+  /**
+   * Respond to HOWDY messages
+   */
+  kademliaNode.use('HOWDY', (req, res) => {
+    res.send(['howdy, neighbor']);
+  });
+
+  /**
+   * Say howdy to our nearest neighbor
+   */
+  kademliaNode.sayHowdy = function(callback) {
+    let neighbor = [
+      ...kademliaNode.router.getClosestContactsToKey(identity).entries()
+    ].shift();
+    
+    kademliaNode.send('HOWDY', ['howdy, neighbor'], neighbor, callback);
+  };
+
+};
+```
+
+### Contributed Plugins
+
+* [kad-quasar](https://github.com/kadtools/kad-quasar) | [@bookchin](https://github.com/bookchin)
+* [kad-spartacus](https://github.com/kadtools/kad-spartacus) | [@bookchin](https://github.com/bookchin)
+* [kad-traverse](https://github.com/kadtools/kad-traverse) | [@bookchin](https://github.com/bookchin)
+
+
+> Submit a pull request if you'd like yours added to this list!
 
 License
 -------
