@@ -15,17 +15,19 @@ const kad = require('kad');
 // - storage
 // - identity
 const node = kad({
-  transport: kad.HttpTransport,
+  transport: new kad.HttpTransport(),
   storage: levelup('path/to/storage.db'),
-  logger: bunyan.createLogger({ name: 'kad example' }),
-  identity: kad.utils.getRandomKeyBuffer()
+  contact: { hostname: 'localhost', port: 1337 }
 });
 
 // When you are ready, start listening for messages and join the network
 // The Node#listen method takes different arguments based on the transport
 // adapter being used
-node.listen(1337, 'my.host.name', () => {
-  node.join('http://some.known.contact:1337');
+node.listen(1337, () => {
+  node.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', {
+    hostname: 'localhost',
+    port: 8080
+  }]);
 });
 
 // Listen for the 'join' event which indicates peers were discovered and
