@@ -167,7 +167,7 @@ describe('@class KademliaNode', function() {
           'ea48d3f07a5241291ed0b4cab6483fa8b8fcc128'
         )).to.equal(true);
         expect(iterativeFindNode.calledWithMatch(
-          kademliaNode.identity
+          kademliaNode.identity.toString('hex')
         )).to.equal(true);
         expect(refresh.callCount).to.equal(1);
         done();
@@ -201,7 +201,7 @@ describe('@class KademliaNode', function() {
           'ea48d3f07a5241291ed0b4cab6483fa8b8fcc128'
         )).to.equal(true);
         expect(iterativeFindNode.calledWithMatch(
-          kademliaNode.identity
+          kademliaNode.identity.toString('hex')
         )).to.equal(true);
         expect(refresh.callCount).to.equal(0);
         done();
