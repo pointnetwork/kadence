@@ -14,7 +14,7 @@
     "test-suite": "mocha test/** --recursive",
     "coverage": "istanbul cover _mocha -- --recursive",
     "linter": "eslint index.js lib test",
-    "jsdoc": "jsdoc index.js lib -r -R README.md -u doc -c .jsdoc.json --verbose -d ../kadtools.github.io"
+    "jsdoc": "mkdir -p ../kadtools.github.io && jsdoc index.js lib -r -R README.md -u doc -c .jsdoc.json --verbose -d ../kadtools.github.io"
   },
   "keywords": [
     "dht",
