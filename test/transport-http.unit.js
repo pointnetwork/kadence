@@ -239,6 +239,7 @@ describe('@class HTTPTransport', function() {
     it('should create a request and push the response back', function(done) {
       let httpTransport = new HTTPTransport();
       let request = new EventEmitter();
+      request.end = sinon.stub();
       let _createRequest = sinon.stub(httpTransport, '_createRequest')
                              .returns(request);
       httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
@@ -264,6 +265,7 @@ describe('@class HTTPTransport', function() {
     it('should bubble response errors', function(done) {
       let httpTransport = new HTTPTransport();
       let request = new EventEmitter();
+      request.end = sinon.stub();
       let _createRequest = sinon.stub(httpTransport, '_createRequest')
                              .returns(request);
       httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
@@ -290,6 +292,7 @@ describe('@class HTTPTransport', function() {
     it('should bubble request errors', function(done) {
       let httpTransport = new HTTPTransport();
       let request = new EventEmitter();
+      request.end = sinon.stub();
       let _createRequest = sinon.stub(httpTransport, '_createRequest')
                              .returns(request);
       httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
