@@ -9,6 +9,7 @@ const memdown = require('memdown');
 const storage = levelup('test:node-abstract', { db: memdown });
 const bunyan = require('bunyan');
 const constants = require('../lib/constants');
+const utils = require('../lib/utils');
 
 
 describe('@class AbstractNode', function() {
@@ -27,7 +28,8 @@ describe('@class AbstractNode', function() {
       contact: { name: 'test:node-abstract:unit' },
       storage,
       transport,
-      logger
+      logger,
+      identity: utils.getRandomKeyString()
     });
   });
 
@@ -114,13 +116,16 @@ describe('@class AbstractNode', function() {
           }
         },
         {
-          params: [
-            'SENDERID',
-            {
-              hostname: 'localhost',
-              port: 8080
-            }
-          ]
+          type: 'notification',
+          payload: {
+            params: [
+              'SENDERID',
+              {
+                hostname: 'localhost',
+                port: 8080
+              }
+            ]
+          }
         }
       ]);
     });
@@ -159,13 +164,16 @@ describe('@class AbstractNode', function() {
           }
         },
         {
-          params: [
-            'SENDERID',
-            {
-              hostname: 'localhost',
-              port: 8080
-            }
-          ]
+          type: 'notification',
+          payload: {
+            params: [
+              'SENDERID',
+              {
+                hostname: 'localhost',
+                port: 8080
+              }
+            ]
+          }
         }
       ]);
     });
@@ -181,13 +189,16 @@ describe('@class AbstractNode', function() {
           }
         },
         {
-          params: [
-            'SENDERID',
-            {
-              hostname: 'localhost',
-              port: 8080
-            }
-          ]
+          type: 'notification',
+          payload: {
+            params: [
+              'SENDERID',
+              {
+                hostname: 'localhost',
+                port: 8080
+              }
+            ]
+          }
         }
       ]);
       _updateContact.restore();
@@ -218,13 +229,16 @@ describe('@class AbstractNode', function() {
           }
         },
         {
-          params: [
-            'SENDERID',
-            {
-              hostname: 'localhost',
-              port: 8080
-            }
-          ]
+          type: 'notification',
+          payload: {
+            params: [
+              'SENDERID',
+              {
+                hostname: 'localhost',
+                port: 8080
+              }
+            ]
+          }
         }
       ]);
       _updateContact.restore();
@@ -249,13 +263,16 @@ describe('@class AbstractNode', function() {
           }
         },
         {
-          params: [
-            'SENDERID',
-            {
-              hostname: 'localhost',
-              port: 8080
-            }
-          ]
+          type: 'notification',
+          payload: {
+            params: [
+              'SENDERID',
+              {
+                hostname: 'localhost',
+                port: 8080
+              }
+            ]
+          }
         }
       ]);
       _updateContact.restore();
