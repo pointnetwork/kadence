@@ -1,15 +1,18 @@
 {
   "transport-adapters": {
-    "title": "API for Transport Implementers"
+    "title": "Transport Adapters"
   },
   "messengers": {
-    "title": "Customizing Message Format"
+    "title": "Message Format"
   },
-  "logging": {
-    "title": "Logging and Debugging"
+  "middleware": {
+    "title": "Middleware Stack"
+  },
+  "plugins": {
+    "title": "Using Plugins"
   },
   "identities": {
-    "title": "Contacts and Identities"
+    "title": "Contacts & Identities"
   },
   "storage-adapters": {
     "title": "Storage Backends"
