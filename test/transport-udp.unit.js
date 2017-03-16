@@ -42,7 +42,10 @@ describe('@class UDPTransport', function() {
       udpTransport.write([
         'message_id',
         message,
-        { hostname: 'localhost', port: 8080 }
+        [
+          'identityKey',
+          { hostname: 'localhost', port: 8080 }
+        ]
       ]);
       expect(socket.send.calledWithMatch(
         message,
