@@ -132,7 +132,7 @@ describe('@class KademliaRules', function() {
     it('should pass to error handler if store fail', function(done) {
       let rules = new KademliaRules({
         storage: {
-          put: stub().callsArgWith(2, new Error('Failed to store item'))
+          put: stub().callsArgWith(3, new Error('Failed to store item'))
         }
       });
       let send = stub();
@@ -157,7 +157,7 @@ describe('@class KademliaRules', function() {
     it('should echo back arguments if stored', function(done) {
       let rules = new KademliaRules({
         storage: {
-          put: stub().callsArgWith(2, null)
+          put: stub().callsArgWith(3, null)
         }
       });
       let key = utils.getRandomKeyString();
@@ -246,7 +246,7 @@ describe('@class KademliaRules', function() {
       contacts.set('node id', { hostname: 'localhost', port: 8080 });
       let rules = new KademliaRules({
         storage: {
-          get: stub().callsArgWith(1, new Error('Not found'))
+          get: stub().callsArgWith(2, new Error('Not found'))
         },
         router: {
           getClosestContactsToKey: stub().returns(contacts)
@@ -275,7 +275,7 @@ describe('@class KademliaRules', function() {
       };
       let rules = new KademliaRules({
         storage: {
-          get: stub().callsArgWith(1, null, item)
+          get: stub().callsArgWith(2, null, item)
         }
       });
       rules.findValue({

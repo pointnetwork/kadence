@@ -242,7 +242,7 @@ describe('@class KademliaNode', function() {
       );
       let send = sandbox.stub(kademliaNode, 'send').callsArgWith(3, null);
       send.onCall(4).callsArgWith(3, new Error('Failed to store'));
-      let put = sandbox.stub(kademliaNode.storage, 'put').callsArg(2);
+      let put = sandbox.stub(kademliaNode.storage, 'put').callsArg(3);
       kademliaNode.iterativeStore(
         utils.getRandomKeyString(),
         'some storage item data',
@@ -269,7 +269,7 @@ describe('@class KademliaNode', function() {
       );
       let send = sandbox.stub(kademliaNode, 'send').callsArgWith(3, null);
       send.onCall(4).callsArgWith(3, new Error('Failed to store'));
-      let put = sandbox.stub(kademliaNode.storage, 'put').callsArg(2);
+      let put = sandbox.stub(kademliaNode.storage, 'put').callsArg(3);
       kademliaNode.iterativeStore(
         utils.getRandomKeyString(),
         {
