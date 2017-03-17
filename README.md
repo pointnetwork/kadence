@@ -9,6 +9,9 @@ Peer-to-peer application framework implementing the
 [Kademlia](http://www.scs.stanford.edu/~dm/home/papers/kpos.pdf) distributed
 hash table for Node.js and the browser.
 
+> Looking for documentation for Kad v1.6.x? 
+> [Go here](https://kadtools.github.io/docs-v1.6.x/)!
+
 Usage
 -----
 
@@ -40,9 +43,9 @@ node.join(seed, function() {
 });
 ```
 
-> For complete documentation, tutorials, and examples on how to extend the
-> base protocol for building your own distributed networks, check out the 
-> [kadtools.github.io](http://kadtools.github.io).
+For complete documentation, tutorials, and examples on how to extend the
+base protocol for building your own distributed networks, check out the 
+[kadtools.github.io](http://kadtools.github.io).
 
 Resources
 ---------
