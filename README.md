@@ -1,8 +1,8 @@
 ![Kad](https://nodei.co/npm/kad.png?downloads=true)
 ===================================================================
 
-[![Build Status](https://img.shields.io/travis/kadtools/kad/master.svg?style=flat-square)](https://travis-ci.org/kadtools/kad)
-[![Coverage Status](https://img.shields.io/coveralls/kadtools/kad.svg?style=flat-square)](https://coveralls.io/r/kadtools/kad)
+[![Build Status](https://img.shields.io/travis/kadtools/kad/master.svg?style=flat-square)](https://travis-ci.org/kadtools/kad) | 
+[![Coverage Status](https://img.shields.io/coveralls/kadtools/kad.svg?style=flat-square)](https://coveralls.io/r/kadtools/kad) | 
 [![NPM](https://img.shields.io/npm/v/kad.svg?style=flat-square)](https://www.npmjs.com/package/kad)
 
 Peer-to-peer application framework implementing the 
