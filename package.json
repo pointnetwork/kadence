@@ -1,7 +1,7 @@
 {
   "name": "kad",
-  "version": "1.6.5",
-  "description": "implementation of the kademlia dht for node",
+  "version": "2.0.0",
+  "description": "extensible implementation of the kademlia dht",
   "main": "index.js",
   "directories": {
     "test": "test",
@@ -10,13 +10,11 @@
     "example": "example"
   },
   "scripts": {
-    "test": "npm run testsuite && npm run linter",
-    "testsuite": "./node_modules/.bin/mocha test/** --recursive",
-    "coverage": "./node_modules/.bin/istanbul cover -x 'lib/logger.js' ./node_modules/.bin/_mocha -- --recursive",
-    "linter": "./node_modules/.bin/jshint --config .jshintrc ./index.js ./lib ./test",
-    "build": "./node_modules/.bin/browserify index.js -s kad -o dist/kad.browser.js",
-    "simulation": "node script/simulation.js",
-    "makedoc": "./node_modules/.bin/jsdoc index.js lib -r -R README.md -u doc -c .jsdoc.json --verbose -d ../kadtools.github.io"
+    "test": "npm run test-suite && npm run linter",
+    "test-suite": "mocha test/** --recursive",
+    "coverage": "istanbul cover _mocha -- --recursive",
+    "linter": "eslint index.js lib test",
+    "jsdoc": "mkdir -p ../kadtools.github.io && jsdoc index.js lib -r -R README.md -u doc -c .jsdoc.json --verbose -d ../kadtools.github.io"
   },
   "keywords": [
     "dht",
@@ -27,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/kadtools/kad.git"
   },
-  "author": "Gordon Hall <gordon@gordonwritescode.com>",
+  "author": "Gordon Hall <gordonh@member.fsf.org>",
   "contributors": [
     {
       "name": "omphalos",
@@ -38,33 +36,29 @@
       "url": "https://github.com/aleitner"
     }
   ],
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0",
   "engines": {
-    "node": "4.x.x 6.x.x"
+    "node": ">=6.9.1"
   },
   "dependencies": {
-    "async": "^0.9.0",
-    "clarinet": "^0.11.0",
-    "colors": "^1.0.3",
-    "hat": "0.0.3",
-    "kad-fs": "0.0.4",
-    "kad-localstorage": "0.0.7",
-    "kad-memstore": "0.0.1",
-    "lodash": "^3.6.0",
+    "async": "^2.1.4",
+    "bunyan": "^1.8.5",
+    "concat-stream": "^1.6.0",
+    "jsonrpc-lite": "^1.2.3",
     "merge": "^1.2.0",
-    "ms": "^0.7.0"
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "browserify": "^11.1.0",
     "chai": "^2.2.0",
     "coveralls": "^2.11.2",
-    "faker": "^2.1.2",
-    "ink-docstrap": "^1.1.2",
+    "eslint": "^3.14.0",
+    "ink-docstrap": "github:bookchin/docstrap",
     "istanbul": "^0.3.13",
     "jsdoc": "^3.4.0",
-    "jshint": "2.8.0",
+    "levelup": "^1.3.5",
+    "memdown": "^1.2.4",
     "mocha": "^2.2.4",
-    "pem": "^1.8.1",
+    "pem": "^1.9.4",
     "proxyquire": "^1.7.3",
     "sinon": "^1.14.1"
   }
