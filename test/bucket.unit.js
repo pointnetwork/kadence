@@ -1,180 +1,130 @@
-'use strict';
+'use strict'
 
-var expect = require('chai').expect;
-var Bucket = require('../lib/bucket');
-var AddressPortContact = require('../lib/contacts/address-port-contact');
+const { expect } = require('chai');
+const Bucket = require('../lib/bucket');
 
-describe('Bucket', function() {
 
-  describe('@constructor', function() {
+describe('@class Bucket', function() {
 
-    it('should create an instance with the `new` keyword', function() {
-      expect(new Bucket()).to.be.instanceOf(Bucket);
+  const bucket = new Bucket();
+  const entries = [
+    '0000000000000000000000000000000000000000',
+    '0000000000000000000000000000000000000001',
+    '0000000000000000000000000000000000000002',
+    '0000000000000000000000000000000000000003',
+    '0000000000000000000000000000000000000004',
+    '0000000000000000000000000000000000000005',
+    '0000000000000000000000000000000000000006',
+    '0000000000000000000000000000000000000007',
+    '0000000000000000000000000000000000000008',
+    '0000000000000000000000000000000000000009',
+    '0000000000000000000000000000000000000010',
+    '0000000000000000000000000000000000000011',
+    '0000000000000000000000000000000000000012',
+    '0000000000000000000000000000000000000013',
+    '0000000000000000000000000000000000000014',
+    '0000000000000000000000000000000000000015',
+    '0000000000000000000000000000000000000016',
+    '0000000000000000000000000000000000000017',
+    '0000000000000000000000000000000000000018',
+    '0000000000000000000000000000000000000019'
+  ];
+
+  describe('@method set', function() {
+
+    it('should add each entry to the head', function() {
+      entries.forEach((entry) => bucket.set(entry, entry));
+      [...bucket.keys()].forEach((key, i) => {
+        expect(entries.indexOf(key)).to.equal(entries.length - (i + 1));
+      });
     });
 
-    it('should create an instance without the `new` keyword', function() {
-      expect(Bucket()).to.be.instanceOf(Bucket);
+    it('should move existing contacts to the tail', function() {
+      bucket.set(entries[4], entries[4]);
+      expect([...bucket.keys()].pop()).to.equal(entries[4]);
     });
 
-    it('should have an empty contacts list', function() {
-      var bucket = new Bucket();
-      expect(bucket._contacts).to.be.instanceOf(Array).and.have.lengthOf(0);
-    });
-
-  });
-
-  describe('#getSize', function() {
-
-    it('should return the length of the internal _contacts array', function() {
-      var b1 = Bucket(), b2 = Bucket(), b3 = Bucket();
-      expect(b1.getSize()).to.equal(0);
-      b2._contacts.push(1);
-      expect(b2.getSize()).to.equal(1);
-      b3._contacts.push(1);
-      b3._contacts.push(2);
-      b3._contacts.push(3);
-      expect(b3.getSize()).to.equal(3);
-    });
-
-  });
-
-  describe('#getContactList', function() {
-
-    it('should return a copy of the contacts', function() {
-      var b = Bucket();
-      b._contacts.push(1);
-      b._contacts.push(2);
-      b._contacts.push(3);
-      var copy = b.getContactList();
-      expect(copy).to.have.lengthOf(b._contacts.length);
-      expect(JSON.stringify(copy)).to.equal(JSON.stringify(b._contacts));
-      expect(copy).to.not.equal(b._contacts);
-    });
-
-  });
-
-  describe('#getContact', function() {
-
-    it('should return the contact at the supplied index', function() {
-      var b = Bucket();
-      b._contacts.push(1);
-      expect(b.getContact(0)).to.equal(1);
-    });
-
-    it('should not return any contact', function() {
-      var b = Bucket();
-      expect(b.getContact(0)).to.equal(null);
+    it('should not add new contacts if bucket is full', function() {
+      expect(
+        bucket.set('0000000000000000000000000000000000000020')
+      ).to.equal(-1);
     });
 
   });
 
-  describe('#addContact', function() {
+  describe('@method indexOf', function() {
 
-    var bucket = new Bucket();
-    var contact = new AddressPortContact({ address: '0.0.0.0', port: 1337 });
-
-    it('should add the contact to the bucket', function() {
-      expect(bucket.getSize()).to.equal(0);
-      bucket.addContact(contact);
-      expect(bucket.getSize()).to.equal(1);
-      expect(bucket.getContact(0)).to.equal(contact);
+    it('should return -1 if not found', function() {
+      expect(bucket.indexOf('NOTVALIDKEY')).to.equal(-1);
     });
 
-    it('should throw with invalid contact object', function() {
-      expect(function() {
-        bucket.addContact({ address: '0.0.0.3', port: 1337 });
-      }).to.throw(Error, 'Invalid contact supplied');
-    });
-
-    it('should not add the duplicate contact to the bucket', function() {
-      expect(bucket.getSize()).to.equal(1);
-      bucket.addContact(contact);
-      expect(bucket.getSize()).to.equal(1);
-    });
-
-    it('should return false if the bucket is full', function() {
-      var bucket = new Bucket();
-      var counter = 0;
-      while(counter < 20) {
-        counter++;
-        bucket.addContact(AddressPortContact({
-          address: '127.0.0.1',
-          port: counter
-        }));
-      }
-      expect(bucket.addContact(AddressPortContact({
-        address: '127.0.0.1',
-        port: 1337
-      }))).to.equal(false);
+    it('should return the correct index', function() {
+      expect(bucket.indexOf(entries[6])).to.equal(13);
+      expect(bucket.indexOf(entries[4])).to.equal(19);
+      expect(bucket.indexOf(entries[19])).to.equal(0);
     });
 
   });
 
-  describe('#removeContact', function() {
+  describe('@method getClosestToKey', function() {
 
-    var bucket = new Bucket();
-
-    bucket.addContact(AddressPortContact({ address: '0.0.0.0', port: 1337 }));
-    bucket.addContact(AddressPortContact({ address: '0.0.0.1', port: 1337 }));
-    bucket.addContact(AddressPortContact({ address: '0.0.0.2', port: 1337 }));
-
-    it('should remove the given contact', function() {
-      expect(bucket.getSize()).to.equal(3);
-      var contact = AddressPortContact({ address: '0.0.0.0', port: 1337 });
-      bucket.removeContact(contact);
-      expect(bucket.getSize()).to.equal(2);
-    });
-
-    it('should throw with invalid contact object', function() {
-      expect(function() {
-        bucket.removeContact({ address: '0.0.0.3', port: 1337 });
-      }).to.throw(Error, 'Invalid contact supplied');
-    });
-
-    it('should do nothing if contact is not found', function() {
-      expect(bucket.getSize()).to.equal(2);
-      var contact = AddressPortContact({ address: '0.0.0.3', port: 1337 });
-      bucket.removeContact(contact);
-      expect(bucket.getSize()).to.equal(2);
-    });
-
-
-  });
-
-  describe('#hasContact', function() {
-
-    var contact = AddressPortContact({ address: '0.0.0.0', port: 80 });
-    var bucket = Bucket();
-
-    bucket.addContact(contact);
-
-    it('should return true because the contact exists', function() {
-      var otherContact = AddressPortContact({ address: '0.0.0.0', port: 80 });
-      expect(bucket.hasContact(otherContact.nodeID)).to.equal(true);
-    });
-
-    it('should return true because the contact does not exist', function() {
-      var otherContact = AddressPortContact({ address: '0.0.0.0', port: 81 });
-      expect(bucket.hasContact(otherContact.nodeID)).to.equal(false);
+    it('should return a sorted list of contacts by distance', function() {
+      expect(JSON.stringify(
+        [
+          ...bucket.getClosestToKey(
+            '0000000000000000000000000000000000000010'
+          ).keys()
+        ]
+      )).to.equal(JSON.stringify([
+        '0000000000000000000000000000000000000011',
+        '0000000000000000000000000000000000000012',
+        '0000000000000000000000000000000000000013',
+        '0000000000000000000000000000000000000014',
+        '0000000000000000000000000000000000000015',
+        '0000000000000000000000000000000000000016',
+        '0000000000000000000000000000000000000017',
+        '0000000000000000000000000000000000000018',
+        '0000000000000000000000000000000000000019',
+        '0000000000000000000000000000000000000000',
+        '0000000000000000000000000000000000000001',
+        '0000000000000000000000000000000000000002',
+        '0000000000000000000000000000000000000003',
+        '0000000000000000000000000000000000000004',
+        '0000000000000000000000000000000000000005',
+        '0000000000000000000000000000000000000006',
+        '0000000000000000000000000000000000000007',
+        '0000000000000000000000000000000000000008',
+        '0000000000000000000000000000000000000009'
+      ]));
     });
 
   });
 
-  describe('#indexOf', function() {
+  describe('@property length', function() {
 
-    var contact = AddressPortContact({ address: '0.0.0.0', port: 80 });
-    var bucket = Bucket();
-
-    bucket.addContact(contact);
-
-    it('should return the index of the given contact object', function() {
-      var otherContact = AddressPortContact({ address: '0.0.0.0', port: 80 });
-      expect(bucket.indexOf(otherContact)).to.equal(0);
+    it('should alias the size property', function() {
+      expect(bucket.length).to.equal(bucket.size);
+      expect(bucket.length).to.equal(20);
     });
 
-    it('should return -1 for the missing contact object', function() {
-      var otherContact = AddressPortContact({ address: '0.0.0.0', port: 81 });
-      expect(bucket.indexOf(otherContact)).to.equal(-1);
+  });
+
+  describe('@property head', function() {
+
+    it('should return the head contact', function() {
+      expect(bucket.head[0]).to.equal(
+        '0000000000000000000000000000000000000019'
+      );
+    });
+
+  });
+
+  describe('@property tail', function() {
+
+    it('should return the tail contact', function() {
+      expect(bucket.tail[0]).to.equal(
+        '0000000000000000000000000000000000000004'
+      );
     });
 
   });

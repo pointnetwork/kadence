@@ -1,46 +1,51 @@
 /**
  * @module kad
- * @license GPL-3.0
- * @author Gordon Hall gordon@gordonwritescode.com
+ * @license AGPL-3.0
+ * @author Gordon Hall https://github.com/bookchin
  */
 
 'use strict';
 
+/**
+ * Returns a new {@link KademliaNode}
+ * @function
+ */
+module.exports = function(options) {
+  return new module.exports.KademliaNode(options);
+};
+
+/** {@link AbstractNode} */
+module.exports.AbstractNode = require('./lib/node-abstract');
+
 /** {@link Bucket} */
 module.exports.Bucket = require('./lib/bucket');
 
-/** {@link Contact} */
-module.exports.Contact = require('./lib/contact');
-
-/** {@link Logger} */
-module.exports.Logger = require('./lib/logger');
-
-/** {@link Message} */
-module.exports.Message = require('./lib/message');
-
-/** {@link Node} */
-module.exports.Node = require('./lib/node');
-
-/** {@link Router} */
-module.exports.Router = require('./lib/router');
-
-/** {@link RPC} */
-module.exports.RPC = require('./lib/rpc');
-
-/** {@link module:kad/contacts} */
-module.exports.contacts = require('./lib/contacts');
-
-/** {@link module:kad/transports} */
-module.exports.transports = require('./lib/transports');
-
-/** {@link module:kad/hooks} */
-module.exports.hooks = require('./lib/hooks');
-
-/** {@link module:kad.storage} */
-module.exports.storage = require('./lib/storage');
-
-/** {@link module:kad/utils} */
-module.exports.utils = require('./lib/utils');
-
-/** {@link module:kad/constants} */
+/** {@link module:constants} */
 module.exports.constants = require('./lib/constants');
+
+/** {@link ErrorRules} */
+module.exports.ErrorRules = require('./lib/rules-errors');
+
+/** {@link KademliaNode} */
+module.exports.KademliaNode = require('./lib/node-kademlia');
+
+/** {@link KademliaRules} */
+module.exports.KademliaRules = require('./lib/rules-kademlia');
+
+/** {@link Messenger} */
+module.exports.Messenger = require('./lib/messenger');
+
+/** {@link RoutingTable} */
+module.exports.RoutingTable = require('./lib/routing-table');
+
+/** {@link UDPTransport} */
+module.exports.UDPTransport = require('./lib/transport-udp');
+
+/** {@link HTTPTransport} */
+module.exports.HTTPTransport = require('./lib/transport-http');
+
+/** {@link HTTPSTransport} */
+module.exports.HTTPSTransport = require('./lib/transport-https');
+
+/** {@link module:utils} */
+module.exports.utils = require('./lib/utils');

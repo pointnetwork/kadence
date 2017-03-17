@@ -1,17 +1,20 @@
 {
-  "custom-contacts": {
-    "title": "Custom Contacts"
+  "transport-adapters": {
+    "title": "Transport Adapters"
   },
-  "custom-storage": {
-    "title": "Custom Storage Adapters"
+  "messengers": {
+    "title": "Message Format"
   },
-  "custom-transports": {
-    "title": "Custom Transport Adapters"
+  "middleware": {
+    "title": "Middleware Stack"
   },
-  "protocol-spec": {
-    "title": "Protocol Specification"
+  "plugins": {
+    "title": "Using Plugins"
   },
-  "using-hooks": {
-    "title": "Using Hooks"
+  "identities": {
+    "title": "Contacts & Identities"
+  },
+  "storage-adapters": {
+    "title": "Storage Backends"
   }
 }
