@@ -45,7 +45,7 @@ node.join(seed, function() {
 
 For complete documentation, tutorials, and examples on how to extend the
 base protocol for building your own distributed networks, check out the 
-[kadtools.github.io](http://kadtools.github.io).
+[complete documentation](http://kadtools.github.io).
 
 Resources
 ---------
