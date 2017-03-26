@@ -27,7 +27,7 @@ Choose a transport, storage layer, and your node's contact information.
 const kad = require('kad');
 
 const node = kad({
-  transport: new kad.HttpTransport(),
+  transport: new kad.HTTPTransport(),
   storage: require('levelup')('path/to/storage.db'),
   contact: { hostname: 'your.host.name', port: 8080 }
 });
