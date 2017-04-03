@@ -51,8 +51,8 @@ Resources
 ---------
 
 * [Transports](http://kadtools.github.io/tutorial-transport-adapters.html)
-* [Middleware](http://kadtools.github.io/tutorial-plugins.html)
-* [Plugins](http://kadtools.github.io/tutorial-middleware.html)
+* [Middleware](http://kadtools.github.io/tutorial-middleware.html)
+* [Plugins](http://kadtools.github.io/tutorial-plugins.html)
 * [Storage](http://kadtools.github.io/tutorial-storage-adapters.html)
 * [Identities](http://kadtools.github.io/tutorial-identities.html)
 * [Messages](http://kadtools.github.io/tutorial-messengers.html)
