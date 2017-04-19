@@ -60,7 +60,7 @@ describe('@class AbstractNode', function() {
     });
 
     it('should log warnings on transport error', function(done) {
-      abstractNode._transport.emit('error', new Error('Transport error'));
+      abstractNode.transport.emit('error', new Error('Transport error'));
       setImmediate(() => {
         expect(logwarn.called).to.equal(true);
         logwarn.reset();
@@ -462,7 +462,7 @@ describe('@class AbstractNode', function() {
   describe('@method listen', function() {
 
     it('should add error middleware and init transport', function() {
-      let _listen = sinon.stub(abstractNode._transport, 'listen');
+      let _listen = sinon.stub(abstractNode.transport, 'listen');
       abstractNode._errors['*'] = [];
       abstractNode.listen(8080, 'localhost');
       _listen.restore();
