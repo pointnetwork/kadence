@@ -16,8 +16,8 @@ describe('KademliaNode+UDPTransport', function() {
   });
 
   after(function() {
-    node1._transport.socket.close();
-    node2._transport.socket.close();
+    node1.transport.socket.close();
+    node2.transport.socket.close();
   });
 
   it('node1 should send TEST to node2 and receive success', function(done) {

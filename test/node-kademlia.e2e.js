@@ -41,10 +41,10 @@ function registerEndToEndSuite(transportName, transportAdapter) {
       nodes.forEach((node) => {
         switch (transportName) {
           case 'UDPTransport':
-            node._transport.socket.close();
+            node.transport.socket.close();
             break;
           case 'HTTPTransport':
-            node._transport.server.close();
+            node.transport.server.close();
             break;
           default:
         }

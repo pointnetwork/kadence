@@ -16,8 +16,8 @@ describe('KademliaNode+HTTPTransport', function() {
   });
 
   after(function() {
-    node1._transport.server.close();
-    node2._transport.server.close();
+    node1.transport.server.close();
+    node2.transport.server.close();
   });
 
   it('node1 should send TEST to node2 and receive success', function(done) {
