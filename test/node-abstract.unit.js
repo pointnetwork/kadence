@@ -338,10 +338,30 @@ describe('@class AbstractNode', function() {
       };
       abstractNode._stack('_testStack', '*', [request, response], () => {
         delete abstractNode._testStack;
-        expect(mw1.calledWithMatch(request, response));
-        expect(mw2.calledWithMatch(request, response));
-        expect(mw3.calledWithMatch(request, response));
-        expect(mw4.calledWithMatch(request, response));
+        expect(mw1.calledWithMatch(request, response)).to.equal(true);
+        expect(mw2.calledWithMatch(request, response)).to.equal(true);
+        expect(mw3.calledWithMatch(request, response)).to.equal(true);
+        expect(mw4.calledWithMatch(request, response)).to.equal(true);
+        done();
+      });
+    });
+
+    it('should trap exceptions in middleware and callback', function(done) {
+      let mw1 = sinon.stub().callsArg(2);
+      let mw2 = sinon.stub().throws(new Error('Syntax error'));
+      let mw3 = sinon.stub().callsArg(2);
+      let mw4 = sinon.stub().callsArg(2);
+      let request = {};
+      let response = {};
+      abstractNode._testStack = {
+        '*': [mw1, mw2, mw3, mw4]
+      };
+      abstractNode._stack('_testStack', '*', [request, response], () => {
+        delete abstractNode._testStack;
+        expect(mw1.calledWithMatch(request, response)).to.equal(true);
+        expect(mw2.calledWithMatch(request, response)).to.equal(true);
+        expect(mw3.calledWithMatch(request, response)).to.equal(false);
+        expect(mw4.calledWithMatch(request, response)).to.equal(false);
         done();
       });
     });
