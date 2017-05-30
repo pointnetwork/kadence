@@ -1,6 +1,6 @@
 {
   "name": "kad",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "extensible implementation of the kademlia dht",
   "main": "index.js",
   "directories": {
@@ -46,6 +46,7 @@
     "concat-stream": "^1.6.0",
     "jsonrpc-lite": "^1.2.3",
     "merge": "^1.2.0",
+    "metapipe": "^2.0.0",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
