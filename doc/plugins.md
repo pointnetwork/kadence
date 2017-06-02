@@ -9,7 +9,7 @@ desired.
 * [kad-spartacus](https://github.com/kadtools/kad-spartacus) | [@bookchin](https://github.com/bookchin)
 * [kad-traverse](https://github.com/kadtools/kad-traverse) | [@bookchin](https://github.com/bookchin)
 * [kad-onion](https://github.com/kadtools/kad-onion) | [@bookchin](https://github.com/bookchin)
-
+* [kad-hibernate](https://github.com/kadtools/kad-hibernate) | [@bookchin](https://github.com/bookchin)
 
 > Submit a pull request if you'd like yours added to this list!
 
