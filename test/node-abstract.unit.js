@@ -322,6 +322,19 @@ describe('@class AbstractNode', function() {
       ).to.equal(true);
     });
 
+    it('should not call RoutingTable#addContactByNodeId', function() {
+      let _addContactByNodeId = sinon.stub(abstractNode.router,
+                                           'addContactByNodeId');
+      abstractNode._updateContact(abstractNode.identity.toString('hex'), {});
+      _addContactByNodeId.restore();
+      expect(
+        _addContactByNodeId.calledWithMatch(
+          abstractNode.identity.toString('hex'),
+          {}
+        )
+      ).to.equal(false);
+    });
+
   });
 
   describe('@private _stack', function() {

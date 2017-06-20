@@ -28,7 +28,8 @@ describe('@class KademliaNode', function() {
       contact: { name: 'test:node-kademlia:unit' },
       storage,
       transport,
-      logger
+      logger,
+      identity: Buffer.from('aa48d3f07a5241291ed0b4cab6483fa8b8fcc128', 'hex')
     });
   });
 
@@ -43,6 +44,17 @@ describe('@class KademliaNode', function() {
       expect(kademliaNode.router.getContactByNodeId(
         'ea48d3f07a5241291ed0b4cab6483fa8b8fcc128'
       )).to.equal(contact);
+    });
+
+    it('should not add itself to the routing table', function() {
+      let contact = { hostname: 'localhost', port: 8080 }
+      kademliaNode._updateContact(
+        'aa48d3f07a5241291ed0b4cab6483fa8b8fcc128',
+        contact
+      );
+      expect(kademliaNode.router.getContactByNodeId(
+        'aa48d3f07a5241291ed0b4cab6483fa8b8fcc128'
+      )).to.equal(undefined);
     });
 
     it('should replace the head contact if ping fails', function(done) {
@@ -147,8 +159,24 @@ describe('@class KademliaNode', function() {
       );
       let iterativeFindNode = sinon.stub(
         kademliaNode,
-        'iterativeFindNode'
-      ).callsArg(1);
+        'iterativeFindNode',
+        function(p, cb) {
+          addContactByNodeId.restore();
+          kademliaNode.router.addContactByNodeId(
+            'da48d3f07a5241291ed0b4cab6483fa8b8fcc128',
+            {}
+          );
+          kademliaNode.router.addContactByNodeId(
+            'ca48d3f07a5241291ed0b4cab6483fa8b8fcc128',
+            {}
+          );
+          kademliaNode.router.addContactByNodeId(
+            'ba48d3f07a5241291ed0b4cab6483fa8b8fcc128',
+            {}
+          );
+          cb();
+        }
+      );
       let getBucketsBeyondClosest = sinon.stub(
         kademliaNode.router,
         'getBucketsBeyondClosest'
@@ -158,7 +186,15 @@ describe('@class KademliaNode', function() {
         hostname: 'localhost',
         port: 8080
       }], (err) => {
-        addContactByNodeId.restore();
+        kademliaNode.router.removeContactByNodeId(
+          'da48d3f07a5241291ed0b4cab6483fa8b8fcc128'
+        );
+        kademliaNode.router.removeContactByNodeId(
+          'ca48d3f07a5241291ed0b4cab6483fa8b8fcc128'
+        );
+        kademliaNode.router.removeContactByNodeId(
+          'ba48d3f07a5241291ed0b4cab6483fa8b8fcc128'
+        );
         iterativeFindNode.restore();
         getBucketsBeyondClosest.restore();
         refresh.restore();
@@ -174,7 +210,34 @@ describe('@class KademliaNode', function() {
       });
     });
 
-    it('should insert contact, lookup, and refresh buckets', function(done) {
+    it('should error if no nodes returned', function(done) {
+      let addContactByNodeId = sinon.stub(
+        kademliaNode.router,
+        'addContactByNodeId'
+      );
+      let iterativeFindNode = sinon.stub(
+        kademliaNode,
+        'iterativeFindNode'
+      ).callsArg(1);
+      let getBucketsBeyondClosest = sinon.stub(
+        kademliaNode.router,
+        'getBucketsBeyondClosest'
+      ).returns([]);
+      let refresh = sinon.stub(kademliaNode, 'refresh').callsArg(1);
+      kademliaNode.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', {
+        hostname: 'localhost',
+        port: 8080
+      }], (err) => {
+        addContactByNodeId.restore();
+        iterativeFindNode.restore();
+        getBucketsBeyondClosest.restore();
+        refresh.restore();
+        expect(err.message).to.equal('Failed to discover nodes');
+        done();
+      });
+    });
+
+    it('should error if lookup fails', function(done) {
       let addContactByNodeId = sinon.stub(
         kademliaNode.router,
         'addContactByNodeId'
