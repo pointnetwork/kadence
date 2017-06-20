@@ -262,6 +262,33 @@ describe('@class HTTPTransport', function() {
       });
     });
 
+    it('should create a request and emit an error event', function(done) {
+      let httpTransport = new HTTPTransport();
+      let request = new EventEmitter();
+      request.end = sinon.stub();
+      let _createRequest = sinon.stub(httpTransport, '_createRequest')
+                             .returns(request);
+      httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
+        hostname: 'localhost',
+        port: 8080,
+        protocol: 'http:'
+      }]]);
+      setImmediate(() => {
+        let response = new ReadableStream({ read: ()=> null });
+        response.statusCode = 400;
+        request.emit('response', response);
+        httpTransport.once('error', (err) => {
+          _createRequest.restore();
+          expect(err.message).to.equal('Bad request');
+          done();
+        });
+        setImmediate(() => {
+          response.push(Buffer.from('Bad request'));
+          response.push(null);
+        });
+      });
+    });
+
     it('should bubble response errors', function(done) {
       let httpTransport = new HTTPTransport();
       let request = new EventEmitter();
