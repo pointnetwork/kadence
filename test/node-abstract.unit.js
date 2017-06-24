@@ -78,6 +78,11 @@ describe('@class AbstractNode', function() {
       clock.tick(constants.T_RESPONSETIMEOUT);
     });
 
+    it('should repipe to the deserializer on error', function(done) {
+      let pipe = () => done();
+      abstractNode.rpc.deserializer.emit('unpipe', { pipe });
+    });
+
   });
 
   describe('@private _process', function() {

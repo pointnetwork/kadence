@@ -20,14 +20,14 @@ describe('@class Messenger', function() {
     });
 
     it('should bubble errors from the serializer', function(done) {
-      let messenger = new Messenger({
-        serializer: (obj, cb) => cb(new Error('Some error'))
-      });
+      let messenger = new Messenger();
       messenger.once('error', (err) => {
         expect(err.message).to.equal('Some error');
         done();
       });
-      setImmediate(() => messenger.serializer.write({}));
+      setImmediate(() => {
+        messenger.serializer.emit('error', new Error('Some error'));
+      });
     });
 
   });
