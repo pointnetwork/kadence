@@ -35,15 +35,18 @@ describe('@class KademliaNode', function() {
 
   describe('@private _updateContact', function() {
 
-    it('should add the contact to the routing table', function() {
+    it('should add the contact to the routing table', function(done) {
       let contact = { hostname: 'localhost', port: 8080 }
       kademliaNode._updateContact(
         'ea48d3f07a5241291ed0b4cab6483fa8b8fcc128',
         contact
       );
-      expect(kademliaNode.router.getContactByNodeId(
-        'ea48d3f07a5241291ed0b4cab6483fa8b8fcc128'
-      )).to.equal(contact);
+      setImmediate(() => {
+        expect(kademliaNode.router.getContactByNodeId(
+          'ea48d3f07a5241291ed0b4cab6483fa8b8fcc128'
+        )).to.equal(contact);
+        done();
+      });
     });
 
     it('should not add itself to the routing table', function() {
