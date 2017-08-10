@@ -428,6 +428,7 @@ describe('@class AbstractNode', function() {
         port: 8080
       }, handler);
       let [calledWith] = write.args[0];
+      write.restore();
       expect(calledWith[0].method).to.equal('PING');
       expect(calledWith[0].params).to.have.lengthOf(0);
       expect(typeof calledWith[0].id).to.equal('string');
@@ -435,6 +436,26 @@ describe('@class AbstractNode', function() {
       expect(calledWith[1][1].name).to.equal('test:node-abstract:unit');
       expect(calledWith[2].hostname).to.equal('localhost');
       expect(calledWith[2].port).to.equal(8080);
+    });
+
+    it('should remove from the routing table if timeout', function(done) {
+      let write = sinon.stub(abstractNode.rpc.serializer, 'write');
+      let remove = sinon.stub(abstractNode.router, 'removeContactByNodeId');
+      abstractNode._pending.clear();
+      abstractNode.send('PING', [], {
+        hostname: 'localhost',
+        port: 8080
+      }, (err) => {
+        expect(remove.called).to.equal(true);
+        expect(err.type).to.equal('TIMEOUT');
+        done();
+      });
+      setImmediate(() => {
+        let id = abstractNode._pending.keys().next().value;
+        let err = new Error('Timeout');
+        err.type = 'TIMEOUT';
+        abstractNode._pending.get(id).handler(err);
+      });
     });
 
   });
