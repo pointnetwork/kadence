@@ -455,6 +455,7 @@ describe('@class AbstractNode', function() {
         let err = new Error('Timeout');
         err.type = 'TIMEOUT';
         abstractNode._pending.get(id).handler(err);
+        write.restore();
       });
     });
 
