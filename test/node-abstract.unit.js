@@ -423,10 +423,10 @@ describe('@class AbstractNode', function() {
     it('should write to serializer and queue handler', function() {
       let write = sinon.stub(abstractNode.rpc.serializer, 'write');
       let handler = sinon.stub();
-      abstractNode.send('PING', [], {
+      abstractNode.send('PING', [], ['000000', {
         hostname: 'localhost',
         port: 8080
-      }, handler);
+      }], handler);
       let [calledWith] = write.args[0];
       write.restore();
       expect(calledWith[0].method).to.equal('PING');
@@ -434,18 +434,30 @@ describe('@class AbstractNode', function() {
       expect(typeof calledWith[0].id).to.equal('string');
       expect(calledWith[1][0]).to.equal(abstractNode.identity.toString('hex'));
       expect(calledWith[1][1].name).to.equal('test:node-abstract:unit');
-      expect(calledWith[2].hostname).to.equal('localhost');
-      expect(calledWith[2].port).to.equal(8080);
+      expect(calledWith[2][1].hostname).to.equal('localhost');
+      expect(calledWith[2][1].port).to.equal(8080);
+    });
+
+    it('should error and not send if invalid target', function(done) {
+      abstractNode.send('PING', [], {
+        hostname: 'localhost',
+        port: 8080
+      }, (err) => {
+        expect(err.message).to.equal(
+          'Refusing to send message to invalid contact'
+        );
+        done();
+      });
     });
 
     it('should remove from the routing table if timeout', function(done) {
       let write = sinon.stub(abstractNode.rpc.serializer, 'write');
       let remove = sinon.stub(abstractNode.router, 'removeContactByNodeId');
       abstractNode._pending.clear();
-      abstractNode.send('PING', [], {
+      abstractNode.send('PING', [], ['000000', {
         hostname: 'localhost',
         port: 8080
-      }, (err) => {
+      }], (err) => {
         expect(remove.called).to.equal(true);
         expect(err.type).to.equal('TIMEOUT');
         done();

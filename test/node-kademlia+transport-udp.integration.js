@@ -28,7 +28,7 @@ describe('KademliaNode+UDPTransport', function() {
     node1.send(
       'TEST',
       ['test parameter'],
-      [node2.identity, node2.contact],
+      [node2.identity.toString('hex'), node2.contact],
       function(err, result) {
         expect(err).to.equal(null);
         expect(result[0]).to.equal('test result');
@@ -45,7 +45,7 @@ describe('KademliaNode+UDPTransport', function() {
     node2.send(
       'TEST',
       ['test parameter'],
-      [node1.identity, node1.contact],
+      [node1.identity.toString('hex'), node1.contact],
       function(err) {
         expect(err.message).to.equal('test error');
         done();
