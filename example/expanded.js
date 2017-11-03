@@ -63,7 +63,7 @@ node.use('ECHO', (request, response, next) => {
     ));
   }
 
-  response.send(request.params.message);
+  response.send(request.params);
 });
 
 // Define a global custom error handler rule, simply by including the `err`
@@ -85,28 +85,23 @@ node.use('ECHO', (err, request, response, next) => {
 // you have defined - in this case for the ECHO method
 node.plugin(function() {
   this.sendNeighborEcho = (text, callback) => {
-    this.rpc.write({
-      target: this.router.getNearestContacts(this.identity, 1).pop(),
-      method: 'ECHO',
-      params: { message: text },
-      callback
-    });
+    this.send('ECHO', {
+      message: text
+    }, this.router.getNearestContacts(this.identity, 1).pop(), callback);
   };
 });
 
 // When you are ready, start listening for messages and join the network
 // The Node#listen method takes different arguments based on the transport
 // adapter being used
-node.listen(1337, () => {
-  node.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', {
-    hostname: 'localhost',
-    port: 8080
-  }]);
-});
+node.listen(1337);
 
-// Listen for the 'join' event which indicates peers were discovered and
-// our node is now connected to the overlay network
-node.on('join', () => {
+node.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', {
+  hostname: 'localhost',
+  port: 8080
+}], () => {
+  // Add 'join' callback which indicates peers were discovered and
+  // our node is now connected to the overlay network
   logger.info(`Connected to ${node.router.length} peers!`)
 
   // Base protocol exposes:

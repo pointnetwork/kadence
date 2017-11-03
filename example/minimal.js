@@ -23,16 +23,14 @@ const node = kad({
 // When you are ready, start listening for messages and join the network
 // The Node#listen method takes different arguments based on the transport
 // adapter being used
-node.listen(1337, () => {
-  node.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', {
-    hostname: 'localhost',
-    port: 8080
-  }]);
-});
+node.listen(1337);
 
-// Listen for the 'join' event which indicates peers were discovered and
-// our node is now connected to the overlay network
-node.on('join', () => {
+node.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', {
+  hostname: 'localhost',
+  port: 8080
+}], () => {
+  // Add 'join' callback which indicates peers were discovered and
+  // our node is now connected to the overlay network
   logger.info(`Connected to ${node.router.length} peers!`)
 
   // Base protocol exposes:
@@ -40,3 +38,5 @@ node.on('join', () => {
   // * node.iterativeFindValue(key, callback)
   // * node.iterativeStore(key, value, callback)
 });
+
+
