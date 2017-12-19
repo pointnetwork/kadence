@@ -85,6 +85,29 @@ function registerEndToEndSuite(transportName, transportAdapter) {
         }, done);
       });
 
+      it('all nodes should find the closest node to a key', function(done) {
+        let key = kad.utils.getRandomKeyString();
+        let closest = nodes.map( node => {
+          return { identity: node.identity, distance: kad.utils.getDistance(node.identity, key) };
+        }).sort( (a, b) => {
+          return kad.utils.compareKeyBuffers(
+            Buffer.from(a.distance, 'hex'),
+            Buffer.from(b.distance, 'hex')
+          );
+        })[0].identity.toString('hex')
+
+        async.eachLimit(nodes, 3, function(node, next) {
+          node.iterativeFindNode(
+            key,
+            function(err, result) {
+              expect(err).to.equal(null);
+              expect(result[0][0]).to.equal(closest);
+              next();
+            }
+          );
+        }, done);
+      });
+
     });
 
     describe('@method iterativeStore', function() {
