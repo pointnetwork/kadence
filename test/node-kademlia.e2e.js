@@ -11,7 +11,7 @@ const TOTAL_NODES = 32;
 function registerEndToEndSuite(transportName, transportAdapter) {
 
   describe(`Kad E2E (w/ ${transportName})`, function() {
-    this.timeout(8000);
+    this.timeout(120000);
 
     let nodes, seed, pairs;
 
@@ -88,7 +88,10 @@ function registerEndToEndSuite(transportName, transportAdapter) {
       it('all nodes should find the closest node to a key', function(done) {
         let key = kad.utils.getRandomKeyString();
         let closest = nodes.map( node => {
-          return { identity: node.identity, distance: kad.utils.getDistance(node.identity, key) };
+          return {
+            identity: node.identity,
+            distance: kad.utils.getDistance(node.identity, key)
+          };
         }).sort( (a, b) => {
           return kad.utils.compareKeyBuffers(
             Buffer.from(a.distance, 'hex'),
