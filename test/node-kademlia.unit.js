@@ -15,6 +15,8 @@ const constants = require('../lib/constants');
 
 describe('@class KademliaNode', function() {
 
+  this.timeout(12000)
+
   let logger, transport, kademliaNode, clock;
 
   before(() => {
@@ -360,7 +362,7 @@ describe('@class KademliaNode', function() {
 
   describe('@method iterativeFindNode', function() {
 
-    it('should send FIND_NODE to 3 close neighbors', function(done) {
+    it('should send iterative FIND_NODE calls', function(done) {
       let contact = { hostname: 'localhost', port: 8080 };
       let getClosestContactsToKey = sinon.stub(
         kademliaNode.router,
@@ -372,10 +374,13 @@ describe('@class KademliaNode', function() {
       ]);
       let _updateContact = sinon.stub(kademliaNode, '_updateContact');
       let send = sinon.stub(kademliaNode, 'send');
+      let contacts = Array(20).fill(null).map(() => {
+        return [utils.getRandomKeyString(), contact]
+      });
       send.onCall(0).callsArgWith(
         3,
         null,
-        Array(20).fill(null).map(() => [utils.getRandomKeyString(), contact])
+        contacts
       );
       send.onCall(1).callsArgWith(
         3,
@@ -384,8 +389,14 @@ describe('@class KademliaNode', function() {
       send.onCall(2).callsArgWith(
         3,
         null,
-        Array(20).fill(null).map(() => [utils.getRandomKeyString(), contact])
+        contacts
       );
+      for (var i=0; i<20; i++) {
+        send.onCall(i + 3).callsArgWith(
+          3,
+          new Error('Lookup failed')
+        );
+      }
       kademliaNode.iterativeFindNode(
         'ea48d3f07a5241291ed0b4cab6483fa8b8fcc126',
         (err, results) => {
@@ -393,8 +404,9 @@ describe('@class KademliaNode', function() {
           _updateContact.restore();
           send.restore();
           expect(err).to.equal(null);
-          expect(_updateContact.callCount).to.equal(40);
-          expect(results).to.have.lengthOf(constants.K);
+          expect(send.callCount).to.equal(23);
+          expect(_updateContact.callCount).to.equal(20);
+          expect(results).to.have.lengthOf(2);
           results.forEach(([key, c]) => {
             expect(utils.keyStringIsValid(key)).to.equal(true);
             expect(contact).to.equal(c);
@@ -403,56 +415,6 @@ describe('@class KademliaNode', function() {
         }
       );
     });
-
-    it('should send iterative FIND_NODE to closer nodes', function(done) {
-      let contact = { hostname: 'localhost', port: 8080 };
-      let getClosestContactsToKey = sinon.stub(
-        kademliaNode.router,
-        'getClosestContactsToKey'
-      ).returns([
-        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', contact],
-        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', contact],
-        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc129', contact]
-      ]);
-      let _updateContact = sinon.stub(kademliaNode, '_updateContact');
-      let send = sinon.stub(kademliaNode, 'send');
-      send.onCall(0).callsArgWith(
-        3,
-        null,
-        [['ea48d3f07a5241291ed0b4cab6483fa8b8fcc124', contact]].concat(Array(19).fill(null).map(() => [utils.getRandomKeyString(), contact]))
-      );
-      send.onCall(1).callsArgWith(
-        3,
-        new Error('Lookup failed')
-      );
-      send.onCall(2).callsArgWith(
-        3,
-        null,
-        Array(20).fill(null).map(() => [utils.getRandomKeyString(), contact])
-      );
-      send.onCall(3).callsArgWith(
-        3,
-        null,
-        Array(20).fill(null).map(() => [utils.getRandomKeyString(), contact])
-      )
-      kademliaNode.iterativeFindNode(
-        'ea48d3f07a5241291ed0b4cab6483fa8b8fcc121',
-        (err, results) => {
-          getClosestContactsToKey.restore();
-          _updateContact.restore();
-          send.restore();
-          expect(err).to.equal(null);
-          expect(_updateContact.callCount).to.equal(60);
-          expect(results).to.have.lengthOf(constants.K);
-          results.forEach(([key, c]) => {
-            expect(utils.keyStringIsValid(key)).to.equal(true);
-            expect(contact).to.equal(c);
-          });
-          done();
-        }
-      );
-    });
-
   });
 
   describe('@method iterativeFindValue', function() {
