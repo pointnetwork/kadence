@@ -415,6 +415,139 @@ describe('@class KademliaNode', function() {
         }
       );
     });
+
+    it('should iterate through closer nodes', function(done) {
+      let contact = { hostname: 'localhost', port: 8080 };
+      let getClosestContactsToKey = sinon.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns([
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc125', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc129', contact]
+      ]);
+      let _updateContact = sinon.stub(kademliaNode, '_updateContact');
+      let send = sinon.stub(kademliaNode, 'send');
+      send.callsArgWith(
+        3,
+        null,
+        Array(20).fill(null).map(() => {
+          return [utils.getRandomKeyString(), contact]
+        })
+      );
+      send.onCall(0).callsArgWith(
+        3,
+        null,
+        [['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', contact]].concat(
+          Array(20).fill(null).map(() => {
+            return [utils.getRandomKeyString(), contact]
+          })
+        )
+      )
+      kademliaNode.iterativeFindNode(
+        'ea48d3f07a5241291ed0b4cab6483fa8b8fcc126',
+        (err, results) => {
+          getClosestContactsToKey.restore();
+          _updateContact.restore();
+          send.restore();
+          expect(err).to.equal(null);
+          expect(results).to.have.lengthOf(constants.K);
+          expect(results[0][0]).to.equal(
+            'ea48d3f07a5241291ed0b4cab6483fa8b8fcc127'
+          );
+          expect(results[1][0]).to.equal(
+            'ea48d3f07a5241291ed0b4cab6483fa8b8fcc125'
+          );
+          done();
+        }
+      );
+    });
+
+    it('should call each node a maximum of once', function(done) {
+      let contact = { hostname: 'localhost', port: 8080 };
+      let getClosestContactsToKey = sinon.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns([
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc125', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc129', contact]
+      ]);
+      let _updateContact = sinon.stub(kademliaNode, '_updateContact');
+      let send = sinon.stub(kademliaNode, 'send');
+      send.callsArgWith(
+        3,
+        null,
+        Array(20).fill(null).map(() => {
+          return [utils.getRandomKeyString(), contact]
+        })
+      );
+      kademliaNode.iterativeFindNode(
+        'ea48d3f07a5241291ed0b4cab6483fa8b8fcc126',
+        () => {
+          let sentNodes = send.args.map( args => args[2][0]);
+          expect(sentNodes).to.deep.equal(sentNodes.filter(
+            (value, index, self) => { 
+              return self.indexOf(value) === index;
+            })
+          )
+          getClosestContactsToKey.restore();
+          _updateContact.restore();
+          send.restore();
+          done();
+        }
+      );
+    });
+
+    it('should not include inactive nodes in the result', function(done) {
+      let contact = { hostname: 'localhost', port: 8080 };
+      let getClosestContactsToKey = sinon.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns([
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc129', contact]
+      ]);
+      let _updateContact = sinon.stub(kademliaNode, '_updateContact');
+      let send = sinon.stub(kademliaNode, 'send');
+      let contacts = Array(20).fill(null).map(() => {
+        return [utils.getRandomKeyString(), contact]
+      });
+      send.onCall(0).callsArgWith(
+        3,
+        null,
+        contacts
+      );
+      send.onCall(1).callsArgWith(
+        3,
+        new Error('Lookup failed')
+      );
+      send.onCall(2).callsArgWith(
+        3,
+        null,
+        contacts
+      );
+      for (var i=0; i<20; i++) {
+        send.onCall(i + 3).callsArgWith(
+          3,
+          contacts
+        );
+      }
+      kademliaNode.iterativeFindNode(
+        'ea48d3f07a5241291ed0b4cab6483fa8b8fcc126',
+        (err, results) => {
+          getClosestContactsToKey.restore();
+          _updateContact.restore();
+          send.restore();
+          expect(err).to.equal(null);
+          results.forEach(([key]) => {
+            expect(key).to.not.equal('ea48d3f07a5241291ed0b4cab6483fa8b8fcc128')
+          });
+          done();
+        }
+      );
+    });
   });
 
   describe('@method iterativeFindValue', function() {
