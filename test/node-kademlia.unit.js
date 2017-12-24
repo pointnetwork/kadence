@@ -562,7 +562,7 @@ describe('@class KademliaNode', function() {
         utils.getRandomKeyString(),
         contact
       ])));
-      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(
+      sandbox.stub(kademliaNode, 'send').callsArgWith(
         3,
         null,
         Array(20).fill(20).map(() => [utils.getRandomKeyString(), contact])
@@ -573,7 +573,38 @@ describe('@class KademliaNode', function() {
           sandbox.restore();
           expect(Array.isArray(result)).to.equal(true);
           expect(result).to.have.lengthOf(constants.K);
-          expect(send.callCount).to.equal(20);
+          done();
+        }
+      );
+    });
+
+    it('should find a value at a currently unknown node', function(done) {
+      let sandbox = sinon.sandbox.create();
+      let contact = { hostname: 'localhost', port: 8080 };
+      sandbox.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns(new Map(Array(10).fill(null).map(() => [
+        utils.getRandomKeyString(),
+        contact
+      ])));
+      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(
+        3,
+        null,
+        Array(20).fill(null).map(() => {
+          return [utils.getRandomKeyString(), contact]
+        })
+      );
+      send.onCall(10).callsArgWith(3, null, {
+        value: 'some data value',
+        timestamp: Date.now(),
+        publisher: 'ea48d3f07a5241291ed0b4cab6483fa8b8fcc127'
+      });
+      kademliaNode.iterativeFindValue(
+        utils.getRandomKeyString(),
+        (err, result) => {
+          sandbox.restore();
+          expect(result.value).to.equal('some data value');
           done();
         }
       );
