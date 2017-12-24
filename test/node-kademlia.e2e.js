@@ -4,14 +4,12 @@ const { expect } = require('chai');
 const kad = require('..');
 const network = require('./fixtures/node-generator');
 const async = require('async');
-
-
 const TOTAL_NODES = 32;
 
 function registerEndToEndSuite(transportName, transportAdapter) {
 
   describe(`Kad E2E (w/ ${transportName})`, function() {
-    this.timeout(120000);
+    this.timeout(20000);
 
     let nodes, seed, pairs;
 
@@ -52,6 +50,8 @@ function registerEndToEndSuite(transportName, transportAdapter) {
     });
 
     describe('@method join', function() {
+
+      this.timeout(200000);
 
       it('all nodes should succeed in joining the network', function(done) {
         async.eachLimit(nodes, 3, function(node, next) {
@@ -136,7 +136,11 @@ function registerEndToEndSuite(transportName, transportAdapter) {
             expect(value).to.equal(result.value);
             next();
           });
-        }, done);
+        }, (err) => {
+          // Use a timeout here because if we close the sockets early,
+          // responses from STORE operations will fail
+          setTimeout(done.bind(this, err), 3000);
+        });
       });
 
     });
@@ -156,7 +160,11 @@ function registerEndToEndSuite(transportName, transportAdapter) {
             expect(value).to.equal(result.value);
             next();
           });
-        }, done);
+        }, (err) => {
+          // Use a timeout here because if we close the sockets early,
+          // responses from STORE operations will fail
+          setTimeout(done.bind(this, err), 3000);
+        });
       });
 
     });
