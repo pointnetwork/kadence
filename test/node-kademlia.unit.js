@@ -182,10 +182,10 @@ describe('@class KademliaNode', function() {
           cb();
         }
       );
-      let getBucketsBeyondClosest = sinon.stub(
+      let getClosestBucket = sinon.stub(
         kademliaNode.router,
-        'getBucketsBeyondClosest'
-      ).returns([]);
+        'getClosestBucket'
+      ).returns([constants.B - 1, kademliaNode.router.get(constants.B - 1)]);
       let refresh = sinon.stub(kademliaNode, 'refresh').callsArg(1);
       kademliaNode.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', {
         hostname: 'localhost',
@@ -201,7 +201,7 @@ describe('@class KademliaNode', function() {
           'ba48d3f07a5241291ed0b4cab6483fa8b8fcc128'
         );
         iterativeFindNode.restore();
-        getBucketsBeyondClosest.restore();
+        getClosestBucket.restore();
         refresh.restore();
         expect(err).to.equal(undefined);
         expect(addContactByNodeId.calledWithMatch(
@@ -224,10 +224,10 @@ describe('@class KademliaNode', function() {
         kademliaNode,
         'iterativeFindNode'
       ).callsArg(1);
-      let getBucketsBeyondClosest = sinon.stub(
+      let getClosestBucket = sinon.stub(
         kademliaNode.router,
-        'getBucketsBeyondClosest'
-      ).returns([]);
+        'getClosestBucket'
+      ).returns([constants.B - 1, kademliaNode.router.get(constants.B - 1)]);
       let refresh = sinon.stub(kademliaNode, 'refresh').callsArg(1);
       kademliaNode.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', {
         hostname: 'localhost',
@@ -235,7 +235,7 @@ describe('@class KademliaNode', function() {
       }], (err) => {
         addContactByNodeId.restore();
         iterativeFindNode.restore();
-        getBucketsBeyondClosest.restore();
+        getClosestBucket.restore();
         refresh.restore();
         expect(err.message).to.equal('Failed to discover nodes');
         done();
@@ -251,10 +251,10 @@ describe('@class KademliaNode', function() {
         kademliaNode,
         'iterativeFindNode'
       ).callsArgWith(1, new Error('Lookup failed'));
-      let getBucketsBeyondClosest = sinon.stub(
+      let getClosestBucket = sinon.stub(
         kademliaNode.router,
-        'getBucketsBeyondClosest'
-      ).returns([]);
+        'getClosestBucket'
+      ).returns([constants.B - 1, kademliaNode.router.get(constants.B - 1)]);
       let refresh = sinon.stub(kademliaNode, 'refresh').callsArg(1);
       kademliaNode.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', {
         hostname: 'localhost',
@@ -262,7 +262,7 @@ describe('@class KademliaNode', function() {
       }], (err) => {
         addContactByNodeId.restore();
         iterativeFindNode.restore();
-        getBucketsBeyondClosest.restore();
+        getClosestBucket.restore();
         refresh.restore();
         expect(err.message).to.equal('Lookup failed');
         expect(addContactByNodeId.calledWithMatch(
@@ -794,16 +794,15 @@ describe('@class KademliaNode', function() {
         utils.getRandomKeyString(),
         { hostname: 'localhost', port: 8080 }
       );
-      kademliaNode.router.get(1).set(
-        utils.getRandomKeyString(),
-        { hostname: 'localhost', port: 8080 }
-      );
       kademliaNode.router.get(2).set(
         utils.getRandomKeyString(),
         { hostname: 'localhost', port: 8080 }
       );
+      for (var i=0; i<constants.B; i++) {
+        kademliaNode._lookups.set(i, Date.now());
+      }
       kademliaNode._lookups.set(1, Date.now() - constants.T_REFRESH);
-      kademliaNode._lookups.set(2, Date.now());
+      kademliaNode._lookups.set(2, Date.now() - constants.T_REFRESH);
       kademliaNode.refresh(0, () => {
         sandbox.restore();
         expect(iterativeFindNode.callCount).to.equal(2);

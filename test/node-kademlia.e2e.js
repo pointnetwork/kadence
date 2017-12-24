@@ -51,7 +51,7 @@ function registerEndToEndSuite(transportName, transportAdapter) {
 
     describe('@method join', function() {
 
-      this.timeout(200000);
+      this.timeout(400000);
 
       it('all nodes should succeed in joining the network', function(done) {
         async.eachLimit(nodes, 3, function(node, next) {
