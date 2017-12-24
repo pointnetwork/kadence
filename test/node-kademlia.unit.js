@@ -662,7 +662,7 @@ describe('@class KademliaNode', function() {
         (err, result) => {
           sandbox.restore();
           expect(result.value).to.equal('some data value');
-          expect(send.callCount).to.equal(2);
+          expect(send.callCount).to.equal(3);
           done();
         }
       );
