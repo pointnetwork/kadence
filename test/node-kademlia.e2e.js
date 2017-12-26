@@ -4,14 +4,12 @@ const { expect } = require('chai');
 const kad = require('..');
 const network = require('./fixtures/node-generator');
 const async = require('async');
-
-
 const TOTAL_NODES = 32;
 
 function registerEndToEndSuite(transportName, transportAdapter) {
 
   describe(`Kad E2E (w/ ${transportName})`, function() {
-    this.timeout(8000);
+    this.timeout(20000);
 
     let nodes, seed, pairs;
 
@@ -53,6 +51,8 @@ function registerEndToEndSuite(transportName, transportAdapter) {
 
     describe('@method join', function() {
 
+      this.timeout(400000);
+
       it('all nodes should succeed in joining the network', function(done) {
         async.eachLimit(nodes, 3, function(node, next) {
           node.join([
@@ -85,6 +85,32 @@ function registerEndToEndSuite(transportName, transportAdapter) {
         }, done);
       });
 
+      it('all nodes should find the closest node to a key', function(done) {
+        let key = kad.utils.getRandomKeyString();
+        let closest = nodes.map( node => {
+          return {
+            identity: node.identity,
+            distance: kad.utils.getDistance(node.identity, key)
+          };
+        }).sort( (a, b) => {
+          return kad.utils.compareKeyBuffers(
+            Buffer.from(a.distance, 'hex'),
+            Buffer.from(b.distance, 'hex')
+          );
+        })[0].identity.toString('hex')
+
+        async.eachLimit(nodes, 3, function(node, next) {
+          node.iterativeFindNode(
+            key,
+            function(err, result) {
+              expect(err).to.equal(null);
+              expect(result[0][0]).to.equal(closest);
+              next();
+            }
+          );
+        }, done);
+      });
+
     });
 
     describe('@method iterativeStore', function() {
@@ -110,7 +136,11 @@ function registerEndToEndSuite(transportName, transportAdapter) {
             expect(value).to.equal(result.value);
             next();
           });
-        }, done);
+        }, (err) => {
+          // Use a timeout here because if we close the sockets early,
+          // responses from STORE operations will fail
+          setTimeout(done.bind(this, err), 3000);
+        });
       });
 
     });
@@ -130,7 +160,11 @@ function registerEndToEndSuite(transportName, transportAdapter) {
             expect(value).to.equal(result.value);
             next();
           });
-        }, done);
+        }, (err) => {
+          // Use a timeout here because if we close the sockets early,
+          // responses from STORE operations will fail
+          setTimeout(done.bind(this, err), 3000);
+        });
       });
 
     });

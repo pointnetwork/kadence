@@ -15,6 +15,8 @@ const constants = require('../lib/constants');
 
 describe('@class KademliaNode', function() {
 
+  this.timeout(12000)
+
   let logger, transport, kademliaNode, clock;
 
   before(() => {
@@ -180,10 +182,10 @@ describe('@class KademliaNode', function() {
           cb();
         }
       );
-      let getBucketsBeyondClosest = sinon.stub(
+      let getClosestBucket = sinon.stub(
         kademliaNode.router,
-        'getBucketsBeyondClosest'
-      ).returns([]);
+        'getClosestBucket'
+      ).returns([constants.B - 1, kademliaNode.router.get(constants.B - 1)]);
       let refresh = sinon.stub(kademliaNode, 'refresh').callsArg(1);
       kademliaNode.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', {
         hostname: 'localhost',
@@ -199,7 +201,7 @@ describe('@class KademliaNode', function() {
           'ba48d3f07a5241291ed0b4cab6483fa8b8fcc128'
         );
         iterativeFindNode.restore();
-        getBucketsBeyondClosest.restore();
+        getClosestBucket.restore();
         refresh.restore();
         expect(err).to.equal(undefined);
         expect(addContactByNodeId.calledWithMatch(
@@ -222,10 +224,10 @@ describe('@class KademliaNode', function() {
         kademliaNode,
         'iterativeFindNode'
       ).callsArg(1);
-      let getBucketsBeyondClosest = sinon.stub(
+      let getClosestBucket = sinon.stub(
         kademliaNode.router,
-        'getBucketsBeyondClosest'
-      ).returns([]);
+        'getClosestBucket'
+      ).returns([constants.B - 1, kademliaNode.router.get(constants.B - 1)]);
       let refresh = sinon.stub(kademliaNode, 'refresh').callsArg(1);
       kademliaNode.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', {
         hostname: 'localhost',
@@ -233,7 +235,7 @@ describe('@class KademliaNode', function() {
       }], (err) => {
         addContactByNodeId.restore();
         iterativeFindNode.restore();
-        getBucketsBeyondClosest.restore();
+        getClosestBucket.restore();
         refresh.restore();
         expect(err.message).to.equal('Failed to discover nodes');
         done();
@@ -249,10 +251,10 @@ describe('@class KademliaNode', function() {
         kademliaNode,
         'iterativeFindNode'
       ).callsArgWith(1, new Error('Lookup failed'));
-      let getBucketsBeyondClosest = sinon.stub(
+      let getClosestBucket = sinon.stub(
         kademliaNode.router,
-        'getBucketsBeyondClosest'
-      ).returns([]);
+        'getClosestBucket'
+      ).returns([constants.B - 1, kademliaNode.router.get(constants.B - 1)]);
       let refresh = sinon.stub(kademliaNode, 'refresh').callsArg(1);
       kademliaNode.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', {
         hostname: 'localhost',
@@ -260,7 +262,7 @@ describe('@class KademliaNode', function() {
       }], (err) => {
         addContactByNodeId.restore();
         iterativeFindNode.restore();
-        getBucketsBeyondClosest.restore();
+        getClosestBucket.restore();
         refresh.restore();
         expect(err.message).to.equal('Lookup failed');
         expect(addContactByNodeId.calledWithMatch(
@@ -360,7 +362,7 @@ describe('@class KademliaNode', function() {
 
   describe('@method iterativeFindNode', function() {
 
-    it('should send FIND_NODE to 3 close neighbors', function(done) {
+    it('should send iterative FIND_NODE calls', function(done) {
       let contact = { hostname: 'localhost', port: 8080 };
       let getClosestContactsToKey = sinon.stub(
         kademliaNode.router,
@@ -372,10 +374,13 @@ describe('@class KademliaNode', function() {
       ]);
       let _updateContact = sinon.stub(kademliaNode, '_updateContact');
       let send = sinon.stub(kademliaNode, 'send');
+      let contacts = Array(20).fill(null).map(() => {
+        return [utils.getRandomKeyString(), contact]
+      });
       send.onCall(0).callsArgWith(
         3,
         null,
-        Array(20).fill(null).map(() => [utils.getRandomKeyString(), contact])
+        contacts
       );
       send.onCall(1).callsArgWith(
         3,
@@ -384,8 +389,14 @@ describe('@class KademliaNode', function() {
       send.onCall(2).callsArgWith(
         3,
         null,
-        Array(20).fill(null).map(() => [utils.getRandomKeyString(), contact])
+        contacts
       );
+      for (var i=0; i<20; i++) {
+        send.onCall(i + 3).callsArgWith(
+          3,
+          new Error('Lookup failed')
+        );
+      }
       kademliaNode.iterativeFindNode(
         'ea48d3f07a5241291ed0b4cab6483fa8b8fcc126',
         (err, results) => {
@@ -393,8 +404,9 @@ describe('@class KademliaNode', function() {
           _updateContact.restore();
           send.restore();
           expect(err).to.equal(null);
-          expect(_updateContact.callCount).to.equal(40);
-          expect(results).to.have.lengthOf(constants.K);
+          expect(send.callCount).to.equal(23);
+          expect(_updateContact.callCount).to.equal(20);
+          expect(results).to.have.lengthOf(2);
           results.forEach(([key, c]) => {
             expect(utils.keyStringIsValid(key)).to.equal(true);
             expect(contact).to.equal(c);
@@ -404,6 +416,138 @@ describe('@class KademliaNode', function() {
       );
     });
 
+    it('should iterate through closer nodes', function(done) {
+      let contact = { hostname: 'localhost', port: 8080 };
+      let getClosestContactsToKey = sinon.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns([
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc125', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc129', contact]
+      ]);
+      let _updateContact = sinon.stub(kademliaNode, '_updateContact');
+      let send = sinon.stub(kademliaNode, 'send');
+      send.callsArgWith(
+        3,
+        null,
+        Array(20).fill(null).map(() => {
+          return [utils.getRandomKeyString(), contact]
+        })
+      );
+      send.onCall(0).callsArgWith(
+        3,
+        null,
+        [['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', contact]].concat(
+          Array(20).fill(null).map(() => {
+            return [utils.getRandomKeyString(), contact]
+          })
+        )
+      )
+      kademliaNode.iterativeFindNode(
+        'ea48d3f07a5241291ed0b4cab6483fa8b8fcc126',
+        (err, results) => {
+          getClosestContactsToKey.restore();
+          _updateContact.restore();
+          send.restore();
+          expect(err).to.equal(null);
+          expect(results).to.have.lengthOf(constants.K);
+          expect(results[0][0]).to.equal(
+            'ea48d3f07a5241291ed0b4cab6483fa8b8fcc127'
+          );
+          expect(results[1][0]).to.equal(
+            'ea48d3f07a5241291ed0b4cab6483fa8b8fcc125'
+          );
+          done();
+        }
+      );
+    });
+
+    it('should call each node a maximum of once', function(done) {
+      let contact = { hostname: 'localhost', port: 8080 };
+      let getClosestContactsToKey = sinon.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns([
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc125', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc129', contact]
+      ]);
+      let _updateContact = sinon.stub(kademliaNode, '_updateContact');
+      let send = sinon.stub(kademliaNode, 'send');
+      send.callsArgWith(
+        3,
+        null,
+        Array(20).fill(null).map(() => {
+          return [utils.getRandomKeyString(), contact]
+        })
+      );
+      kademliaNode.iterativeFindNode(
+        'ea48d3f07a5241291ed0b4cab6483fa8b8fcc126',
+        () => {
+          let sentNodes = send.args.map( args => args[2][0]);
+          expect(sentNodes).to.deep.equal(sentNodes.filter(
+            (value, index, self) => { 
+              return self.indexOf(value) === index;
+            })
+          )
+          getClosestContactsToKey.restore();
+          _updateContact.restore();
+          send.restore();
+          done();
+        }
+      );
+    });
+
+    it('should not include inactive nodes in the result', function(done) {
+      let contact = { hostname: 'localhost', port: 8080 };
+      let getClosestContactsToKey = sinon.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns([
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', contact],
+        ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc129', contact]
+      ]);
+      let _updateContact = sinon.stub(kademliaNode, '_updateContact');
+      let send = sinon.stub(kademliaNode, 'send');
+      let contacts = Array(20).fill(null).map(() => {
+        return [utils.getRandomKeyString(), contact]
+      });
+      send.onCall(0).callsArgWith(
+        3,
+        null,
+        contacts
+      );
+      send.onCall(1).callsArgWith(
+        3,
+        new Error('Lookup failed')
+      );
+      send.onCall(2).callsArgWith(
+        3,
+        null,
+        contacts
+      );
+      for (var i=0; i<20; i++) {
+        send.onCall(i + 3).callsArgWith(
+          3,
+          contacts
+        );
+      }
+      kademliaNode.iterativeFindNode(
+        'ea48d3f07a5241291ed0b4cab6483fa8b8fcc126',
+        (err, results) => {
+          getClosestContactsToKey.restore();
+          _updateContact.restore();
+          send.restore();
+          expect(err).to.equal(null);
+          results.forEach(([key]) => {
+            expect(key).to.not.equal('ea48d3f07a5241291ed0b4cab6483fa8b8fcc128')
+          });
+          done();
+        }
+      );
+    });
   });
 
   describe('@method iterativeFindValue', function() {
@@ -418,7 +562,7 @@ describe('@class KademliaNode', function() {
         utils.getRandomKeyString(),
         contact
       ])));
-      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(
+      sandbox.stub(kademliaNode, 'send').callsArgWith(
         3,
         null,
         Array(20).fill(20).map(() => [utils.getRandomKeyString(), contact])
@@ -429,7 +573,38 @@ describe('@class KademliaNode', function() {
           sandbox.restore();
           expect(Array.isArray(result)).to.equal(true);
           expect(result).to.have.lengthOf(constants.K);
-          expect(send.callCount).to.equal(20);
+          done();
+        }
+      );
+    });
+
+    it('should find a value at a currently unknown node', function(done) {
+      let sandbox = sinon.sandbox.create();
+      let contact = { hostname: 'localhost', port: 8080 };
+      sandbox.stub(
+        kademliaNode.router,
+        'getClosestContactsToKey'
+      ).returns(new Map(Array(10).fill(null).map(() => [
+        utils.getRandomKeyString(),
+        contact
+      ])));
+      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(
+        3,
+        null,
+        Array(20).fill(null).map(() => {
+          return [utils.getRandomKeyString(), contact]
+        })
+      );
+      send.onCall(10).callsArgWith(3, null, {
+        value: 'some data value',
+        timestamp: Date.now(),
+        publisher: 'ea48d3f07a5241291ed0b4cab6483fa8b8fcc127'
+      });
+      kademliaNode.iterativeFindValue(
+        utils.getRandomKeyString(),
+        (err, result) => {
+          sandbox.restore();
+          expect(result.value).to.equal('some data value');
           done();
         }
       );
@@ -487,7 +662,7 @@ describe('@class KademliaNode', function() {
         (err, result) => {
           sandbox.restore();
           expect(result.value).to.equal('some data value');
-          expect(send.callCount).to.equal(2);
+          expect(send.callCount).to.equal(3);
           done();
         }
       );
@@ -619,16 +794,15 @@ describe('@class KademliaNode', function() {
         utils.getRandomKeyString(),
         { hostname: 'localhost', port: 8080 }
       );
-      kademliaNode.router.get(1).set(
-        utils.getRandomKeyString(),
-        { hostname: 'localhost', port: 8080 }
-      );
       kademliaNode.router.get(2).set(
         utils.getRandomKeyString(),
         { hostname: 'localhost', port: 8080 }
       );
+      for (var i=0; i<constants.B; i++) {
+        kademliaNode._lookups.set(i, Date.now());
+      }
       kademliaNode._lookups.set(1, Date.now() - constants.T_REFRESH);
-      kademliaNode._lookups.set(2, Date.now());
+      kademliaNode._lookups.set(2, Date.now() - constants.T_REFRESH);
       kademliaNode.refresh(0, () => {
         sandbox.restore();
         expect(iterativeFindNode.callCount).to.equal(2);
