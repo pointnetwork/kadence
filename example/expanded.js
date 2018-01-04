@@ -13,7 +13,7 @@ const kad = require('kad');
 // Prepare required options
 const storage = levelup('path/to/storage.db');
 const logger = bunyan.createLogger({ name: 'kad example' });
-const transport = new kad.HttpTransport();
+const transport = new kad.HTTPTransport();
 const identity = kad.utils.getRandomKeyBuffer();
 const contact = { hostname: 'localhost', port: 1337 };
 
