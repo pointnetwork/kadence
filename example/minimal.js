@@ -15,7 +15,7 @@ const kad = require('kad');
 // - storage
 // - identity
 const node = kad({
-  transport: new kad.HttpTransport(),
+  transport: new kad.HTTPTransport(),
   storage: levelup('path/to/storage.db'),
   contact: { hostname: 'localhost', port: 1337 }
 });
