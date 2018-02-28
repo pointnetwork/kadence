@@ -27,12 +27,26 @@
     "url": "https://github.com/kadence/kadence.git"
   },
   "author": "Gordon Hall <gordonh@member.fsf.org>",
-  "contributors": [],
+  "contributors": [
+    {
+      "name": "omphalos",
+      "url": "https://github.com/omphalos"
+    },
+    {
+      "name": "Alexander Leitner",
+      "url": "https://github.com/aleitner"
+    },
+    {
+      "name": "Trey Griffith",
+      "url": "https://github.com/treygriffith"
+    }
+  ],
   "license": "AGPL-3.0",
   "engines": {
     "node": "^8.9.3"
   },
   "dependencies": {
+    "async": "^2.6.0",
     "atbf": "^1.1.0",
     "boscar": "^2.0.0",
     "bunyan": "^1.8.12",
@@ -52,6 +66,7 @@
     "leveldown": "^3.0.0",
     "levelup": "^2.0.1",
     "merge": "^1.2.0",
+    "metapipe": "^2.0.1",
     "mkdirp": "^0.5.1",
     "ms": "^2.0.0",
     "nat-pmp": "^1.0.0",
@@ -64,7 +79,8 @@
     "semver": "^5.1.0",
     "socks": "^2.1.2",
     "split": "^1.0.1",
-    "tiny": "0.0.10"
+    "tiny": "0.0.10",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "chai": "^2.2.0",
