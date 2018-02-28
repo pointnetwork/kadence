@@ -1,70 +1,77 @@
 {
-  "name": "kad",
-  "version": "2.5.1",
-  "description": "extensible implementation of the kademlia dht",
+  "name": "@kadenceproject/kadence",
+  "version": "3.0.0",
+  "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
+  "bin": {
+    "kadence": "bin/kadence.js"
+  },
   "directories": {
     "test": "test",
     "lib": "lib",
-    "doc": "doc",
-    "example": "example"
+    "doc": "doc"
   },
   "scripts": {
-    "test": "npm run test-suite && npm run linter",
-    "test-suite": "mocha test/** --recursive",
+    "test": "npm run unit-tests && npm run e2e-tests && npm run linter",
+    "unit-tests": "mocha test/*.unit.js",
+    "e2e-tests": "mocha test/*.e2e.js",
     "coverage": "istanbul cover _mocha -- --recursive",
-    "linter": "eslint index.js lib test",
-    "jsdoc": "mkdir -p ../kadtools.github.io && jsdoc index.js lib -r -R README.md -u doc -c .jsdoc.json --verbose -d ../kadtools.github.io"
+    "linter": "eslint ./index.js ./lib ./test",
+    "generate-docs": "mkdir -p ./jsdoc && rm -r ./jsdoc && jsdoc lib -r -R README.md -u ./doc -c .jsdoc.json --verbose -d ./jsdoc",
+    "publish-docs": "gh-pages -d jsdoc --repo git@github.com:kadence/kadence.git"
   },
-  "keywords": [
-    "dht",
-    "kademlia",
-    "p2p"
-  ],
+  "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kadtools/kad.git"
+    "url": "https://github.com/kadence/kadence.git"
   },
   "author": "Gordon Hall <gordonh@member.fsf.org>",
-  "contributors": [
-    {
-      "name": "omphalos",
-      "url": "https://github.com/omphalos"
-    },
-    {
-      "name": "Alexander Leitner",
-      "url": "https://github.com/aleitner"
-    },
-    {
-      "name": "Trey Griffith",
-      "url": "https://github.com/treygriffith"
-    }
-  ],
+  "contributors": [],
   "license": "AGPL-3.0",
   "engines": {
-    "node": ">=6.9.1"
+    "node": "^8.9.3"
   },
   "dependencies": {
-    "async": "^2.1.4",
-    "bunyan": "^1.8.5",
+    "atbf": "^1.1.0",
+    "boscar": "^2.0.0",
+    "bunyan": "^1.8.12",
+    "bunyan-rotating-file-stream": "^1.6.3",
+    "bytes": "^3.0.0",
+    "commander": "^2.9.0",
     "concat-stream": "^1.6.0",
-    "jsonrpc-lite": "^1.2.3",
+    "daemon": "^1.1.0",
+    "diglet": "^1.0.6",
+    "ip": "^1.1.5",
+    "json-stable-stringify": "^1.0.1",
+    "jsonrpc-lite": "^1.3.0",
+    "knuth-shuffle": "^1.0.8",
+    "leveldown": "^3.0.0",
+    "levelup": "^2.0.1",
     "merge": "^1.2.0",
-    "metapipe": "^2.0.1",
-    "uuid": "^3.0.1"
+    "mkdirp": "^0.5.1",
+    "ms": "^2.0.0",
+    "nat-pmp": "^1.0.0",
+    "nat-upnp": "^1.1.1",
+    "network": "^0.4.1",
+    "npid": "^0.4.0",
+    "pem": "^1.9.7",
+    "rc": "^1.2.1",
+    "scrypt": "^6.0.3",
+    "semver": "^5.1.0",
+    "tiny": "0.0.10"
   },
   "devDependencies": {
     "chai": "^2.2.0",
     "coveralls": "^2.11.2",
     "eslint": "^3.14.0",
+    "gh-pages": "^0.9.0",
     "ink-docstrap": "github:bookchin/docstrap",
-    "istanbul": "^0.3.13",
+    "istanbul": "^1.1.0-alpha.1",
     "jsdoc": "^3.4.0",
-    "levelup": "^1.3.5",
-    "memdown": "^1.2.4",
+    "memdown": "^2.0.0",
     "mocha": "^2.2.4",
-    "pem": "^1.9.4",
-    "proxyquire": "^1.7.3",
-    "sinon": "^1.14.1"
+    "proxyquire": "^1.8.0",
+    "rimraf": "^2.6.1",
+    "sinon": "^2.4.1"
   }
 }
