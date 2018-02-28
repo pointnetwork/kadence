@@ -32,6 +32,22 @@ module.exports = function(datadir) {
     NodePublicAddress: '127.0.0.1',
     NodeListenAddress: '0.0.0.0',
 
+    // Onion Plugin
+    OnionEnabled: '0',
+    OnionVirtualPort: '443',
+    OnionHiddenServiceDirectory: join(datadir, 'hidden_service'),
+    OnionLoggingVerbosity: 'notice',
+    OnionLoggingEnabled: '0',
+
+    // Bandwidth Metering
+    BandwidthAccountingEnabled: '0',
+    BandwidthAccountingMax: '5GB',
+    BandwidthAccountingReset: '24HR',
+
+    // NAT Traversal
+    TraverseNatEnabled: '1',
+    TraversePortForwardTTL: '0',
+
     // SSL Certificate
     SSLCertificatePath: join(datadir, 'kadence.crt'),
     SSLKeyPath: join(datadir, 'kadence.key'),

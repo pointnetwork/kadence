@@ -65,22 +65,22 @@ module.exports.HTTPTransport = require('./lib/transport-http');
 /** {@link HTTPSTransport} */
 module.exports.HTTPSTransport = require('./lib/transport-https');
 
-/** {@link HashCashPlugin} */
+/** {@link module:kadence/HashCashPlugin} */
 module.exports.HashCashPlugin = require('./lib/plugin-hashcash');
 
-/** {@link HibernatePlugin} */
+/** {@link module:kadence/HibernatePlugin} */
 module.exports.HibernatePlugin = require('./lib/plugin-hibernate');
 
-/** {@link OnionPlugin} */
+/** {@link module:kadence/OnionPlugin} */
 module.exports.OnionPlugin = require('./lib/plugin-onion');
 
-/** {@link QuasarPlugin} */
+/** {@link module:kadence/QuasarPlugin} */
 module.exports.QuasarPlugin = require('./lib/plugin-quasar');
 
-/** {@link SpartacusPlugin} */
+/** {@link module:kadence/SpartacusPlugin} */
 module.exports.SpartacusPlugin = require('./lib/plugin-spartacus');
 
-/** {@link TraversePlugin} */
+/** {@link module:kadence/TraversePlugin} */
 module.exports.TraversePlugin = require('./lib/plugin-traverse');
 
 /** {@link module:kadence/constants} */

@@ -10,12 +10,11 @@ const assert = require('assert');
 const async = require('async');
 const program = require('commander');
 const hdkey = require('hdkey');
-const spartacus = require('kad-spartacus');
+const kadence = require('../index');
 const bunyan = require('bunyan');
 const RotatingLogStream = require('bunyan-rotating-file-stream');
 const fs = require('fs');
 const path = require('path');
-const kadence = require('../index');
 const options = require('./config');
 const npid = require('npid');
 const daemon = require('daemon');
@@ -65,6 +64,7 @@ const solvers = [];
 let config = rc('kadence', options(program.datadir), argv);
 let xprivkey, parentkey, childkey, identity, logger, controller, node, wallet;
 
+
 // Handle certificate generation
 function _generateSelfSignedCertificate() {
   return new Promise((resolve, reject) => {
@@ -107,6 +107,12 @@ if (parseInt(config.TestNetworkEnabled)) {
   kadence.constants.IDENTITY_DIFFICULTY = 2;
 }
 
+if (parseInt(config.TraverseNatEnabled) && parseInt(config.OnionEnabled)) {
+  logger.error('refusing to start with both TraverseNatEnabled and ' +
+    'OnionEnabled - this is a privacy risk');
+  process.exit(1);
+}
+
 async function _init() {
   let index = parseInt(config.ChildDerivationIndex);
 
@@ -114,7 +120,7 @@ async function _init() {
   if (!fs.existsSync(config.PrivateExtendedKeyPath)) {
     fs.writeFileSync(
       config.PrivateExtendedKeyPath,
-      spartacus.utils.toHDKeyFromSeed().privateExtendedKey
+      kadence.utils.toHDKeyFromSeed().privateExtendedKey
     );
   }
 
@@ -199,7 +205,7 @@ async function _init() {
   parentkey = hdkey.fromExtendedKey(xprivkey)
     .derive(kadence.constants.HD_KEY_DERIVATION_PATH);
   childkey = parentkey.deriveChild(parseInt(config.ChildDerivationIndex));
-  identity = spartacus.utils.toPublicKeyHash(childkey.publicKey)
+  identity = kadence.utils.toPublicKeyHash(childkey.publicKey)
     .toString('hex');
   wallet = new kadence.KadenceWallet(config.EmbeddedWalletDirectory,
     childkey.privateKey);
@@ -380,6 +386,46 @@ async function init() {
     peerCacheFilePath: config.EmbeddedPeerCachePath,
     storage: levelup(encoding(leveldown(config.EmbeddedDatabaseDirectory)))
   });
+
+  // Hibernate when bandwidth thresholds are reached
+  if (!!parseInt(config.BandwidthAccountingEnabled)) {
+    node.plugin(kadence.HibernatePlugin({
+      limit: config.BandwidthAccountingMax,
+      interval: config.BandwidthAccountingReset,
+      reject: ['FIND_VALUE', 'STORE']
+    }));
+  }
+
+  // Use Tor for an anonymous overlay
+  if (!!parseInt(config.OnionEnabled)) {
+    node.plugin(kadence.OnionPlugin({
+      dataDirectory: config.OnionHiddenServiceDirectory,
+      virtualPort: config.OnionVirtualPort,
+      localMapping: `127.0.0.1:${config.NodeListenPort}`,
+      torrcEntries: {
+        CircuitBuildTimeout: 10,
+        KeepalivePeriod: 60,
+        NewCircuitPeriod: 60,
+        NumEntryGuards: 8,
+        Log: `${config.OnionLoggingVerbosity} stdout`
+      },
+      passthroughLoggingEnabled: !!parseInt(config.OnionLoggingEnabled)
+    }));
+  }
+
+  // Punch through NATs
+  if (!!parseInt(config.TraverseNatEnabled)) {
+    node.plugin(kadence.TraversePlugin([
+      new kadence.TraversePlugin.UPNPStrategy({
+        mappingTtl: parseInt(config.TraversePortForwardTTL),
+        publicPort: parseInt(node.contact.port)
+      }),
+      new kadence.TraversePlugin.NATPMPStrategy({
+        mappingTtl: parseInt(config.TraversePortForwardTTL),
+        publicPort: parseInt(node.contact.port)
+      })
+    ]));
+  }
 
   // Handle any fatal errors
   node.on('error', (err) => {
