@@ -7,7 +7,7 @@
 'use strict';
 
 /**
- * Returns a new {@link KademliaNode}
+ * Returns a new {@link KadenceNode}
  * @function
  */
 module.exports = function(options) {
@@ -30,7 +30,7 @@ module.exports.KadenceSolution = require('./lib/solution');
 module.exports.KadenceWallet = require('./lib/wallet');
 
 /** {@link Control} */
-module.exports.Control = require('./lib/control');
+module.exports.KadenceController = require('./lib/control');
 
 /** {@link AbstractNode} */
 module.exports.AbstractNode = require('./lib/node-abstract');
