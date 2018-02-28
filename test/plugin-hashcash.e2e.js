@@ -1,16 +1,16 @@
 'use strict';
 
 const { expect } = require('chai');
-const kad = require('kad');
-const network = require('kad/test/fixtures/node-generator');
-const hashcash = require('..');
+const kadence = require('..');
+const network = require('./fixtures/node-generator');
+const hashcash = require('../lib/plugin-hashcash');
 
 
-kad.constants.T_RESPONSETIMEOUT = 4000;
+kadence.constants.T_RESPONSETIMEOUT = 4000;
 
 describe('Kad HashCash E2E (w/ UDPTransport)', function() {
 
-  let [node1, node2] = network(2, kad.UDPTransport);
+  let [node1, node2] = network(2, kadence.UDPTransport);
 
   before(function(done) {
     [node1, node2].forEach((node) => {

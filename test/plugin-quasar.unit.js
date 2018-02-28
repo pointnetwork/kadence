@@ -2,10 +2,10 @@
 
 const { expect } = require('chai');
 const sinon = require('sinon');
-const kad = require('kad');
+const kadence = require('..');
 const constants = require('../lib/constants');
 const BloomFilter = require('atbf');
-const QuasarPlugin = require('../lib/plugin-quasar');
+const { QuasarPlugin } = require('../lib/plugin-quasar');
 
 
 describe('QuasarPlugin', function() {
@@ -16,15 +16,15 @@ describe('QuasarPlugin', function() {
     debug: sinon.stub(),
     error: sinon.stub()
   };
-  const identity = kad.utils.getRandomKeyBuffer();
-  const router = new kad.RoutingTable(identity);
+  const identity = kadence.utils.getRandomKeyBuffer();
+  const router = new kadence.RoutingTable(identity);
   const use = sinon.stub();
 
   before(function() {
     let numContacts = 32;
 
     while (numContacts > 0) {
-      router.addContactByNodeId(kad.utils.getRandomKeyString(), {
+      router.addContactByNodeId(kadence.utils.getRandomKeyString(), {
         hostname: 'localhost',
         port: 8080
       });
@@ -54,7 +54,7 @@ describe('QuasarPlugin', function() {
 
     it('should return ALPHA contact objects', function() {
       let plugin = new QuasarPlugin({ identity, router, use });
-      expect(plugin.neighbors).to.have.lengthOf(kad.constants.ALPHA);
+      expect(plugin.neighbors).to.have.lengthOf(kadence.constants.ALPHA);
     });
 
   });
@@ -89,7 +89,7 @@ describe('QuasarPlugin', function() {
         router,
         'getClosestContactsToKey'
       );
-      let routingKey = kad.utils.getRandomKeyString();
+      let routingKey = kadence.utils.getRandomKeyString();
       plugin.node.send = sinon.stub().callsArg(3);
       plugin.quasarPublish('topic string', {
         some: 'data'
@@ -223,7 +223,7 @@ describe('QuasarPlugin', function() {
       plugin.node.send = function(method, params, contact, callback) {
         callback(null, ['some', 'bad', 'data?']);
       };
-      plugin.pullFilterFrom([], (err) => {
+      plugin.pullFilterFrom([], (err, result) => {
         expect(err.message).to.equal('Invalid hex string');
         done();
       });
