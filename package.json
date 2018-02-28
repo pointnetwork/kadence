@@ -43,6 +43,7 @@
     "daemon": "^1.1.0",
     "diglet": "^1.0.6",
     "encoding-down": "^4.0.0",
+    "hdkey": "^0.8.0",
     "hsv3": "^1.1.4",
     "ip": "^1.1.5",
     "json-stable-stringify": "^1.0.1",
