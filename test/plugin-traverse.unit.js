@@ -6,9 +6,7 @@ const { expect } = require('chai');
 const proxyquire = require('proxyquire');
 const {
   TraversePlugin,
-  NATPMPStrategy,
   UPNPStrategy,
-  ReverseTunnelStrategy
 } = require('../lib/plugin-traverse');
 
 

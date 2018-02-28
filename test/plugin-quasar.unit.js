@@ -223,7 +223,7 @@ describe('QuasarPlugin', function() {
       plugin.node.send = function(method, params, contact, callback) {
         callback(null, ['some', 'bad', 'data?']);
       };
-      plugin.pullFilterFrom([], (err, result) => {
+      plugin.pullFilterFrom([], (err) => {
         expect(err.message).to.equal('Invalid hex string');
         done();
       });

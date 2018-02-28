@@ -32,6 +32,15 @@ module.exports.KadenceWallet = require('./lib/wallet');
 /** {@link Control} */
 module.exports.KadenceController = require('./lib/control');
 
+/** {@link KademliaNode} */
+module.exports.KademliaNode = require('./lib/node-kademlia');
+
+/** {@link KademliaRules} */
+module.exports.KademliaRules = require('./lib/rules-kademlia');
+
+/** {@link QuasarRules} */
+module.exports.QuasarRules = require('./lib/rules-quasar');
+
 /** {@link AbstractNode} */
 module.exports.AbstractNode = require('./lib/node-abstract');
 
@@ -40,12 +49,6 @@ module.exports.Bucket = require('./lib/bucket');
 
 /** {@link ErrorRules} */
 module.exports.ErrorRules = require('./lib/rules-errors');
-
-/** {@link KademliaNode} */
-module.exports.KademliaNode = require('./lib/node-kademlia');
-
-/** {@link KademliaRules} */
-module.exports.KademliaRules = require('./lib/rules-kademlia');
 
 /** {@link Messenger} */
 module.exports.Messenger = require('./lib/messenger');
@@ -61,6 +64,24 @@ module.exports.HTTPTransport = require('./lib/transport-http');
 
 /** {@link HTTPSTransport} */
 module.exports.HTTPSTransport = require('./lib/transport-https');
+
+/** {@link HashCashPlugin} */
+module.exports.HashCashPlugin = require('./lib/plugin-hashcash');
+
+/** {@link HibernatePlugin} */
+module.exports.HibernatePlugin = require('./lib/plugin-hibernate');
+
+/** {@link OnionPlugin} */
+module.exports.OnionPlugin = require('./lib/plugin-onion');
+
+/** {@link QuasarPlugin} */
+module.exports.QuasarPlugin = require('./lib/plugin-quasar');
+
+/** {@link SpartacusPlugin} */
+module.exports.SpartacusPlugin = require('./lib/plugin-spartacus');
+
+/** {@link TraversePlugin} */
+module.exports.TraversePlugin = require('./lib/plugin-traverse');
 
 /** {@link module:kadence/constants} */
 module.exports.constants = require('./lib/constants');
