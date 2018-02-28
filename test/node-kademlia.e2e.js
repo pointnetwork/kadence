@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const kad = require('..');
 const network = require('./fixtures/node-generator');
 const async = require('async');
-const TOTAL_NODES = 32;
+const TOTAL_NODES = 12;
 
 function registerEndToEndSuite(transportName, transportAdapter) {
 
@@ -78,7 +78,7 @@ function registerEndToEndSuite(transportName, transportAdapter) {
             node.identity.toString('hex'),
             function(err, result) {
               expect(err).to.equal(null);
-              expect(result).to.have.lengthOf(kad.constants.K);
+              expect(result).to.have.lengthOf(TOTAL_NODES - 1);
               next();
             }
           );
@@ -87,7 +87,7 @@ function registerEndToEndSuite(transportName, transportAdapter) {
 
       it('all nodes should find the closest node to a key', function(done) {
         let key = kad.utils.getRandomKeyString();
-        let closest = nodes.map( node => {
+        let closest = nodes.map(node => {
           return {
             identity: node.identity,
             distance: kad.utils.getDistance(node.identity, key)
@@ -119,7 +119,7 @@ function registerEndToEndSuite(transportName, transportAdapter) {
         async.eachOfLimit(nodes, 3, function(node, index, next) {
           let [key, value] = pairs[index];
           node.iterativeStore(key, value, function(err, totalStored) {
-            expect(totalStored).to.equal(20);
+            expect(totalStored > 10).to.equal(true);
             next();
           });
         }, done);

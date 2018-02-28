@@ -8,7 +8,7 @@ const KademliaNode = require('../lib/node-kademlia');
 const FakeTransport = require('./fixtures/transport-fake');
 const levelup = require('levelup');
 const memdown = require('memdown');
-const storage = levelup('test:node-kademlia', { db: memdown });
+const storage = levelup('test:node-kademlia', memdown);
 const bunyan = require('bunyan');
 const constants = require('../lib/constants');
 
@@ -164,24 +164,23 @@ describe('@class KademliaNode', function() {
       );
       let iterativeFindNode = sinon.stub(
         kademliaNode,
-        'iterativeFindNode',
-        function(p, cb) {
-          addContactByNodeId.restore();
-          kademliaNode.router.addContactByNodeId(
-            'da48d3f07a5241291ed0b4cab6483fa8b8fcc128',
-            {}
-          );
-          kademliaNode.router.addContactByNodeId(
-            'ca48d3f07a5241291ed0b4cab6483fa8b8fcc128',
-            {}
-          );
-          kademliaNode.router.addContactByNodeId(
-            'ba48d3f07a5241291ed0b4cab6483fa8b8fcc128',
-            {}
-          );
-          cb();
-        }
-      );
+        'iterativeFindNode'
+      ).callsFake(function(p, cb) {
+        addContactByNodeId.restore();
+        kademliaNode.router.addContactByNodeId(
+          'da48d3f07a5241291ed0b4cab6483fa8b8fcc128',
+          {}
+        );
+        kademliaNode.router.addContactByNodeId(
+          'ca48d3f07a5241291ed0b4cab6483fa8b8fcc128',
+          {}
+        );
+        kademliaNode.router.addContactByNodeId(
+          'ba48d3f07a5241291ed0b4cab6483fa8b8fcc128',
+          {}
+        );
+        cb();
+      });
       let getClosestBucket = sinon.stub(
         kademliaNode.router,
         'getClosestBucket'
@@ -487,7 +486,7 @@ describe('@class KademliaNode', function() {
         () => {
           let sentNodes = send.args.map( args => args[2][0]);
           expect(sentNodes).to.deep.equal(sentNodes.filter(
-            (value, index, self) => { 
+            (value, index, self) => {
               return self.indexOf(value) === index;
             })
           )
