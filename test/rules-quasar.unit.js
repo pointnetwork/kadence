@@ -3,21 +3,22 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const uuid = require('uuid');
-const kad = require('kad');
+const utils = require('../lib/utils');
+const RoutingTable = require('../lib/routing-table');
 const BloomFilter = require('atbf');
 const QuasarRules = require('../lib/rules-quasar');
 
 
 describe('QuasarRules', function() {
 
-  const identity = kad.utils.getRandomKeyBuffer();
-  const router = new kad.RoutingTable(identity);
+  const identity = utils.getRandomKeyBuffer();
+  const router = new RoutingTable(identity);
 
   before(function() {
     let numContacts = 32;
 
     while (numContacts > 0) {
-      router.addContactByNodeId(kad.utils.getRandomKeyString(), {
+      router.addContactByNodeId(utils.getRandomKeyString(), {
         hostname: 'localhost',
         port: 8080
       });
@@ -351,7 +352,7 @@ describe('QuasarRules', function() {
         }
       };
       let contact = [
-        kad.utils.getRandomKeyString(),
+        utils.getRandomKeyString(),
         { hostname: 'localhost', port: 8080 }
       ]
       rules._relayPublication(request, contact, () => {
