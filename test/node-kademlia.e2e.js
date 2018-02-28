@@ -1,10 +1,10 @@
 'use strict';
 
 const { expect } = require('chai');
-const kad = require('..');
+const kadence= require('..');
 const network = require('./fixtures/node-generator');
 const async = require('async');
-const TOTAL_NODES = 32;
+const TOTAL_NODES = 12;
 
 function registerEndToEndSuite(transportName, transportAdapter) {
 
@@ -27,8 +27,8 @@ function registerEndToEndSuite(transportName, transportAdapter) {
         });
         pairs = nodes.map(() => {
           return [
-            kad.utils.getRandomKeyString(),
-            kad.utils.getRandomKeyString()
+            kadence.utils.getRandomKeyString(),
+            kadence.utils.getRandomKeyString()
           ];
         });
         done();
@@ -78,7 +78,7 @@ function registerEndToEndSuite(transportName, transportAdapter) {
             node.identity.toString('hex'),
             function(err, result) {
               expect(err).to.equal(null);
-              expect(result).to.have.lengthOf(kad.constants.K);
+              expect(result).to.have.lengthOf(TOTAL_NODES - 1);
               next();
             }
           );
@@ -86,14 +86,14 @@ function registerEndToEndSuite(transportName, transportAdapter) {
       });
 
       it('all nodes should find the closest node to a key', function(done) {
-        let key = kad.utils.getRandomKeyString();
-        let closest = nodes.map( node => {
+        let key = kadence.utils.getRandomKeyString();
+        let closest = nodes.map(node => {
           return {
             identity: node.identity,
-            distance: kad.utils.getDistance(node.identity, key)
+            distance: kadence.utils.getDistance(node.identity, key)
           };
         }).sort( (a, b) => {
-          return kad.utils.compareKeyBuffers(
+          return kadence.utils.compareKeyBuffers(
             Buffer.from(a.distance, 'hex'),
             Buffer.from(b.distance, 'hex')
           );
@@ -119,7 +119,7 @@ function registerEndToEndSuite(transportName, transportAdapter) {
         async.eachOfLimit(nodes, 3, function(node, index, next) {
           let [key, value] = pairs[index];
           node.iterativeStore(key, value, function(err, totalStored) {
-            expect(totalStored).to.equal(20);
+            expect(totalStored > 10).to.equal(true);
             next();
           });
         }, done);
@@ -173,5 +173,5 @@ function registerEndToEndSuite(transportName, transportAdapter) {
 
 }
 
-registerEndToEndSuite('UDPTransport', kad.UDPTransport);
-registerEndToEndSuite('HTTPTransport', kad.HTTPTransport);
+registerEndToEndSuite('UDPTransport', kadence.UDPTransport);
+registerEndToEndSuite('HTTPTransport', kadence.HTTPTransport);
