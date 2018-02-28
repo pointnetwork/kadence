@@ -398,6 +398,7 @@ async function init() {
 
   // Use Tor for an anonymous overlay
   if (!!parseInt(config.OnionEnabled)) {
+    kadence.constants.T_RESPONSETIMEOUT = 20000;
     node.plugin(kadence.OnionPlugin({
       dataDirectory: config.OnionHiddenServiceDirectory,
       virtualPort: config.OnionVirtualPort,
