@@ -28,6 +28,7 @@ const os = require('os');
 const ms = require('ms');
 const rc = require('rc');
 const ini = require('ini');
+const encoding = require('encoding-down');
 
 
 program.version(`
@@ -377,7 +378,7 @@ async function init() {
     privateExtendedKey: xprivkey,
     keyDerivationIndex: parseInt(config.ChildDerivationIndex),
     peerCacheFilePath: config.EmbeddedPeerCachePath,
-    storage: levelup(leveldown(config.EmbeddedDatabaseDirectory))
+    storage: levelup(encoding(leveldown(config.EmbeddedDatabaseDirectory)))
   });
 
   // Handle any fatal errors

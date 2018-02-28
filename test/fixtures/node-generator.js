@@ -4,6 +4,7 @@ const bunyan = require('bunyan');
 const levelup = require('levelup');
 const memdown = require('memdown');
 const kadence = require('../..');
+const encoding = require('encoding-down');
 
 let startPort = 45000;
 
@@ -16,7 +17,7 @@ module.exports = function(numNodes, Transport) {
     levels: ['fatal'],
     name: 'node-kademlia'
   });
-  const storage = levelup('node-kademlia', memdown());
+  const storage = levelup(encoding(memdown()));
 
   function createNode() {
     let transport = new Transport();

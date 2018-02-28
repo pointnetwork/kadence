@@ -2,7 +2,7 @@
 
 const { expect } = require('chai');
 const { stub } = require('sinon');
-const onion = require('..');
+const onion = require('../lib/plugin-onion');
 const { EventEmitter } = require('events');
 const proxyquire = require('proxyquire');
 const logger = { info: stub() };
@@ -21,7 +21,7 @@ describe('@class OnionPlugin', function() {
       );
       controller.addEventListeners = stub().callsArg(1);
       controller.removeEventListeners = stub().callsArg(0);
-      let onionStubbed = proxyquire('..', {
+      let onionStubbed = proxyquire('../lib/plugin-onion', {
         hsv3: stub().returns(controller),
         fs: {
           readFileSync: stub().returns(
@@ -54,7 +54,7 @@ describe('@class OnionPlugin', function() {
 
     it('should emit error if tor control fails', function(done) {
       let controller = new EventEmitter();
-      let onionStubbed = proxyquire('..', {
+      let onionStubbed = proxyquire('../lib/plugin-onion', {
         hsv3: stub().returns(controller)
       });
       let transport = {

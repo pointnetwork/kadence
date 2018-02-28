@@ -1,16 +1,16 @@
 'use strict';
 
 const async = require('async');
-const kad = require('kad');
-const quasar = require('..');
-const network = require('kad/test/fixtures/node-generator');
+const kadence = require('..');
+const quasar = require('../lib/plugin-quasar');
+const network = require('./fixtures/node-generator');
 
 
-const TOTAL_NODES = 33;
+const TOTAL_NODES = 12;
 
 describe('Kad Quasar E2E (w/ UDPTransport)', function() {
 
-  this.timeout(0);
+  this.timeout(40000);
 
   let nodes, seed;
 
@@ -22,7 +22,7 @@ describe('Kad Quasar E2E (w/ UDPTransport)', function() {
   };
 
   before(function(done) {
-    nodes = network(32, kad.UDPTransport);
+    nodes = network(TOTAL_NODES, kadence.UDPTransport);
     async.each(nodes, (node, done) => {
       node.plugin(quasar);
       node.listen(node.contact.port, node.contact.hostname, done);

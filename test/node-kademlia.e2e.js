@@ -1,7 +1,7 @@
 'use strict';
 
 const { expect } = require('chai');
-const kad = require('..');
+const kadence= require('..');
 const network = require('./fixtures/node-generator');
 const async = require('async');
 const TOTAL_NODES = 12;
@@ -27,8 +27,8 @@ function registerEndToEndSuite(transportName, transportAdapter) {
         });
         pairs = nodes.map(() => {
           return [
-            kad.utils.getRandomKeyString(),
-            kad.utils.getRandomKeyString()
+            kadence.utils.getRandomKeyString(),
+            kadence.utils.getRandomKeyString()
           ];
         });
         done();
@@ -86,14 +86,14 @@ function registerEndToEndSuite(transportName, transportAdapter) {
       });
 
       it('all nodes should find the closest node to a key', function(done) {
-        let key = kad.utils.getRandomKeyString();
+        let key = kadence.utils.getRandomKeyString();
         let closest = nodes.map(node => {
           return {
             identity: node.identity,
-            distance: kad.utils.getDistance(node.identity, key)
+            distance: kadence.utils.getDistance(node.identity, key)
           };
         }).sort( (a, b) => {
-          return kad.utils.compareKeyBuffers(
+          return kadence.utils.compareKeyBuffers(
             Buffer.from(a.distance, 'hex'),
             Buffer.from(b.distance, 'hex')
           );
@@ -173,5 +173,5 @@ function registerEndToEndSuite(transportName, transportAdapter) {
 
 }
 
-registerEndToEndSuite('UDPTransport', kad.UDPTransport);
-registerEndToEndSuite('HTTPTransport', kad.HTTPTransport);
+registerEndToEndSuite('UDPTransport', kadence.UDPTransport);
+registerEndToEndSuite('HTTPTransport', kadence.HTTPTransport);

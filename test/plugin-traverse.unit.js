@@ -4,7 +4,12 @@ const stream = require('stream');
 const sinon = require('sinon');
 const { expect } = require('chai');
 const proxyquire = require('proxyquire');
-const TraversePlugin = require('../lib/plugin-traverse');
+const {
+  TraversePlugin,
+  NATPMPStrategy,
+  UPNPStrategy,
+  ReverseTunnelStrategy
+} = require('../lib/plugin-traverse');
 
 
 describe('TraversePlugin', function() {
@@ -234,7 +239,7 @@ describe('NATPMPStrategy', function() {
   describe('@method exec', function() {
 
     it('should create port mapping and get ip', function(done) {
-      let NATPMPStrategy = proxyquire('../lib/strategy-natpmp', {
+      let { NATPMPStrategy } = proxyquire('../lib/plugin-traverse', {
         'nat-pmp': {
           connect: sinon.stub().returns({
             portMapping: sinon.stub().callsArg(1),
@@ -262,7 +267,7 @@ describe('NATPMPStrategy', function() {
     });
 
     it('should callback with error', function(done) {
-      let NATPMPStrategy = proxyquire('../lib/strategy-natpmp', {
+      let { NATPMPStrategy } = proxyquire('../lib/plugin-traverse', {
         'nat-pmp': {
           connect: sinon.stub().returns({
             portMapping: sinon.stub().callsArg(1),
@@ -297,7 +302,7 @@ describe('ReverseTunnelStrategy', function() {
   describe('@method exec', function() {
 
     it('should error if parse fails', function(done) {
-      let Strategy = proxyquire('../lib/strategy-reverse-tunnel', {
+      let { ReverseTunnelStrategy } = proxyquire('../lib/plugin-traverse', {
         http: {
           request: function(opts, handler) {
             let data = ['{', 'invalid', 'json'];
@@ -310,7 +315,7 @@ describe('ReverseTunnelStrategy', function() {
           }
         }
       });
-      let strategy = new Strategy();
+      let strategy = new ReverseTunnelStrategy();
       strategy.exec({
         contact: { hostname: '127.0.0.1', port: 8080 },
         identity: Buffer.from('nodeid')
@@ -321,7 +326,7 @@ describe('ReverseTunnelStrategy', function() {
     });
 
     it('should error if status code not 200', function(done) {
-      let Strategy = proxyquire('../lib/strategy-reverse-tunnel', {
+      let { ReverseTunnelStrategy } = proxyquire('../lib/plugin-traverse', {
         http: {
           request: function(opts, handler) {
             let data = [JSON.stringify({ error: 'unknown' })];
@@ -336,7 +341,7 @@ describe('ReverseTunnelStrategy', function() {
           }
         }
       });
-      let strategy = new Strategy();
+      let strategy = new ReverseTunnelStrategy();
       strategy.exec({
         contact: { hostname: '127.0.0.1', port: 8080 },
         identity: Buffer.from('nodeid')
@@ -348,7 +353,7 @@ describe('ReverseTunnelStrategy', function() {
 
     it('should update the contact info', function(done) {
       let open = sinon.stub();
-      let Strategy = proxyquire('../lib/strategy-reverse-tunnel', {
+      let { ReverseTunnelStrategy } = proxyquire('../lib/plugin-traverse', {
         http: {
           request: function(opts, handler) {
             let data = [JSON.stringify({
@@ -376,13 +381,13 @@ describe('ReverseTunnelStrategy', function() {
           }
         }
       });
-      let strategy = new Strategy();
+      let strategy = new ReverseTunnelStrategy();
       let node = {
         contact: { hostname: '127.0.0.1', port: 8080 },
         identity: Buffer.from('nodeid')
       };
       strategy.exec(node, (err) => {
-        expect(err).to.equal(null);
+        expect(err).to.equal(undefined);
         expect(open.called).to.equal(true);
         expect(node.contact.hostname).to.equal('nodeid.diglet.me');
         expect(node.contact.port).to.equal(80);
