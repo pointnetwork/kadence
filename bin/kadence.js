@@ -200,7 +200,7 @@ async function _init() {
   childkey = parentkey.deriveChild(parseInt(config.ChildDerivationIndex));
   identity = spartacus.utils.toPublicKeyHash(childkey.publicKey)
     .toString('hex');
-  wallet = new kadence.Wallet(config.EmbeddedWalletDirectory,
+  wallet = new kadence.KadenceWallet(config.EmbeddedWalletDirectory,
     childkey.privateKey);
 
   init();
@@ -224,7 +224,7 @@ function registerControlInterface() {
            parseInt(config.ControlSockEnabled)),
   'ControlSock and ControlPort cannot both be enabled');
 
-  controller = new boscar.Server(new kadence.Control(node));
+  controller = new boscar.Server(new kadence.KadenceController(node));
 
   if (parseInt(config.ControlPortEnabled)) {
     logger.info('binding controller to port ' + config.ControlPort);
@@ -269,7 +269,7 @@ function forkIdentitySolver(c) {
     logger.info(`solver ${c} found solution ` +
       `in ${msg.result.attempts} attempts (${ms(msg.result.time)})`);
 
-    const solution = new kadence.Solution(
+    const solution = new kadence.KadenceSolution(
       Buffer.from(msg.result.solution, 'hex')
     );
 
@@ -369,7 +369,7 @@ async function init() {
   const transport = new kad.HTTPSTransport({ key, cert, ca });
 
   // Initialize protocol implementation
-  node = new kadence.Node({
+  node = new kadence.KadenceNode({
     wallet,
     logger,
     transport,
