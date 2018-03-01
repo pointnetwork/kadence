@@ -6,7 +6,7 @@ const stream = require('stream');
 const { HibernatePlugin } = require('../lib/plugin-hibernate');
 
 
-describe('@class HibernatePlugin', function() {
+describe('@module kademlia/hibernate', function() {
 
   let clock = null;
   let node = {

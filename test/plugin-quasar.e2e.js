@@ -8,7 +8,7 @@ const network = require('./fixtures/node-generator');
 
 const TOTAL_NODES = 12;
 
-describe('@class QuasarPlugin / @class  UDPTransport', function() {
+describe('@module kadence/quasar + @class  UDPTransport', function() {
 
   this.timeout(40000);
 
@@ -24,7 +24,7 @@ describe('@class QuasarPlugin / @class  UDPTransport', function() {
   before(function(done) {
     nodes = network(TOTAL_NODES, kadence.UDPTransport);
     async.each(nodes, (node, done) => {
-      node.plugin(quasar);
+      node.plugin(quasar());
       node.listen(node.contact.port, node.contact.hostname, done);
     }, () => {
       seed = nodes.shift();

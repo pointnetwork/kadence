@@ -1,8 +1,8 @@
 'use strict';
 
-const constants = require('./constants');
-const version = require('./version');
-const Solution = require('./solution');
+const constants = require('../lib/constants');
+const version = require('../lib/version');
+const { PermissionSolution: Solution } = require('../lib/plugin-permission');
 const secp256k1 = require('secp256k1');
 
 

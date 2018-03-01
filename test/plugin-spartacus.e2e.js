@@ -9,7 +9,7 @@ const { randomBytes } = require('crypto');
 
 kadence.constants.T_RESPONSETIMEOUT = 1000;
 
-describe('@class SpartacusPlugin / @class UDPTransport)', function() {
+describe('@module kadence/spartacus + @class UDPTransport)', function() {
 
   let [node1, node2, node3] = network(3, kadence.UDPTransport);
   let node3xpub = null;
