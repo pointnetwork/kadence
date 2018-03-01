@@ -15,7 +15,7 @@ const logger=  bunyan.createLogger({
 });
 
 
-describe('TraversePlugin', function() {
+describe('@class TraversePlugin', function() {
 
   describe('@constructor', function() {
 

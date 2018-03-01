@@ -3,7 +3,7 @@
 const { expect } = require('chai');
 const kad = require('..');
 
-describe('KademliaNode+UDPTransport', function() {
+describe('@class AbstractNode / @class UDPTransport', function() {
 
   const [node1, node2] = require('./fixtures/node-generator')(
     2,

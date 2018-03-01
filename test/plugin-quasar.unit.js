@@ -8,7 +8,7 @@ const BloomFilter = require('atbf');
 const { QuasarPlugin } = require('../lib/plugin-quasar');
 
 
-describe('QuasarPlugin', function() {
+describe('@class QuasarPlugin', function() {
 
   const logger = {
     warn: sinon.stub(),
