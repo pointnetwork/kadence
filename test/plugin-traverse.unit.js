@@ -1,5 +1,6 @@
 'use strict';
 
+const bunyan = require('bunyan');
 const stream = require('stream');
 const sinon = require('sinon');
 const { expect } = require('chai');
@@ -8,6 +9,10 @@ const {
   TraversePlugin,
   UPNPStrategy,
 } = require('../lib/plugin-traverse');
+const logger=  bunyan.createLogger({
+  name: 'kadence-traverse-test',
+  level: 'fatal'
+});
 
 
 describe('TraversePlugin', function() {
@@ -21,7 +26,8 @@ describe('TraversePlugin', function() {
     it('should wrap node#listen', function() {
       let _wrap = sandbox.stub(TraversePlugin.prototype, '_wrapNodeListen');
       let plugin = new TraversePlugin({
-        contact: { hostname: '127.0.0.1', port: 8080 }
+        contact: { hostname: '127.0.0.1', port: 8080 },
+        logger
       }, []);
       expect(_wrap.called).to.equal(true);
       expect(plugin._originalContact.hostname).to.equal('127.0.0.1');
@@ -50,7 +56,8 @@ describe('TraversePlugin', function() {
       _test.onCall(0).callsArgWith(0, null, false);
       sandbox.stub(TraversePlugin.prototype, '_wrapNodeListen');
       let plugin = new TraversePlugin({
-        contact: { hostname: '127.0.0.1', port: 8080 }
+        contact: { hostname: '127.0.0.1', port: 8080 },
+        logger
       }, [s1, s2, s3]);
       plugin._execTraversalStrategies(() => {
         expect(s1.exec.called).to.equal(true);
@@ -76,7 +83,8 @@ describe('TraversePlugin', function() {
 
     it('should callback false if hostname not public', function(done) {
       let plugin = new TraversePlugin({
-        contact: { hostname: '127.0.0.1', port: 8080 }
+        contact: { hostname: '127.0.0.1', port: 8080 },
+        logger
       }, []);
       plugin._testIfReachable((err, result) => {
         expect(result).to.equal(false);
@@ -88,7 +96,8 @@ describe('TraversePlugin', function() {
       let plugin = new TraversePlugin({
         contact: { hostname: 'public.hostname', port: 8080 },
         ping: sandbox.stub().callsArgWith(1, new Error('failed')),
-        identity: Buffer.from('nodeid')
+        identity: Buffer.from('nodeid'),
+        logger
       }, []);
       plugin._testIfReachable((err, result) => {
         expect(result).to.equal(false);
@@ -100,7 +109,8 @@ describe('TraversePlugin', function() {
       let plugin = new TraversePlugin({
         contact: { hostname: 'public.hostname', port: 8080 },
         ping: sandbox.stub().callsArgWith(1, null),
-        identity: Buffer.from('nodeid')
+        identity: Buffer.from('nodeid'),
+        logger
       }, []);
       plugin._testIfReachable((err, result) => {
         expect(result).to.equal(true);
@@ -125,7 +135,7 @@ describe('TraversePlugin', function() {
       let node = {
         contact: { hostname: '127.0.0.1', port: 8080 },
         listen,
-        logger: { warn: sandbox.stub() }
+        logger
       };
       let plugin = new TraversePlugin(node);
       let _exec = sandbox.stub(plugin, '_execTraversalStrategies').callsArg(0);
@@ -255,7 +265,7 @@ describe('NATPMPStrategy', function() {
         }
       });
       let strategy = new NATPMPStrategy({ publicPort: 8081 });
-      let node = { contact: { hostname: '127.0.0.1', port: 8080 } };
+      let node = { contact: { hostname: '127.0.0.1', port: 8080 }, logger };
       strategy.exec(node, (err) => {
         expect(err).to.equal(null);
         expect(node.contact.hostname).to.equal('some.ip.addr');
@@ -284,7 +294,7 @@ describe('NATPMPStrategy', function() {
         }
       });
       let strategy = new NATPMPStrategy();
-      let node = { contact: { hostname: '127.0.0.1', port: 8080 } };
+      let node = { contact: { hostname: '127.0.0.1', port: 8080 }, logger };
       strategy.exec(node, (err) => {
         expect(err.message).to.equal('Failed to get IP');
         done();
