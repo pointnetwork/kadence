@@ -15,7 +15,7 @@ const logger=  bunyan.createLogger({
 });
 
 
-describe('@class TraversePlugin', function() {
+describe('@module kadence/traverse', function() {
 
   describe('@constructor', function() {
 

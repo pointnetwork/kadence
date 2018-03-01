@@ -8,7 +8,7 @@ const hashcash = require('../lib/plugin-hashcash');
 
 kadence.constants.T_RESPONSETIMEOUT = 4000;
 
-describe('@class HashCashPlugin / @class UDPTransport', function() {
+describe('@module kadence/hashcash + @class UDPTransport', function() {
 
   let [node1, node2] = network(2, kadence.UDPTransport);
 

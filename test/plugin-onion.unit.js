@@ -8,7 +8,7 @@ const proxyquire = require('proxyquire');
 const logger = { info: stub() };
 
 
-describe('@class OnionPlugin', function() {
+describe('@module kademlia/onion', function() {
 
   describe('@constructor', function() {
 

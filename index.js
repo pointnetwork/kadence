@@ -7,30 +7,12 @@
 'use strict';
 
 /**
- * Returns a new {@link KadenceNode}
+ * Returns a new {@link KademliaNode}
  * @function
  */
 module.exports = function(options) {
-  return new module.exports.KadenceNode(options);
+  return new module.exports.KademliaNode(options);
 };
-
-/** {@link KadenceNode} */
-module.exports.KadenceNode = require('./lib/node-kadence');
-
-/** {@link KadenceRules} */
-module.exports.KadenceRules = require('./lib/rules-kadence');
-
-/** {@link KadenceSolver} */
-module.exports.KadenceSolver = require('./lib/solver');
-
-/** {@link KadenceSolution} */
-module.exports.KadenceSolution = require('./lib/solution');
-
-/** {@link KadenceWallet} */
-module.exports.KadenceWallet = require('./lib/wallet');
-
-/** {@link Control} */
-module.exports.KadenceController = require('./lib/control');
 
 /** {@link KademliaNode} */
 module.exports.KademliaNode = require('./lib/node-kademlia');
@@ -38,17 +20,14 @@ module.exports.KademliaNode = require('./lib/node-kademlia');
 /** {@link KademliaRules} */
 module.exports.KademliaRules = require('./lib/rules-kademlia');
 
-/** {@link QuasarRules} */
-module.exports.QuasarRules = require('./lib/rules-quasar');
-
 /** {@link AbstractNode} */
 module.exports.AbstractNode = require('./lib/node-abstract');
 
-/** {@link Bucket} */
-module.exports.Bucket = require('./lib/bucket');
-
 /** {@link ErrorRules} */
 module.exports.ErrorRules = require('./lib/rules-errors');
+
+/** {@link Bucket} */
+module.exports.Bucket = require('./lib/bucket');
 
 /** {@link Messenger} */
 module.exports.Messenger = require('./lib/messenger');
@@ -65,23 +44,32 @@ module.exports.HTTPTransport = require('./lib/transport-http');
 /** {@link HTTPSTransport} */
 module.exports.HTTPSTransport = require('./lib/transport-https');
 
-/** {@link module:kadence/HashCashPlugin} */
-module.exports.HashCashPlugin = require('./lib/plugin-hashcash');
+/** {@link module:kadence/hashcash} */
+module.exports.hashcash = require('./lib/plugin-hashcash');
 
-/** {@link module:kadence/HibernatePlugin} */
-module.exports.HibernatePlugin = require('./lib/plugin-hibernate');
+/** {@link module:kadence/hibernate} */
+module.exports.hibernate = require('./lib/plugin-hibernate');
 
-/** {@link module:kadence/OnionPlugin} */
-module.exports.OnionPlugin = require('./lib/plugin-onion');
+/** {@link module:kadence/onion} */
+module.exports.onion = require('./lib/plugin-onion');
 
-/** {@link module:kadence/QuasarPlugin} */
-module.exports.QuasarPlugin = require('./lib/plugin-quasar');
+/** {@link module:kadence/quasar} */
+module.exports.quasar = require('./lib/plugin-quasar');
 
-/** {@link module:kadence/SpartacusPlugin} */
-module.exports.SpartacusPlugin = require('./lib/plugin-spartacus');
+/** {@link module:kadence/spartacus} */
+module.exports.spartacus = require('./lib/plugin-spartacus');
 
-/** {@link module:kadence/TraversePlugin} */
-module.exports.TraversePlugin = require('./lib/plugin-traverse');
+/** {@link module:kadence/traverse} */
+module.exports.traverse = require('./lib/plugin-traverse');
+
+/** {@link module:kadence/eclipse} */
+module.exports.eclipse = require('./lib/plugin-eclipse');
+
+/** {@link module:kadence/permission} */
+module.exports.permission = require('./lib/plugin-permission');
+
+/** {@link module:kadence/rolodex} */
+module.exports.rolodex = require('./lib/plugin-rolodex');
 
 /** {@link module:kadence/constants} */
 module.exports.constants = require('./lib/constants');
@@ -91,9 +79,6 @@ module.exports.version = require('./lib/version');
 
 /** {@link module:kadence/utils} */
 module.exports.utils = require('./lib/utils');
-
-/** {@link module:kadence/identity} */
-module.exports.identity = require('./lib/identity');
 
 /** {@link module:kadence/logger} */
 module.exports.logger = require('./lib/logger');

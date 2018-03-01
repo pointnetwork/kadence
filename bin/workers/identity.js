@@ -11,16 +11,17 @@ if (parseInt(process.env.kadence_TestNetworkEnabled)) {
 }
 
 process.once('message', ([xprv, index]) => {
-  let events = new EventEmitter();
+  const identity = new kadence.eclipse.EclipseIdentity(xprv, index);
+
   let attempts = 0;
   let start = Date.now();
 
-  events.on('index', () => {
+  identity.on('index', () => {
     attempts++;
     process.send({ attempts });
   });
 
-  kadence.identity.solve(xprv, index, events)
+  identity.solve()
     .then(result => {
       process.send({ index: result, time: Date.now() - start });
       process.exit(0);

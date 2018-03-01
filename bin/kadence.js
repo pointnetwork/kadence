@@ -28,6 +28,7 @@ const ms = require('ms');
 const rc = require('rc');
 const ini = require('ini');
 const encoding = require('encoding-down');
+const Control = require('./control');
 
 
 program.version(`
@@ -161,12 +162,19 @@ async function _init() {
     logger.debug(err.stack);
     process.exit(1);
   });
+  process.on('unhandledRejection', (err) => {
+    npid.remove(config.DaemonPidFilePath);
+    logger.error(err.message);
+    logger.debug(err.stack);
+    process.exit(1);
+  });
 
   // Initialize private extended key
   xprivkey = fs.readFileSync(config.PrivateExtendedKeyPath).toString();
+  identity = new kadence.eclipse.EclipseIdentity(xprivkey, index);
 
   // If identity is not solved yet, start trying to solve it
-  if (!kadence.identity.validate(xprivkey, index)) {
+  if (!identity.validate(xprivkey, index)) {
     logger.warn(`identity derivation not yet solved - ${index} is invalid`);
 
     let events = new EventEmitter();
@@ -207,8 +215,6 @@ async function _init() {
   childkey = parentkey.deriveChild(parseInt(config.ChildDerivationIndex));
   identity = kadence.utils.toPublicKeyHash(childkey.publicKey)
     .toString('hex');
-  wallet = new kadence.KadenceWallet(config.EmbeddedWalletDirectory,
-    childkey.privateKey);
 
   init();
 }
@@ -231,7 +237,7 @@ function registerControlInterface() {
            parseInt(config.ControlSockEnabled)),
   'ControlSock and ControlPort cannot both be enabled');
 
-  controller = new boscar.Server(new kadence.KadenceController(node));
+  controller = new boscar.Server(new Control(node));
 
   if (parseInt(config.ControlPortEnabled)) {
     logger.info('binding controller to port ' + config.ControlPort);
@@ -276,11 +282,11 @@ function forkIdentitySolver(c) {
     logger.info(`solver ${c} found solution ` +
       `in ${msg.result.attempts} attempts (${ms(msg.result.time)})`);
 
-    const solution = new kadence.KadenceSolution(
+    const solution = new kadence.permission.PermissionSolution(
       Buffer.from(msg.result.solution, 'hex')
     );
 
-    wallet.put(solution);
+    node.wallet.put(solution);
   });
 
   solver.on('error', err => {
@@ -356,8 +362,6 @@ function forkDerivationSolver(c, xprv, index, events) {
 
 async function init() {
   logger.info('initializing kadence');
-  logger.info('validating solutions in wallet, this can take some time');
-  await wallet.validate();
 
   // Initialize public contact data
   const contact = {
@@ -376,20 +380,36 @@ async function init() {
   const transport = new kad.HTTPSTransport({ key, cert, ca });
 
   // Initialize protocol implementation
-  node = new kadence.KadenceNode({
-    wallet,
+  node = new kadence.KademliaNode({
     logger,
     transport,
     contact,
-    privateExtendedKey: xprivkey,
-    keyDerivationIndex: parseInt(config.ChildDerivationIndex),
-    peerCacheFilePath: config.EmbeddedPeerCachePath,
     storage: levelup(encoding(leveldown(config.EmbeddedDatabaseDirectory)))
   });
 
+  node.hashcash = node.plugin(kadence.hashcash({
+    methods: ['PUBLISH', 'SUBSCRIBE'],
+    difficulty: 8
+  }));
+  node.quasar = node.plugin(kadence.quasar());
+  node.spartacus = node.plugin(kadence.spartacus(
+    xprivkey,
+    parseInt(config.ChildDerivationIndex),
+    kadence.constants.HD_KEY_DERIVATION_PATH
+  ));
+  node.eclipse = node.plugin(kadence.eclipse());
+  node.permission = node.plugin(kadence.permission({
+    privateKey: node.spartacus.privateKey,
+    walletPath: config.EmbeddedWalletDirectory
+  }));
+  node.rolodex = node.plugin(kadence.rolodex(config.EmbeddedPeerCachePath));
+
+  logger.info('validating solutions in wallet, this can take some time');
+  await node.wallet.validate();
+
   // Hibernate when bandwidth thresholds are reached
   if (!!parseInt(config.BandwidthAccountingEnabled)) {
-    node.plugin(kadence.HibernatePlugin({
+    node.hibernate = node.plugin(kadence.hibernate({
       limit: config.BandwidthAccountingMax,
       interval: config.BandwidthAccountingReset,
       reject: ['FIND_VALUE', 'STORE']
@@ -399,7 +419,7 @@ async function init() {
   // Use Tor for an anonymous overlay
   if (!!parseInt(config.OnionEnabled)) {
     kadence.constants.T_RESPONSETIMEOUT = 20000;
-    node.plugin(kadence.OnionPlugin({
+    node.onion = node.plugin(kadence.onion({
       dataDirectory: config.OnionHiddenServiceDirectory,
       virtualPort: config.OnionVirtualPort,
       localMapping: `127.0.0.1:${config.NodeListenPort}`,
@@ -416,12 +436,12 @@ async function init() {
 
   // Punch through NATs
   if (!!parseInt(config.TraverseNatEnabled)) {
-    node.plugin(kadence.TraversePlugin([
-      new kadence.TraversePlugin.UPNPStrategy({
+    node.traverse = node.plugin(kadence.traverse([
+      new kadence.traverse.UPNPStrategy({
         mappingTtl: parseInt(config.TraversePortForwardTTL),
         publicPort: parseInt(node.contact.port)
       }),
-      new kadence.TraversePlugin.NATPMPStrategy({
+      new kadence.traverse.NATPMPStrategy({
         mappingTtl: parseInt(config.TraversePortForwardTTL),
         publicPort: parseInt(node.contact.port)
       })

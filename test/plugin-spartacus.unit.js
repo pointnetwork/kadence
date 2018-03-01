@@ -7,7 +7,7 @@ const { SpartacusPlugin } = require('../lib/plugin-spartacus');
 const utils = require('../lib/utils');
 
 
-describe('@class SpartacusPlugin', function() {
+describe('@module kadence/spartacus', function() {
 
   describe('@constructor', function() {
 

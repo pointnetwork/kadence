@@ -10,7 +10,9 @@ if (parseInt(process.env.kadence_TestNetworkEnabled)) {
 }
 
 process.once('message', ({ privateKey }) => {
-  const solver = new kadence.KadenceSolver(Buffer.from(privateKey, 'hex'));
+  const solver = new kadence.permission.PermissionSolver(
+    Buffer.from(privateKey, 'hex')
+  );
 
   solver.on('data', data => {
     data.solution = data.solution.toBuffer().toString('hex');
