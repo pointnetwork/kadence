@@ -9,7 +9,7 @@ const BloomFilter = require('atbf');
 const QuasarRules = require('../lib/rules-quasar');
 
 
-describe('QuasarRules', function() {
+describe('@class QuasarRules', function() {
 
   const identity = utils.getRandomKeyBuffer();
   const router = new RoutingTable(identity);

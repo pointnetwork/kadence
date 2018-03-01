@@ -8,7 +8,7 @@ const TOTAL_NODES = 12;
 
 function registerEndToEndSuite(transportName, transportAdapter) {
 
-  describe(`Kad E2E (w/ ${transportName})`, function() {
+  describe(`@class KademliaNode / @class ${transportName})`, function() {
     this.timeout(20000);
 
     let nodes, seed, pairs;

@@ -8,7 +8,7 @@ const network = require('./fixtures/node-generator');
 
 const TOTAL_NODES = 12;
 
-describe('Kad Quasar E2E (w/ UDPTransport)', function() {
+describe('@class QuasarPlugin / @class  UDPTransport', function() {
 
   this.timeout(40000);
 

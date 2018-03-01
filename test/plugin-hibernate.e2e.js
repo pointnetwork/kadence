@@ -6,7 +6,7 @@ const network = require('./fixtures/node-generator');
 const hibernate = require('../lib/plugin-hibernate');
 
 
-describe('Kad Hibernate E2E (w/ UDPTransport)', function() {
+describe('@class HibernatePlugin / @class UDPTransport', function() {
 
   let [node1, node2] = network(2, kadence.UDPTransport);
 
