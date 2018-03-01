@@ -12,7 +12,7 @@ constants.SOLUTION_DIFFICULTY = 8;
 describe('@class Solver', function() {
 
   it('should discover a solution', function(done) {
-    this.timeout(30000);
+    this.timeout(60000);
     const privateKey = crypto.randomBytes(32);
     const solver = new Solver(privateKey);
 
