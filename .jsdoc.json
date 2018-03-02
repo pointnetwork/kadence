@@ -3,12 +3,12 @@
     "template": "node_modules/ink-docstrap/template"
   },
   "templates": {
-    "systemName": "KadTools",
-    "copyright":  "Copyright 2017 Gordon Hall",
+    "systemName": "Kadence",
+    "copyright":  "Copyright 2014 - 2018 Gordon Hall",
     "includeDate": false,
     "navType": "vertical",
-    "logoFile": "img/kadtools.jpg",
-    "theme": "storj",
+    "logoFile": "img/logo-header-space.png",
+    "theme": "kadence",
     "linenums": false,
     "collapseSymbols": false,
     "inverseNav": false,
