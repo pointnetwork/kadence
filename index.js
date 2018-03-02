@@ -8,7 +8,6 @@
 
 /**
  * Returns a new {@link KademliaNode}
- * @function
  */
 module.exports = function(options) {
   return new module.exports.KademliaNode(options);
