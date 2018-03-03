@@ -19,5 +19,88 @@ Returns general information about the running daemon.
 
 **Params:** `[]`  
 **Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
 
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
+#### `getProtocolInfo`
+
+Returns general information about the running daemon. 
+
+**Params:** `[]`  
+**Result:** `{ versions: { software, protocol }, peers, identity, contact }`
 
