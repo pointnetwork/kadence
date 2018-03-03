@@ -1,17 +1,18 @@
-Kad plugins are a simple way to package additional features. A plugin is just 
-a function that receives an instance of {@link KademliaNode} returned from 
-calling `require('kad')(options)`. This function can then apply any decorations 
-desired.
+Kadence plugins are a simple way to package additional features. A plugin is just 
+a function that receives an instance of {@link KademliaNode}. This function can 
+then apply any decorations desired.
 
-### Contributed Plugins
+### Included Plugins
 
-* [kad-quasar](https://github.com/kadtools/kad-quasar) | [@bookchin](https://github.com/bookchin)
-* [kad-spartacus](https://github.com/kadtools/kad-spartacus) | [@bookchin](https://github.com/bookchin)
-* [kad-traverse](https://github.com/kadtools/kad-traverse) | [@bookchin](https://github.com/bookchin)
-* [kad-onion](https://github.com/kadtools/kad-onion) | [@bookchin](https://github.com/bookchin)
-* [kad-hibernate](https://github.com/kadtools/kad-hibernate) | [@bookchin](https://github.com/bookchin)
-
-> Submit a pull request if you'd like yours added to this list!
+* {@link module:kadence/eclipse~EclipsePlugin}
+* {@link module:kadence/hashcash~HashCashPlugin}
+* {@link module:kadence/hibernate~HibernatePlugin}
+* {@link module:kadence/onion~OnionPlugin}
+* {@link module:kadence/permission~PermissionPlugin}
+* {@link module:kadence/quasar~QuasarPlugin}
+* {@link module:kadence/rolodex~RolodexPlugin}
+* {@link module:kadence/spartacus~SpartacusPlugin}
+* {@link module:kadence/traverse~TraversePlugin}
 
 ### Example: "Howdy, Neighbor" Plugin
 

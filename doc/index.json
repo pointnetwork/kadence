@@ -2,6 +2,9 @@
   "protocol": {
     "title": "Protocol Specification"
   },
+  "install": {
+    "title": "Installing Kadence"
+  },
   "control": {
     "title": "Using the Control Socket"
   },  
@@ -19,8 +22,5 @@
   },
   "identities": {
     "title": "Contacts & Identities"
-  },
-  "storage-adapters": {
-    "title": "Storage Backends"
   }
 }
