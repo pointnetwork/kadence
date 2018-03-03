@@ -73,7 +73,7 @@ module.exports.rolodex = require('./lib/plugin-rolodex');
 /** {@link module:kadence/constants} */
 module.exports.constants = require('./lib/constants');
 
-/** {@link module.kadence/version} */
+/** {@link module:kadence/version} */
 module.exports.version = require('./lib/version');
 
 /** {@link module:kadence/utils} */
