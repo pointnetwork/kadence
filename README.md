@@ -102,7 +102,7 @@ and join the network.
 
 Kadence supports the use of multiple transport adapters and is agnostic to the 
 underlying network protocol. Support for UDP and HTTP/HTTPS ship by default. 
-Plugin you own custom transport layer using using a simple interface.
+Plugin your own custom transport layer using using a simple interface.
 
 ### Persistent Routing Tables
 
