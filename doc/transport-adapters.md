@@ -1,18 +1,12 @@
-Kad does not impose any particular transport layer, which makes it very 
-flexible for applying to many use cases. As far as Kad is concerned, a valid 
+Kadence does not impose any particular transport layer, which makes it very 
+flexible for applying to many use cases. As far as Kadence is concerned, a valid 
 transport adapter is any `objectMode` 
 [`DuplexStream`](https://nodejs.org/dist/latest-v6.x/docs/api/stream.html) 
 that exposes a `listen()` method.
 
-Kad ships with UDP and HTTP(S) transports so you don't need to implement a 
+Kadence ships with UDP and HTTP(S) transports so you don't need to implement a 
 transport adapter yourself to get started. If your network layer needs are not 
-met by these, check out the [API for Transport Implementers]();
-
-### Contributed Transports
-
-* [kad-webrtc](https://github.com/kadtools/kad-webrtc) | [@omphalos](https://github.com/omphalos)
-
-> Submit a pull request if you'd like yours added to this list!
+met by these, check out the interface for {@link AbstractNode~transport}.
 
 ### API for Transport Implementers
 
@@ -86,5 +80,3 @@ class UDPTransport extends DuplexStream {
 
 }
 ```
-
-
