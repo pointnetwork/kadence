@@ -1,4 +1,10 @@
 {
+  "protocol": {
+    "title": "Protocol Specification"
+  },
+  "control": {
+    "title": "Using the Control Socket"
+  },  
   "transport-adapters": {
     "title": "Transport Adapters"
   },
