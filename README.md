@@ -98,7 +98,7 @@ Kadence supports multiple strategies for punching through
 This enables peers behind even the strictest of firewalls to become addressable 
 and join the network.
 
-### Mutliple Network Transports
+### Multiple Network Transports
 
 Kadence supports the use of multiple transport adapters and is agnostic to the 
 underlying network protocol. Support for UDP and HTTP/HTTPS ship by default. 
