@@ -28,7 +28,6 @@ const ms = require('ms');
 const rc = require('rc');
 const ini = require('ini');
 const encoding = require('encoding-down');
-const Control = require('./control');
 
 
 program.version(`
@@ -237,7 +236,7 @@ function registerControlInterface() {
            parseInt(config.ControlSockEnabled)),
   'ControlSock and ControlPort cannot both be enabled');
 
-  controller = new boscar.Server(new Control(node));
+  controller = new boscar.Server(new kadence.Control(node));
 
   if (parseInt(config.ControlPortEnabled)) {
     logger.info('binding controller to port ' + config.ControlPort);
