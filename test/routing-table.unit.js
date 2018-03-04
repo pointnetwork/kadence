@@ -107,22 +107,6 @@ describe('@class RoutingTable', function() {
 
   });
 
-  describe('@method getBucketsBeyondClosest', function() {
-
-    it('should return occupied buckets beyond closest', function() {
-      let router = new RoutingTable();
-      router.get(10).set('0', {});
-      router.get(20).set('1', {});
-      router.get(50).set('2', {});
-      router.get(140).set('3', {});
-      let buckets = router.getBucketsBeyondClosest();
-      expect(buckets[0][0]).to.equal(20);
-      expect(buckets[1][0]).to.equal(50);
-      expect(buckets[2][0]).to.equal(140);
-    });
-
-  });
-
   describe('@method getClosestContactsToKey', function() {
 
     it('should return the contacts closest to the key', function() {
