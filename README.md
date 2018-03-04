@@ -133,6 +133,17 @@ application logic. Users of [Express](https://expressjs.com/) will find it
 comfortable and familiar. If you are new to building distributed systems, you 
 will find it easy to get started.
 
+Research
+--------
+
+Kadence is used in academic research on distributed systems. Here are some 
+notable papers!
+
+* [Secure and Trustable Distributed Aggregation based on Kademlia](https://arxiv.org/pdf/1709.03265.pdf)
+* [Distributed Random Process for a large-scale Peer-to-Peer Lottery](https://hal.inria.fr/hal-01583824/document)
+* [DHT-based collaborative Web Translation](https://etd.ohiolink.edu/!etd.send_file?accession=ucin1479821556144121&disposition=inline)
+* [Kademlia with Consistency Checks as a Foundation of Borderless Collaboration in Open Science Services](https://www.sciencedirect.com/science/article/pii/S1877050916327041)
+
 License
 -------
 
