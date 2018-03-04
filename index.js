@@ -28,6 +28,9 @@ module.exports.ErrorRules = require('./lib/rules-errors');
 /** {@link Bucket} */
 module.exports.Bucket = require('./lib/bucket');
 
+/** {@link Control} */
+module.exports.Control = require('./lib/control');
+
 /** {@link Messenger} */
 module.exports.Messenger = require('./lib/messenger');
 

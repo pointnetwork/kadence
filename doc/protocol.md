@@ -328,7 +328,7 @@ users to prevent unauthorized control of the daemon from other users or
 processes on the same system and prevents remote intrusion. The JSON-RPC 
 message format is the same as described in _4: Remote Procedure Calls_.
 
-See {@tutorial control} for more details information.
+See {@link Control} for more detailed information.
 
 ### 7    References
 
