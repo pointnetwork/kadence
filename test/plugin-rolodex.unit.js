@@ -24,21 +24,28 @@ describe('@module kadence/rolodex', function() {
   rolodex(path.join(os.tmpdir(), id.toString('hex')))(node);
 
   it('should store the contact in the db', function(done) {
-    let nodeid = utils.getRandomKeyString();
-    let contact = {
+    let nodeid1 = utils.getRandomKeyString();
+    let contact1 = {
       hostname: 'localhost',
       port: 8080,
       protocol: 'http:'
     };
-    node.router.addContactByNodeId(nodeid, contact);
+    let nodeid2 = utils.getRandomKeyString();
+    let contact2 = {
+      hostname: 'localhost',
+      port: 8081,
+      protocol: 'http:'
+    };
+    node.router.addContactByNodeId(nodeid1, contact1);
     setTimeout(function() {
-      node.getBootstrapCandidates().then(function(peers) {
-        const peer = peers[0];
-        expect(peer).to.equal(
-          `http://localhost:8080/#${nodeid}`
-        );
-        done();
-      }, done);
+      node.router.addContactByNodeId(nodeid2, contact2);
+      setTimeout(function() {
+        node.getBootstrapCandidates().then(function(peers) {
+          expect(peers[0]).to.equal(`http://localhost:8081/#${nodeid2}`);
+          expect(peers[1]).to.equal(`http://localhost:8080/#${nodeid1}`);
+          done();
+        }, done);
+      }, 20);
     }, 20);
   });
 
