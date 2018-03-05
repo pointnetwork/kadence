@@ -10,7 +10,7 @@ const TOTAL_NODES = 12;
 
 describe('@module kadence/quasar + @class UDPTransport', function() {
 
-  this.timeout(120000);
+  this.timeout(400000);
 
   let nodes, seed;
 
