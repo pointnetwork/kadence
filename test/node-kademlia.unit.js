@@ -214,33 +214,6 @@ describe('@class KademliaNode', function() {
       });
     });
 
-    it('should error if no nodes returned', function(done) {
-      let addContactByNodeId = sinon.stub(
-        kademliaNode.router,
-        'addContactByNodeId'
-      );
-      let iterativeFindNode = sinon.stub(
-        kademliaNode,
-        'iterativeFindNode'
-      ).callsArg(1);
-      let getClosestBucket = sinon.stub(
-        kademliaNode.router,
-        'getClosestBucket'
-      ).returns([constants.B - 1, kademliaNode.router.get(constants.B - 1)]);
-      let refresh = sinon.stub(kademliaNode, 'refresh').callsArg(1);
-      kademliaNode.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', {
-        hostname: 'localhost',
-        port: 8080
-      }], (err) => {
-        addContactByNodeId.restore();
-        iterativeFindNode.restore();
-        getClosestBucket.restore();
-        refresh.restore();
-        expect(err.message).to.equal('Failed to discover nodes');
-        done();
-      });
-    });
-
     it('should error if lookup fails', function(done) {
       let addContactByNodeId = sinon.stub(
         kademliaNode.router,

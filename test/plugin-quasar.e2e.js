@@ -8,7 +8,7 @@ const network = require('./fixtures/node-generator');
 
 const TOTAL_NODES = 12;
 
-describe('@module kadence/quasar + @class  UDPTransport', function() {
+describe('@module kadence/quasar + @class UDPTransport', function() {
 
   this.timeout(40000);
 
