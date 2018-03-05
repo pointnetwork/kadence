@@ -20,6 +20,9 @@
   </a> | 
   <a href="https://raw.githubusercontent.com/kadence/kadence/master/LICENSE">
     <img src="https://img.shields.io/badge/license-AGPLv3-blue.svg?style=flat-square" alt="AGPL-3.0 License">
+  </a> | 
+  <a href="https://github.com/kadence/kadence">
+    <img src="https://img.shields.io/github/last-commit/kadence/kadence.svg?style=flat-square" alt="Source Code">
   </a>
 </div>
 
@@ -42,6 +45,8 @@ Ready to get started?
 $ npm install -g @kadenceproject/kadence
 $ kadence --help
 ```
+
+
 
 Features
 --------
