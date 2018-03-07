@@ -1,5 +1,5 @@
 /**
- * @example kad/example/minimal
+ * @example kadence/example/minimal
  */
 
 'use strict';
@@ -7,16 +7,19 @@
 // Import dependencies
 const bunyan = require('bunyan');
 const levelup = require('levelup');
-const kad = require('kad');
+const leveldown = require('leveldown');
+const encoding = require('encoding-down');
+const kadence = require('@kadenceproject/kadence');
 
-// Construct a kademlia node interface; the returned `Node` object exposes:
+// Construct a kademlia node interface; the returned `KademliaNode` object
+// exposes:
 // - router
 // - rpc
 // - storage
 // - identity
-const node = kad({
-  transport: new kad.HTTPTransport(),
-  storage: levelup('path/to/storage.db'),
+const node = new kadence.KademliaNode({
+  transport: new kadence.HTTPTransport(),
+  storage: levelup(encoding(leveldown('path/to/storage.db'))),
   contact: { hostname: 'localhost', port: 1337 }
 });
 
