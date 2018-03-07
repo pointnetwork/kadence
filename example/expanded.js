@@ -1,6 +1,9 @@
 /**
- * @example kad/example/expanded
+ * @example kadence/example/expanded
  */
+
+// NB: For a complete example of a full kadence implementation, see the daemon
+// NB: implementation in bin/kadence.js
 
 'use strict';
 
@@ -8,13 +11,15 @@
 const crypto = require('crypto');
 const bunyan = require('bunyan');
 const levelup = require('levelup');
-const kad = require('kad');
+const encoding = require('encoding-down');
+const leveldown = require('leveldown');
+const kadence = require('@kadenceproject/kadence');
 
 // Prepare required options
-const storage = levelup('path/to/storage.db');
-const logger = bunyan.createLogger({ name: 'kad example' });
-const transport = new kad.HTTPTransport();
-const identity = kad.utils.getRandomKeyBuffer();
+const storage = levelup(encoding(leveldown('path/to/storage.db')));
+const logger = bunyan.createLogger({ name: 'kadence example' });
+const transport = new kadence.HTTPTransport();
+const identity = kadence.utils.getRandomKeyBuffer();
 const contact = { hostname: 'localhost', port: 1337 };
 
 // Construct a kademlia node interface; the returned `Node` object exposes:
@@ -22,12 +27,17 @@ const contact = { hostname: 'localhost', port: 1337 };
 // - rpc
 // - storage
 // - identity
-const node = kad({ transport, storage, logger, identity, contact });
+const node = new kadence.KademliaNode({
+  transport,
+  storage,
+  logger,
+  identity,
+  contact
+});
 
-// Use rule "extensions" from other packages to add additional functionality
-// using plugins. Plugins can also extend the `Node` object with additional
-// methods
-node.plugin(require('kad-quasar'));
+// Use rule "extensions" from plugins to add additional functionality.
+// Plugins can also extend the `KademliaNode` object with additional methods
+node.plugin(kadence.quasar());
 
 // Use "global" rules for preprocessing *all* incoming messages
 // This is useful for things like blacklisting certain nodes
@@ -83,11 +93,11 @@ node.use('ECHO', (err, request, response, next) => {
 // Extend the Node interface with your own plugins
 // In many cases, you probably want parity with any userland message routes
 // you have defined - in this case for the ECHO method
-node.plugin(function() {
-  this.sendNeighborEcho = (text, callback) => {
-    this.send('ECHO', {
+node.plugin(function(node) {
+  node.sendNeighborEcho = (text, callback) => {
+    node.send('ECHO', {
       message: text
-    }, this.router.getNearestContacts(this.identity, 1).pop(), callback);
+    }, node.router.getNearestContacts(node.identity, 1).pop(), callback);
   };
 });
 

@@ -58,7 +58,6 @@ if (program.datadir) {
   program.config = argv.config;
 }
 
-const kad = require('kad');
 const solvers = [];
 
 let config = rc('kadence', options(program.datadir), argv);
@@ -376,7 +375,7 @@ async function init() {
   const ca = config.SSLAuthorityPaths.map(fs.readFileSync);
 
   // Initialize transport adapter
-  const transport = new kad.HTTPSTransport({ key, cert, ca });
+  const transport = new kadence.HTTPSTransport({ key, cert, ca });
 
   // Initialize protocol implementation
   node = new kadence.KademliaNode({
