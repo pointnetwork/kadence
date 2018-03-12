@@ -20,17 +20,17 @@ describe('@module kadence/rolodex', function() {
       debug: sinon.stub()
     }
   };
+  const plugin = rolodex(path.join(os.tmpdir(), id.toString('hex')))(node);
 
-  rolodex(path.join(os.tmpdir(), id.toString('hex')))(node);
+  let nodeid1 = utils.getRandomKeyString();
+  let nodeid2 = utils.getRandomKeyString();
 
   it('should store the contact in the db', function(done) {
-    let nodeid1 = utils.getRandomKeyString();
     let contact1 = {
       hostname: 'localhost',
       port: 8080,
       protocol: 'http:'
     };
-    let nodeid2 = utils.getRandomKeyString();
     let contact2 = {
       hostname: 'localhost',
       port: 8081,
@@ -40,13 +40,51 @@ describe('@module kadence/rolodex', function() {
     setTimeout(function() {
       node.router.addContactByNodeId(nodeid2, contact2);
       setTimeout(function() {
-        node.getBootstrapCandidates().then(function(peers) {
+        plugin.getBootstrapCandidates().then(function(peers) {
           expect(peers[0]).to.equal(`http://localhost:8081/#${nodeid2}`);
           expect(peers[1]).to.equal(`http://localhost:8080/#${nodeid1}`);
           done();
         }, done);
       }, 20);
     }, 20);
+  });
+
+  describe('@class RolodexPlugin', function() {
+
+    describe('@method getExternalPeerInfo', function() {
+
+      it('should return the peer info', function(done) {
+        plugin.getExternalPeerInfo(nodeid1).then(contact => {
+          expect(contact.hostname).to.equal('localhost');
+          expect(contact.port).to.equal(8080);
+          expect(contact.protocol).to.equal('http:');
+          done();
+        }, done);
+      });
+
+    });
+
+    describe('@method setInternalPeerInfo', function() {
+
+      it('should set the internal peer info', function(done) {
+        plugin.setInternalPeerInfo(nodeid1, {
+          reputation: 95
+        }).then(done, done);
+      });
+
+    });
+
+    describe('@method getInternalPeerInfo', function() {
+
+      it('should return the internal peer info', function(done) {
+        plugin.getInternalPeerInfo(nodeid1).then(info => {
+          expect(info.reputation).to.equal(95);
+          done();
+        }, done);
+      });
+
+    });
+
   });
 
 });

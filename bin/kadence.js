@@ -464,7 +464,7 @@ async function init() {
 
   async function joinNetwork(callback) {
     let peers = config.NetworkBootstrapNodes.concat(
-      await node.getBootstrapCandidates()
+      await node.rolodex.getBootstrapCandidates()
     );
 
     if (peers.length === 0) {
