@@ -1,6 +1,6 @@
 {
   "name": "@kadenceproject/kadence",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
