@@ -253,14 +253,17 @@ describe('@class KademliaNode', function() {
   describe('@method ping', function() {
 
     it('should call send with PING message', function(done) {
-      let send = sinon.stub(kademliaNode, 'send').callsArg(3);
+      let send = sinon.stub(kademliaNode, 'send').callsFake((a, b, c, d) => {
+        setTimeout(d, 10);
+      });
       let contact = ['ea48d3f07a5241291ed0b4cab6483fa8b8fcc128', {
         hostname: 'localhost',
         port: 8080
       }];
-      kademliaNode.ping(contact, () => {
+      kademliaNode.ping(contact, (err, latency) => {
         send.restore();
         expect(send.calledWithMatch('PING', [], contact)).to.equal(true);
+        expect(latency > 0).to.equal(true);
         done();
       });
     });
