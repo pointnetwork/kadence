@@ -28,6 +28,7 @@ const node = new kadence.KademliaNode({
 // adapter being used
 node.listen(1337);
 
+// Join a known peer by it's [identity, contact]
 node.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', {
   hostname: 'localhost',
   port: 8080

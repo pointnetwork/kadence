@@ -1,4 +1,7 @@
 {
+  "quickstart": {
+    "title": "Getting Started"
+  },
   "protocol": {
     "title": "Protocol Specification"
   },
@@ -18,9 +21,9 @@
     "title": "Middleware Stack"
   },
   "plugins": {
-    "title": "Using Plugins"
+    "title": "Using and Authoring Plugins"
   },
   "identities": {
-    "title": "Contacts & Identities"
+    "title": "Contacts and Identities"
   }
 }
