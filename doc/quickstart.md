@@ -263,3 +263,4 @@ middleware, custom transports, and the message pipelines, see:
 * {@tutorial middleware}
 * {@tutorial transport-adapters}
 * {@tutorial messengers}
+* [Examples on GitHub](https://github.com/kadence/kadence/tree/master/example)
