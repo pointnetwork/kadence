@@ -46,7 +46,7 @@ $ npm install -g @kadenceproject/kadence
 $ kadence --help
 ```
 
-
+If you're new to Kadence, check out our tutorial for {@tutorial quickstart}!
 
 Features
 --------
