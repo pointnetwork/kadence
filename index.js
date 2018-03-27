@@ -73,6 +73,9 @@ module.exports.permission = require('./lib/plugin-permission');
 /** {@link module:kadence/rolodex} */
 module.exports.rolodex = require('./lib/plugin-rolodex');
 
+/** {@link module:kadence/contentaddress} */
+module.exports.contentaddress = require('./lib/plugin-contentaddress');
+
 /** {@link module:kadence/constants} */
 module.exports.constants = require('./lib/constants');
 
