@@ -95,9 +95,13 @@ node.use('ECHO', (err, request, response, next) => {
 // you have defined - in this case for the ECHO method
 node.plugin(function(node) {
   node.sendNeighborEcho = (text, callback) => {
+    const neighbor = [
+        ...node.router.getClosestContactsToKey(node.identity).entries(),
+    ].shift();
+
     node.send('ECHO', {
       message: text
-    }, node.router.getNearestContacts(node.identity, 1).pop(), callback);
+    }, neighbor, callback);
   };
 });
 
