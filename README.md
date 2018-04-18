@@ -131,6 +131,10 @@ the box with no additional software installation or configuration required.
 This enables fully anonymized structured networks and leverages the latest 
 version 3 hidden services protocol.
 
+### Configurable Trust Policies
+
+TODO ...
+
 ### Simple Plugin Interface
 
 Kadence exposes a simple interface for extending the protocol with your own 
