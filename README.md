@@ -131,6 +131,12 @@ the box with no additional software installation or configuration required.
 This enables fully anonymized structured networks and leverages the latest 
 version 3 hidden services protocol.
 
+### Configurable Trust Policies
+
+Kadence provides a flexible trust policy plugin allowing for fine-tuned, 
+per-identity, per-method trust policies. Blacklist misbehaving nodes on an 
+open network or whitelist identities on an explicit trust-based network.
+
 ### Simple Plugin Interface
 
 Kadence exposes a simple interface for extending the protocol with your own 
