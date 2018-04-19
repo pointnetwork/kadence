@@ -133,7 +133,9 @@ version 3 hidden services protocol.
 
 ### Configurable Trust Policies
 
-TODO ...
+Kadence provides a flexible trust policy plugin allowing for fine-tuned, 
+per-identity, per-method trust policies. Blacklist misbehaving nodes on an 
+open network or whitelist identities on an explicit trust-based network.
 
 ### Simple Plugin Interface
 
