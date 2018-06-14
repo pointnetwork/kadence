@@ -1,28 +1,19 @@
 <p align="center" class="docstrap-hideme">
-  <a href="https://kadence.github.io"><img src="https://avatars1.githubusercontent.com/u/36767738?s=256"></a>
+  <a href="https://kadence.gitlab.io"><img src="https://assets.gitlab-static.net/uploads/-/system/group/avatar/3071188/36767738.png"></a>
 </p>
 <p style="font-size:18px" align="center"><strong>Extensible, Hardened, and Secure Distributed Systems Framework</strong></p>
 <p align="center">
   Join the discussion in <code>#kadence</code> on our <a href="https://matrix.counterpointhackers.org/_matrix/client/#/room/#kadence:matrix.counterpointhackers.org">Matrix server</a>!
 </p>
 <div align="center">
-  <a href="https://travis-ci.org/kadence/kadence">
-    <img src="https://img.shields.io/travis/kadence/kadence.svg?style=flat-square" alt="Build Status">
-  </a> | 
-  <a href="https://coveralls.io/r/kadence/kadence">
-    <img src="https://img.shields.io/coveralls/kadence/kadence.svg?style=flat-square" alt="Test Coverage">
-  </a> | 
   <a href="https://www.npmjs.com/package/@kadenceproject/kadence">
     <img src="https://img.shields.io/npm/v/@kadenceproject/kadence.svg?style=flat-square" alt="NPM Package">
   </a> | 
   <a href="https://hub.docker.com/r/kadence/kadence">
     <img src="https://img.shields.io/docker/pulls/kadence/kadence.svg?style=flat-square" alt="Docker Hub">
   </a> | 
-  <a href="https://raw.githubusercontent.com/kadence/kadence/master/LICENSE">
+  <a href="https://gitlab.com/kadence/kadence/raw/master/LICENSE">
     <img src="https://img.shields.io/badge/license-AGPLv3-blue.svg?style=flat-square" alt="AGPL-3.0 License">
-  </a> | 
-  <a href="https://github.com/kadence/kadence">
-    <img src="https://img.shields.io/github/last-commit/kadence/kadence.svg?style=flat-square" alt="Source Code">
   </a>
 </div>
 
