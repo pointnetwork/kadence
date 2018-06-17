@@ -1,23 +1,21 @@
 Contributing
 ============
 
-Want to contribute? Check out our [issue board](http://waffle.io/kadtools/kad)!
-
 This document outlines general patterns and conventions for contributing
-to the project. **For in-depth documentation on Kad,
-[read the documentation](http://kadtools.github.io).**
+to the project. **For in-depth documentation on Kadence,
+[read the documentation](http://kadence.gitlab.io).**
 
 Coding Style
 ------------
 
-Kad adheres to
+Kadence adheres to
 [Felix's Node.js Style Guide](https://github.com/felixge/node-style-guide).
 
 Test Coverage
 -------------
 
-At the time of writing, Kad has complete code coverage (100%) through
-it's test suite. It is important to never decrease coverage, so be sure to
+At the time of writing, Kad has near complete code coverage through
+its test suite. It is important to never decrease coverage, so be sure to
 include tests for any new code.
 
 You can run the coverage report with:
