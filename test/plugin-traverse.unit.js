@@ -92,19 +92,6 @@ describe('@module kadence/traverse', function() {
       });
     });
 
-    it('should callback false if ping errors', function(done) {
-      let plugin = new TraversePlugin({
-        contact: { hostname: 'public.hostname', port: 8080 },
-        ping: sandbox.stub().callsArgWith(1, new Error('failed')),
-        identity: Buffer.from('nodeid'),
-        logger
-      }, []);
-      plugin._testIfReachable((err, result) => {
-        expect(result).to.equal(false);
-        done();
-      });
-    });
-
     it('should callback true if ping succeeds', function(done) {
       let plugin = new TraversePlugin({
         contact: { hostname: 'public.hostname', port: 8080 },
