@@ -100,7 +100,7 @@ to addressing the node on the network. This includes:
   "hostname": "ip.address.or.domain.name",
   "port": 8443,
   "protocol": "https:",
-  "xpub": "<child_identity_public_extended_key>",
+  "xpub": "<public_extended_key>",
   "index": "<child_identity_derivation_index>"
 }
 ```
