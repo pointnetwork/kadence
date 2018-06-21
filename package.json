@@ -1,6 +1,6 @@
 {
   "name": "@kadenceproject/kadence",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
@@ -16,7 +16,7 @@
     "unit-tests": "mocha --exit test/*.unit.js",
     "integration-tests": "mocha --exit test/*.integration.js",
     "e2e-tests": "mocha --exit test/*.e2e.js",
-    "coverage": "istanbul cover _mocha -- --recursive",
+    "coverage": "istanbul cover _mocha -- --exit --recursive",
     "linter": "eslint ./index.js ./lib ./test",
     "generate-docs": "mkdir -p ../kadence.gitlab.io/public && rm -r ../kadence.gitlab.io/public && jsdoc index.js lib -r -R README.md -u ./doc -c .jsdoc.json --verbose -d ../kadence.gitlab.io/public"
   },
