@@ -208,9 +208,10 @@ async function _init() {
   }
 
   // Start initializing identity keys
-  parentkey = hdkey.fromExtendedKey(xprivkey)
-    .derive(kadence.constants.HD_KEY_DERIVATION_PATH);
-  childkey = parentkey.deriveChild(parseInt(config.ChildDerivationIndex));
+  parentkey = hdkey.fromExtendedKey(xprivkey);
+  childkey = parentkey
+    .derive(kadence.constants.HD_KEY_DERIVATION_PATH)
+    .deriveChild(parseInt(config.ChildDerivationIndex));
   identity = kadence.utils.toPublicKeyHash(childkey.publicKey)
     .toString('hex');
 
@@ -392,8 +393,7 @@ async function init() {
   node.quasar = node.plugin(kadence.quasar());
   node.spartacus = node.plugin(kadence.spartacus(
     xprivkey,
-    parseInt(config.ChildDerivationIndex),
-    kadence.constants.HD_KEY_DERIVATION_PATH
+    parseInt(config.ChildDerivationIndex)
   ));
   node.eclipse = node.plugin(kadence.eclipse());
   node.permission = node.plugin(kadence.permission({
@@ -493,7 +493,7 @@ async function init() {
         logger.error('failed to join network, will retry in 1 minute');
         callback(new Error('Failed to join network'));
       } else {
-        callback(null, entry);
+        callback(null, result);
       }
     });
   }
