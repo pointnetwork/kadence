@@ -17,11 +17,16 @@ describe('@module kadence/spartacus + @class UDPTransport)', function() {
   before(function(done) {
     [node1, node2, node3].forEach((node, i) => {
       if (i === 0) {
-        node.spartacus = node.plugin(spartacus(/* autogenerate */));
+        node.spartacus = node.plugin(spartacus(
+          null, // NB: autogenerate
+          0,
+          kadence.constants.HD_KEY_DERIVATION_PATH
+        ));
       } else {
         node.spartacus = node.plugin(spartacus(
           kadence.utils.toExtendedFromPrivateKey(randomBytes(32)),
-          -1
+          0,
+          kadence.constants.HD_KEY_DERIVATION_PATH
         ));
       }
       node.listen(node.contact.port);

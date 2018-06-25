@@ -58,6 +58,7 @@ if (program.datadir) {
   program.config = argv.config;
 }
 
+const { HD_KEY_DERIVATION_PATH } = kadence.constants;
 const solvers = [];
 
 let config = rc('kadence', options(program.datadir), argv);
@@ -102,8 +103,8 @@ logger = bunyan.createLogger({
 if (parseInt(config.TestNetworkEnabled)) {
   logger.info('kadence is running in test mode, difficulties are reduced');
   process.env.kadence_TestNetworkEnabled = config.TestNetworkEnabled;
-  kadence.constants.SOLUTION_DIFFICULTY = 2;
-  kadence.constants.IDENTITY_DIFFICULTY = 2;
+  kadence.constants.SOLUTION_DIFFICULTY = kadence.constants.TESTNET_DIFFICULTY;
+  kadence.constants.IDENTITY_DIFFICULTY = kadence.constants.TESTNET_DIFFICULTY;
 }
 
 if (parseInt(config.TraverseNatEnabled) && parseInt(config.OnionEnabled)) {
@@ -169,10 +170,14 @@ async function _init() {
 
   // Initialize private extended key
   xprivkey = fs.readFileSync(config.PrivateExtendedKeyPath).toString();
-  identity = new kadence.eclipse.EclipseIdentity(xprivkey, index);
+  identity = new kadence.eclipse.EclipseIdentity(
+    xprivkey,
+    index,
+    HD_KEY_DERIVATION_PATH
+  );
 
   // If identity is not solved yet, start trying to solve it
-  if (!identity.validate(xprivkey, index)) {
+  if (!identity.validate()) {
     logger.warn(`identity derivation not yet solved - ${index} is invalid`);
 
     let events = new EventEmitter();
@@ -210,7 +215,7 @@ async function _init() {
   // Start initializing identity keys
   parentkey = hdkey.fromExtendedKey(xprivkey);
   childkey = parentkey
-    .derive(kadence.constants.HD_KEY_DERIVATION_PATH)
+    .derive(HD_KEY_DERIVATION_PATH)
     .deriveChild(parseInt(config.ChildDerivationIndex));
   identity = kadence.utils.toPublicKeyHash(childkey.publicKey)
     .toString('hex');
@@ -393,7 +398,8 @@ async function init() {
   node.quasar = node.plugin(kadence.quasar());
   node.spartacus = node.plugin(kadence.spartacus(
     xprivkey,
-    parseInt(config.ChildDerivationIndex)
+    parseInt(config.ChildDerivationIndex),
+    HD_KEY_DERIVATION_PATH
   ));
   node.eclipse = node.plugin(kadence.eclipse());
   node.permission = node.plugin(kadence.permission({

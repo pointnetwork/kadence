@@ -5,8 +5,8 @@ const readLine = require('readline');
 
 
 if (parseInt(process.env.kadence_TestNetworkEnabled)) {
-  kadence.constants.SOLUTION_DIFFICULTY = 2;
-  kadence.constants.IDENTITY_DIFFICULTY = 2;
+  kadence.constants.SOLUTION_DIFFICULTY = kadence.constants.TESTNET_DIFFICULTY;
+  kadence.constants.IDENTITY_DIFFICULTY = kadence.constants.TESTNET_DIFFICULTY;
 }
 
 process.once('message', ({ privateKey }) => {
