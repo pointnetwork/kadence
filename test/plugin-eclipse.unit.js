@@ -19,7 +19,11 @@ describe('@module kadence/eclipse', function() {
 
     it('should solve the index', function(done) {
       this.timeout(20000);
-      const ident = new eclipse.EclipseIdentity(xprv);
+      const ident = new eclipse.EclipseIdentity(
+        xprv,
+        0,
+        constants.HD_KEY_DERIVATION_PATH
+      );
       ident.solve().then(i => {
         expect(i).to.equal(10)
         done();
