@@ -11,7 +11,7 @@ kadence.constants.T_RESPONSETIMEOUT = 1000;
 
 describe('@module kadence/spartacus + @class UDPTransport)', function() {
 
-  let [node1, node2, node3] = network(3, kadence.UDPTransport);
+  let [node1, node2, node3, node4] = network(4, kadence.UDPTransport);
   let node3xpub = null;
 
   before(function(done) {
@@ -31,6 +31,7 @@ describe('@module kadence/spartacus + @class UDPTransport)', function() {
       }
       node.listen(node.contact.port);
     });
+    node4.listen(node4.contact.port); // NB: Not a spartacus node
     setTimeout(done, 1000);
   });
 
@@ -64,6 +65,14 @@ describe('@module kadence/spartacus + @class UDPTransport)', function() {
     node3.contact.port = 0;
     node1.spartacus.setValidationPeriod(0);
     node3.ping([node1.identity.toString('hex'), node1.contact], (err) => {
+      expect(err.message).to.equal('Timed out waiting for response');
+      done();
+    });
+  });
+
+  it('should timeout and not crash if no auth payload', function(done) {
+    this.timeout(4000);
+    node4.ping([node2.identity.toString('hex'), node2.contact], (err) => {
       expect(err.message).to.equal('Timed out waiting for response');
       done();
     });
