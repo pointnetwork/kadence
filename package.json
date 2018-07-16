@@ -54,7 +54,7 @@
     "commander": "2.9.0",
     "concat-stream": "1.6.0",
     "daemon": "1.1.0",
-    "diglet": "2.0.2",
+    "diglet": "2.0.3",
     "encoding-down": "4.0.0",
     "hdkey": "0.8.0",
     "hsv3": "1.1.4",

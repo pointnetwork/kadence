@@ -457,7 +457,8 @@ async function init() {
         remoteAddress: config.TraverseReverseTunnelHostname,
         remotePort: parseInt(config.TraverseReverseTunnelPort),
         privateKey: node.spartacus.privateKey,
-        secureLocalConnection: true
+        secureLocalConnection: true,
+        verboseLogging: parseInt(config.VerboseLoggingEnabled)
       })
     ]));
   }
@@ -530,10 +531,7 @@ async function init() {
         process.exit(1);
       }
 
-      logger.info(
-        `connected to network via ${entry[0]} ` +
-        `(http://${entry[1].hostname}:${entry[1].port})`
-      );
+      logger.info(`connected to network via ${entry}`);
       logger.info(`discovered ${node.router.size} peers from seed`);
     });
   });
