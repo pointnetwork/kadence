@@ -1,7 +1,7 @@
 'use strict';
 
+const { EventEmitter } = require('events');
 const bunyan = require('bunyan');
-const stream = require('stream');
 const sinon = require('sinon');
 const { expect } = require('chai');
 const proxyquire = require('proxyquire');
@@ -296,83 +296,18 @@ describe('ReverseTunnelStrategy', function() {
 
   describe('@method exec', function() {
 
-    it('should error if parse fails', function(done) {
-      let { ReverseTunnelStrategy } = proxyquire('../lib/plugin-traverse', {
-        http: {
-          request: function(opts, handler) {
-            let data = ['{', 'invalid', 'json'];
-            handler(new stream.Readable({
-              read: function() {
-                this.push(data.shift() || null);
-              }
-            }));
-            return stream.Writable({ write: () => null });
-          }
-        }
-      });
-      let strategy = new ReverseTunnelStrategy();
-      strategy.exec({
-        contact: { hostname: '127.0.0.1', port: 8080 },
-        identity: Buffer.from('nodeid')
-      }, (err) => {
-        expect(err.message).to.equal('Failed to parse response');
-        done();
-      });
-    });
-
-    it('should error if status code not 200', function(done) {
-      let { ReverseTunnelStrategy } = proxyquire('../lib/plugin-traverse', {
-        http: {
-          request: function(opts, handler) {
-            let data = [JSON.stringify({ error: 'unknown' })];
-            let response = new stream.Readable({
-              read: function() {
-                this.push(data.shift() || null);
-              }
-            });
-            response.statusCode = 500;
-            handler(response);
-            return stream.Writable({ write: () => null });
-          }
-        }
-      });
-      let strategy = new ReverseTunnelStrategy();
-      strategy.exec({
-        contact: { hostname: '127.0.0.1', port: 8080 },
-        identity: Buffer.from('nodeid')
-      }, (err) => {
-        expect(err.message).to.equal('unknown');
-        done();
-      });
-    });
-
     it('should update the contact info', function(done) {
-      let open = sinon.stub();
+      let tunnel = new EventEmitter();
+      tunnel.open = sinon.stub();
+      tunnel.url = 'https://nodeid.tunnel.bookch.in:443';
       let { ReverseTunnelStrategy } = proxyquire('../lib/plugin-traverse', {
-        http: {
-          request: function(opts, handler) {
-            let data = [JSON.stringify({
-              tunnelHost: 'diglet.me',
-              tunnelPort: 12000,
-              publicUrl: 'http://nodeid.diglet.me'
-            })];
-            let response = new stream.Readable({
-              read: function() {
-                this.push(data.shift() || null);
-              }
-            });
-            response.statusCode = 200;
-            handler(response);
-            return stream.Writable({ write: () => null });
-          }
-        },
         diglet: {
           Tunnel: function(opts) {
             expect(opts.localAddress).to.equal('127.0.0.1');
             expect(opts.localPort).to.equal(8080);
-            expect(opts.remoteAddress).to.equal('diglet.me');
-            expect(opts.remotePort).to.equal(12000);
-            return { open: open };
+            expect(opts.remoteAddress).to.equal('tunnel.bookch.in');
+            expect(opts.remotePort).to.equal(8443);
+            return tunnel;
           }
         }
       });
@@ -383,11 +318,13 @@ describe('ReverseTunnelStrategy', function() {
       };
       strategy.exec(node, (err) => {
         expect(err).to.equal(undefined);
-        expect(open.called).to.equal(true);
-        expect(node.contact.hostname).to.equal('nodeid.diglet.me');
-        expect(node.contact.port).to.equal(80);
+        expect(tunnel.open.called).to.equal(true);
+        expect(node.contact.hostname).to.equal('nodeid.tunnel.bookch.in');
+        expect(node.contact.port).to.equal(443);
+        expect(node.contact.protocol).to.equal('https:');
         done();
       });
+      setImmediate(() => tunnel.emit('connected'));
     });
 
   });

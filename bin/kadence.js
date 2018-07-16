@@ -2,6 +2,10 @@
 
 'use strict';
 
+// NB: We use self-signed certificates, *however*, we perform our own
+// NB: authentication/authorization via ECDSA, so this is fine. We don't
+// NB: care about certificate authorities, just TLS, because our nodes
+// NB: identified by public key hashes and verified by signatures.
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 const { EventEmitter } = require('events');
@@ -448,6 +452,12 @@ async function init() {
       new kadence.traverse.NATPMPStrategy({
         mappingTtl: parseInt(config.TraversePortForwardTTL),
         publicPort: parseInt(node.contact.port)
+      }),
+      new kadence.traverse.ReverseTunnelStrategy({
+        remoteAddress: config.TraverseReverseTunnelHostname,
+        remotePort: parseInt(config.TraverseReverseTunnelPort),
+        privateKey: node.spartacus.privateKey,
+        secureLocalConnection: true
       })
     ]));
   }

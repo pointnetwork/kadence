@@ -47,6 +47,8 @@ module.exports = function(datadir) {
     // NAT Traversal
     TraverseNatEnabled: '1',
     TraversePortForwardTTL: '0',
+    TraverseReverseTunnelHostname: 'tunnel.bookch.in',
+    TraverseReverseTunnelPort: '8443',
 
     // SSL Certificate
     SSLCertificatePath: join(datadir, 'kadence.crt'),
