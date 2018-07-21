@@ -263,4 +263,11 @@ middleware, custom transports, and the message pipelines, see:
 * {@tutorial middleware}
 * {@tutorial transport-adapters}
 * {@tutorial messengers}
-* [Examples on GitHub](https://github.com/kadence/kadence/tree/master/example)
+* [Examples on GitLab](https://gitlab.com/kadence/kadence/tree/master/example)
+* [Complete Reference Implementation](https://gitlab.com/kadence/kadence/blob/master/bin/kadence.js)
+
+> **Note!** If you are using Kadence to build a distributed network from scratch
+> the best place to start is the [reference implementation](https://gitlab.com/kadence/kadence/blob/master/bin/kadence.js).
+> This provides a complete working Kadence network that leverages all the 
+> features provided by the library as well as autogenerating keys, managing 
+> configuration, and more!

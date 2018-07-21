@@ -92,7 +92,8 @@ attacks computationally very difficult and ultimately ineffective.
 Kadence supports multiple strategies for punching through 
 [network address translation](https://en.wikipedia.org/wiki/Network_address_translation). 
 This enables peers behind even the strictest of firewalls to become addressable 
-and join the network.
+and join the network. Fallback to secure reverse tunnels is supported through 
+the use of [Diglet](https://gitlab.com/bookchin/diglet) servers.
 
 ### Multiple Network Transports
 
