@@ -1,6 +1,6 @@
 {
   "name": "@kadenceproject/kadence",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
@@ -66,7 +66,7 @@
     "levelup": "2.0.1",
     "lru-cache": "4.1.1",
     "merge": "1.2.0",
-    "metapipe": "2.0.1",
+    "metapipe": "2.0.2",
     "mkdirp": "0.5.1",
     "ms": "2.1.1",
     "nat-pmp": "git+https://gitlab.com/kadence/node-nat-pmp#ffeda3dee8fd7103f368b4d2448ed0a861f662a5",
