@@ -25,5 +25,8 @@
   },
   "identities": {
     "title": "Contacts and Identities"
+  },
+  "nat": {
+    "title": "Traversing NATs and Firewalls"
   }
 }
