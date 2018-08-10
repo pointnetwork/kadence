@@ -12,8 +12,110 @@ both approaches.
 
 ### Contents
 
-1. [Using the Daemon](#daemon)
-2. [Using the Library](#library)
+1. [Using the Library](#library)
+2. [Using the Daemon](#daemon)
+
+<span id="library"></span>
+### Using the Library
+
+Not all use-cases require the exact properties of a "proper" Kadence network. 
+Because of this, Kadence exposes it's core library as a complete framework for 
+building distributed systems. This guide will demonstrate how to use the 
+Kadence framework to invent new distributed protocols.
+
+Start by following the guide for {@tutorial install} and install Kadence 
+locally to a new project. First create your project.
+
+```
+$ mkdir myproject
+$ cd myproject
+$ npm init
+```
+
+Then install Kadence and save the dependency to your `package.json` file.
+
+```
+$ npm install @kadenceproject/kadence --save
+```
+
+#### Creating a Node
+
+Most of the framework revolves around the instantiation of a 
+{@link KademliaNode}, which exposes the primary interface for extending the 
+protocol. There are several required options to provide, notably:
+
+* {@link AbstractNode~transport}
+* {@link AbstractNode~storage}
+* {@link Bucket~contact}
+* Identity buffer (160 bits)
+
+For this example we'll be using the {@link UDPTransport} and a LevelDB database 
+provided by the `levelup` and `leveldown` packages.
+
+```js
+const kadence = require('@kadenceproject/kadence');
+const levelup = require('levelup');
+const leveldown = require('leveldown');
+const encode = require('encoding-down');
+
+const node = new kadence.KademliaNode({
+  identity: kadence.utils.getRandomKeyBuffer(),
+  transport: new kadence.UDPTransport(),
+  storage: levelup(encode(leveldown('path/to/database'))),
+  contact: {
+    hostname: 'my.hostname',
+    port: 8080
+  }
+});
+```
+
+The code above is the minimum setup for a complete Kademlia DHT. If this is all 
+you require, then all you need to do is listen on the port specified in the 
+`contact.port` option and join a known seed with {@link KademliaNode#join}. The 
+provided seed must be defined as a tuple (array) where the first item is the 
+hex encoded identity key of the seed and the second item is the 
+{@link Bucket~contact} object. You can read more about this structure in our 
+guide on {@tutorial identities}.
+
+If this node is the "first node" in the network, you don't need to call 
+{@link KademliaNode#join}, instead our node will just listen for connections 
+from others.
+
+```js
+const seed = ['0000000000000000000000000000000000000000', { // (sample)
+  hostname: 'seed.hostname',
+  port: 8080
+}];
+
+node.once('join', function() {
+  console.info(`connected to ${node.router.size} peers`);
+});
+
+node.once('error', function(err) {
+  console.error('failed to join the network', err);
+});
+
+node.listen(node.contact.port);
+node.join(seed);
+```
+
+That's it, for a basic minimal Kademlia DHT, you're finished! Now you can use 
+the methods on {@link KademliaNode} to store and retrieve entries from the 
+network. To learn more about using plugins, extending the protocol with 
+middleware, custom transports, and the message pipelines, see:
+
+* {@tutorial plugins}
+* {@tutorial middleware}
+* {@tutorial transport-adapters}
+* {@tutorial messengers}
+* [Examples on GitLab](https://gitlab.com/kadence/kadence/tree/master/example)
+* [Complete Reference Implementation](https://gitlab.com/kadence/kadence/blob/master/bin/kadence.js)
+
+> **Note!** If you are using Kadence to build a distributed network from scratch
+> the best place to start is the [reference implementation](https://gitlab.com/kadence/kadence/blob/master/bin/kadence.js).
+> This provides a complete working Kadence network that leverages all the 
+> features provided by the library as well as autogenerating keys, managing 
+> configuration, and more!
 
 <span id="daemon"></span>
 ### Using the Daemon
@@ -169,105 +271,3 @@ Connection closed.
 
 Complete documentation on configuration properties and what they do can be 
 reviewed in the {@tutorial config}.
-
-<span id="library"></span>
-### Using the Library
-
-Not all use-cases require the exact properties of a "proper" Kadence network. 
-Because of this, Kadence exposes it's core library as a complete framework for 
-building distributed systems. This guide will demonstrate how to use the 
-Kadence framework to invent new distributed protocols.
-
-Start by following the guide for {@tutorial install} and install Kadence 
-locally to a new project. First create your project.
-
-```
-$ mkdir myproject
-$ cd myproject
-$ npm init
-```
-
-Then install Kadence and save the dependency to your `package.json` file.
-
-```
-$ npm install @kadenceproject/kadence --save
-```
-
-#### Creating a Node
-
-Most of the framework revolves around the instantiation of a 
-{@link KademliaNode}, which exposes the primary interface for extending the 
-protocol. There are several required options to provide, notably:
-
-* {@link AbstractNode~transport}
-* {@link AbstractNode~storage}
-* {@link Bucket~contact}
-* Identity buffer (160 bits)
-
-For this example we'll be using the {@link UDPTransport} and a LevelDB database 
-provided by the `levelup` and `leveldown` packages.
-
-```js
-const kadence = require('@kadenceproject/kadence');
-const levelup = require('levelup');
-const leveldown = require('leveldown');
-const encode = require('encoding-down');
-
-const node = new kadence.KademliaNode({
-  identity: kadence.utils.getRandomKeyBuffer(),
-  transport: new kadence.UDPTransport(),
-  storage: levelup(encode(leveldown('path/to/database'))),
-  contact: {
-    hostname: 'my.hostname',
-    port: 8080
-  }
-});
-```
-
-The code above is the minimum setup for a complete Kademlia DHT. If this is all 
-you require, then all you need to do is listen on the port specified in the 
-`contact.port` option and join a known seed with {@link KademliaNode#join}. The 
-provided seed must be defined as a tuple (array) where the first item is the 
-hex encoded identity key of the seed and the second item is the 
-{@link Bucket~contact} object. You can read more about this structure in our 
-guide on {@tutorial identities}.
-
-If this node is the "first node" in the network, you don't need to call 
-{@link KademliaNode#join}, instead our node will just listen for connections 
-from others.
-
-```js
-const seed = ['0000000000000000000000000000000000000000', { // (sample)
-  hostname: 'seed.hostname',
-  port: 8080
-}];
-
-node.once('join', function() {
-  console.info(`connected to ${node.router.size} peers`);
-});
-
-node.once('error', function(err) {
-  console.error('failed to join the network', err);
-});
-
-node.listen(node.contact.port);
-node.join(seed);
-```
-
-That's it, for a basic minimal Kademlia DHT, you're finished! Now you can use 
-the methods on {@link KademliaNode} to store and retrieve entries from the 
-network. To learn more about using plugins, extending the protocol with 
-middleware, custom transports, and the message pipelines, see:
-
-* {@tutorial plugins}
-* {@tutorial middleware}
-* {@tutorial transport-adapters}
-* {@tutorial messengers}
-* [Examples on GitLab](https://gitlab.com/kadence/kadence/tree/master/example)
-* [Complete Reference Implementation](https://gitlab.com/kadence/kadence/blob/master/bin/kadence.js)
-
-> **Note!** If you are using Kadence to build a distributed network from scratch
-> the best place to start is the [reference implementation](https://gitlab.com/kadence/kadence/blob/master/bin/kadence.js).
-> This provides a complete working Kadence network that leverages all the 
-> features provided by the library as well as autogenerating keys, managing 
-> configuration, and more!
