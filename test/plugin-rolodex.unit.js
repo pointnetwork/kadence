@@ -11,6 +11,8 @@ const os = require('os');
 
 describe('@module kadence/rolodex', function() {
 
+  let plugin;
+
   const id = Buffer.from(utils.getRandomKeyString(), 'hex');
   const node = {
     router: new RoutingTable(id),
@@ -20,10 +22,13 @@ describe('@module kadence/rolodex', function() {
       debug: sinon.stub()
     }
   };
-  const plugin = rolodex(path.join(os.tmpdir(), id.toString('hex')))(node);
 
   let nodeid1 = utils.getRandomKeyString();
   let nodeid2 = utils.getRandomKeyString();
+
+  before(function() {
+    plugin = rolodex(path.join(os.tmpdir(), id.toString('hex')))(node);
+  });
 
   it('should store the contact in the db', function(done) {
     let contact1 = {
