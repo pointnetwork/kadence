@@ -3,7 +3,7 @@
 </p>
 <p style="font-size:18px" align="center"><strong>Extensible, Hardened, and Secure Distributed Systems Framework</strong></p>
 <p align="center">
-  Join the discussion in <code>#kadence</code> on our <a href="https://matrix.counterpointhackers.org/_matrix/client/#/room/#kadence:matrix.counterpointhackers.org">Matrix server</a>!
+  Join the discussion in <code>#kadence</code> on our <a href="https://chat.counterpoint.info/channel/kadence">Rocket.Chat</a>!
 </p>
 <div align="center">
   <a href="https://www.npmjs.com/package/@kadenceproject/kadence">
