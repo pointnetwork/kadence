@@ -6,7 +6,7 @@ const memdown = require('memdown');
 const kadence = require('../..');
 const encoding = require('encoding-down');
 
-let startPort = 45000;
+let startPort = 65000;
 
 
 // NB: Increase response timeout for test because running multiple nodes
@@ -25,7 +25,7 @@ module.exports = function(numNodes, Transport) {
 
   function createNode() {
     let transport = new Transport();
-    let contact = { hostname: 'localhost', port: startPort++ };
+    let contact = { hostname: 'localhost', port: startPort-- };
 
     return new kadence.KademliaNode({
       transport: transport,
