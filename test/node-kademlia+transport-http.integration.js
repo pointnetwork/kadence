@@ -53,4 +53,16 @@ describe('@class AbstractNode / @class HTTPTransport', function() {
     );
   });
 
+  it('node1 should send to invalid and immediately callback', function(done) {
+    node1.send(
+      'TEST',
+      ['test parameter'],
+      [node2.identity.toString('hex'), { hostname: 'localhost', port: 1 }],
+      function(err) {
+        expect(err.message).to.equal('connect ECONNREFUSED 127.0.0.1:1');
+        done();
+      }
+    );
+  });
+
 });
