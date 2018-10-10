@@ -35,7 +35,7 @@ node.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', {
 }], () => {
   // Add 'join' callback which indicates peers were discovered and
   // our node is now connected to the overlay network
-  node.logger.info(`Connected to ${node.router.length} peers!`)
+  node.logger.info(`Connected to ${node.router.size} peers!`)
 
   // Base protocol exposes:
   // * node.iterativeFindNode(key, callback)

@@ -19,6 +19,9 @@ const kadence = require('@kadenceproject/kadence');
 const storage = levelup(encoding(leveldown('path/to/storage.db')));
 const logger = bunyan.createLogger({ name: 'kadence example' });
 const transport = new kadence.HTTPTransport();
+
+// In production, persist identity to disk and load it
+// Generating a new one every time will cause lookup problems
 const identity = kadence.utils.getRandomKeyBuffer();
 const contact = { hostname: 'localhost', port: 1337 };
 
@@ -54,8 +57,8 @@ node.use((request, response, next) => {
 // Use existing "base" rules to add additional logic to the base kad routes
 // This is useful for things like validating key/value pairs
 node.use('STORE', (request, response, next) => {
-  let [key, val] = request.params;
-  let hash = crypto.createHash('rmd160').update(val).digest('hex');
+  let [key, entry] = request.params;
+  let hash = crypto.createHash('rmd160').update(entry.value).digest('hex');
 
   // Ensure values are content-addressable
   if (key !== hash) {
@@ -78,16 +81,15 @@ node.use('ECHO', (request, response, next) => {
 
 // Define a global custom error handler rule, simply by including the `err`
 // argument in the handler
+// Be sure you use response.error(message) if you want to respond
 node.use((err, request, response, next) => {
-  response.send({ error: err.message });
+  response.error(err.message);
 });
 
 // Define error handlers for specific rules the same way, but including the
 // rule name as the first argument
 node.use('ECHO', (err, request, response, next) => {
-  response.send({
-    error: err.message.replace(request.params.message, '[redacted]')
-  });
+  response.error(err.message.replace(request.params.message, '[redacted]'));
 });
 
 // Extend the Node interface with your own plugins
@@ -99,9 +101,7 @@ node.plugin(function(node) {
         ...node.router.getClosestContactsToKey(node.identity).entries(),
     ].shift();
 
-    node.send('ECHO', {
-      message: text
-    }, neighbor, callback);
+    node.send('ECHO', { message: text }, neighbor, callback);
   };
 });
 
@@ -116,7 +116,7 @@ node.join(['ea48d3f07a5241291ed0b4cab6483fa8b8fcc127', {
 }], () => {
   // Add 'join' callback which indicates peers were discovered and
   // our node is now connected to the overlay network
-  logger.info(`Connected to ${node.router.length} peers!`)
+  logger.info(`Connected to ${node.router.size} peers!`)
 
   // Base protocol exposes:
   // * node.iterativeFindNode(key, callback)
