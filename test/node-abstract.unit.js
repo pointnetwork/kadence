@@ -452,27 +452,6 @@ describe('@class AbstractNode', function() {
       });
     });
 
-    it('should remove from the routing table if timeout', function(done) {
-      let write = sinon.stub(abstractNode.rpc.serializer, 'write');
-      let remove = sinon.stub(abstractNode.router, 'removeContactByNodeId');
-      abstractNode._pending.clear();
-      abstractNode.send('PING', [], ['000000', {
-        hostname: 'localhost',
-        port: 8080
-      }], (err) => {
-        expect(remove.called).to.equal(true);
-        expect(err.type).to.equal('TIMEOUT');
-        done();
-      });
-      setImmediate(() => {
-        let id = abstractNode._pending.keys().next().value;
-        let err = new Error('Timeout');
-        err.type = 'TIMEOUT';
-        abstractNode._pending.get(id).handler(err);
-        write.restore();
-      });
-    });
-
   });
 
   describe('@method use', function() {

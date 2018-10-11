@@ -11,6 +11,7 @@ const memdown = require('memdown');
 const storage = levelup('test:node-kademlia', memdown);
 const bunyan = require('bunyan');
 const constants = require('../lib/constants');
+const ms = require('ms');
 
 
 describe('@class KademliaNode', function() {
@@ -133,6 +134,7 @@ describe('@class KademliaNode', function() {
 
     it('should use kad rules and setup refresh/replicate', function(done) {
       let sandbox = sinon.sandbox.create();
+      let clock2 = sinon.useFakeTimers(Date.now(), 'setTimeout');
       let use = sandbox.stub(kademliaNode, 'use');
       let refresh = sandbox.stub(kademliaNode, 'refresh');
       let replicate = sandbox.stub(kademliaNode, 'replicate').callsArg(0);
@@ -140,8 +142,10 @@ describe('@class KademliaNode', function() {
       sandbox.stub(transport, 'listen');
       kademliaNode.listen();
       clock.tick(constants.T_REPLICATE);
+      clock2.tick(ms('30m')); // Account for convoy prevention
       setImmediate(() => {
         sandbox.restore();
+        clock2.restore();
         expect(use.calledWithMatch('PING')).to.equal(true);
         expect(use.calledWithMatch('STORE')).to.equal(true);
         expect(use.calledWithMatch('FIND_NODE')).to.equal(true);
@@ -764,7 +768,7 @@ describe('@class KademliaNode', function() {
       let iterativeFindNode = sandbox.stub(
         kademliaNode,
         'iterativeFindNode'
-      ).callsArg(1);
+      ).callsArgWith(1, null, []);
       kademliaNode.router.get(0).set(
         utils.getRandomKeyString(),
         { hostname: 'localhost', port: 8080 }
