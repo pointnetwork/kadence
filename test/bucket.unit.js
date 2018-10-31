@@ -103,7 +103,9 @@ describe('@class Bucket', function() {
       expect(JSON.stringify(
         [
           ...bucket.getClosestToKey(
-            '0000000000000000000000000000000000000010'
+            '0000000000000000000000000000000000000010',
+            20,
+            true
           ).keys()
         ]
       )).to.equal(JSON.stringify([
