@@ -4,7 +4,8 @@ const { expect } = require('chai');
 const kadence= require('..');
 const network = require('./fixtures/node-generator');
 const async = require('async');
-const TOTAL_NODES = 12;
+const TOTAL_NODES = 50;
+
 
 function registerEndToEndSuite(transportName, transportAdapter) {
 
@@ -62,7 +63,7 @@ function registerEndToEndSuite(transportName, transportAdapter) {
         }, function(err) {
           expect(err).to.equal(null);
           nodes.forEach((node) => {
-            expect(node.router.size > TOTAL_NODES / 2).to.equal(true);
+            expect(node.router.size >= kadence.constants.K).to.equal(true);
           });
           done();
         });
@@ -78,10 +79,30 @@ function registerEndToEndSuite(transportName, transportAdapter) {
             node.identity.toString('hex'),
             function(err, result) {
               expect(err).to.equal(null);
-              expect(result).to.have.lengthOf(TOTAL_NODES - 1);
+              expect(result).to.have.lengthOf(kadence.constants.K);
               next();
             }
           );
+        }, done);
+      });
+
+      it('all nodes should be able to find existing contact', function(done) {
+        this.timeout(400000);
+        async.eachSeries(nodes, function(node, next) {
+          async.eachSeries(nodes, function(target, next) {
+            if (Buffer.compare(node.identity, target.identity) === 0) {
+              return next();
+            }
+            node.iterativeFindNode(
+              target.identity.toString('hex'),
+              function(err, result) {
+                expect(err).to.equal(null);
+                expect(result.map(c => c[0])
+                  .includes(target.identity.toString('hex'))).to.equal(true);
+                next();
+              }
+            );
+          }, next);
         }, done);
       });
 
