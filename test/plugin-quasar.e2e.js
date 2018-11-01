@@ -22,6 +22,7 @@ describe('@module kadence/quasar + @class UDPTransport', function() {
   };
 
   before(function(done) {
+    kadence.constants.T_RESPONSETIMEOUT = 30000;
     nodes = network(TOTAL_NODES, kadence.UDPTransport);
     async.each(nodes, (node, done) => {
       node.plugin(quasar());
