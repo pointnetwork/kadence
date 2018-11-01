@@ -7,14 +7,15 @@ const spartacus = require('../lib/plugin-spartacus');
 const { randomBytes } = require('crypto');
 
 
-kadence.constants.T_RESPONSETIMEOUT = 1000;
-
 describe('@module kadence/spartacus + @class UDPTransport)', function() {
+
+  kadence.constants.T_RESPONSETIMEOUT = 1000;
 
   let [node1, node2, node3, node4] = network(4, kadence.UDPTransport);
   let node3xpub = null;
 
   before(function(done) {
+    kadence.constants.T_RESPONSETIMEOUT = 1000;
     [node1, node2, node3].forEach((node, i) => {
       if (i === 0) {
         node.spartacus = node.plugin(spartacus(
