@@ -9,10 +9,6 @@ const encoding = require('encoding-down');
 let startPort = 65000;
 
 
-// NB: Increase response timeout for test because running multiple nodes
-// NB: in a single process can produce a lot of latency
-kadence.constants.T_RESPONSETIMEOUT = 30000;
-
 module.exports = function(numNodes, Transport) {
 
   const nodes = [];

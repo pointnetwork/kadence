@@ -452,6 +452,18 @@ describe('@class AbstractNode', function() {
       });
     });
 
+    it('should error and not send if invalid target', function(done) {
+      abstractNode.send('PING', [], [
+        '0000000000000000000000000000000000000000',
+        null
+      ], (err) => {
+        expect(err.message).to.equal(
+          'Refusing to send message to invalid contact'
+        );
+        done();
+      });
+    });
+
   });
 
   describe('@method use', function() {

@@ -6,13 +6,12 @@ const network = require('./fixtures/node-generator');
 const hashcash = require('../lib/plugin-hashcash');
 
 
-kadence.constants.T_RESPONSETIMEOUT = 4000;
-
 describe('@module kadence/hashcash + @class UDPTransport', function() {
 
   let [node1, node2] = network(2, kadence.UDPTransport);
 
   before(function(done) {
+    kadence.constants.T_RESPONSETIMEOUT = 200;
     [node1, node2].forEach((node) => {
       node.hashcash = node.plugin(hashcash());
       node.listen(node.contact.port);
