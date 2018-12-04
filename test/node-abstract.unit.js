@@ -68,7 +68,8 @@ describe('@class AbstractNode', function() {
       let write = sinon.stub();
       let emitter = new EventEmitter();
       emitter.write = write;
-      let create = sinon.stub(abstractNode.rpc.serializer, 'create').returns(emitter);
+      let create = sinon.stub(abstractNode.rpc.serializer, 'create')
+        .returns(emitter);
       let receive = sinon.stub(abstractNode, 'receive')
         .callsFake(function(req, res) {
           receive.restore();
@@ -120,7 +121,8 @@ describe('@class AbstractNode', function() {
       let write = sinon.stub();
       let emitter = new EventEmitter();
       emitter.write = write;
-      let create = sinon.stub(abstractNode.rpc.serializer, 'create').returns(emitter);
+      let create = sinon.stub(abstractNode.rpc.serializer, 'create')
+        .returns(emitter);
       let receive = sinon.stub(abstractNode, 'receive')
         .callsFake(function(req, res) {
           receive.restore();
@@ -408,7 +410,8 @@ describe('@class AbstractNode', function() {
       let write = sinon.stub();
       let emitter = new EventEmitter();
       emitter.write = write;
-      let create = sinon.stub(abstractNode.rpc.serializer, 'create').returns(emitter);
+      let create = sinon.stub(abstractNode.rpc.serializer, 'create')
+        .returns(emitter);
       let handler = sinon.stub();
       abstractNode.send('PING', [], ['000000', {
         hostname: 'localhost',

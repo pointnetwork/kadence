@@ -2,7 +2,6 @@
 
 const { expect } = require('chai');
 const sinon = require('sinon');
-const stream = require('stream');
 const { HibernatePlugin } = require('../lib/plugin-hibernate');
 
 
