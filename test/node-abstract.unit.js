@@ -10,6 +10,7 @@ const storage = levelup('test:node-abstract', memdown);
 const bunyan = require('bunyan');
 const constants = require('../lib/constants');
 const utils = require('../lib/utils');
+const { EventEmitter } = require('events');
 
 
 describe('@class AbstractNode', function() {
@@ -39,26 +40,6 @@ describe('@class AbstractNode', function() {
 
   describe('@private _init', function() {
 
-    it('should log warnings on messenger error', function(done) {
-      abstractNode.rpc.emit('error', new Error('Messenger error'));
-      setImmediate(() => {
-        expect(logwarn.called).to.equal(true);
-        logwarn.reset();
-        done();
-      });
-    });
-
-    it('should call _process on data from deserializer', function(done) {
-      let _process = sinon.stub(abstractNode, '_process');
-      let message = [];
-      abstractNode.rpc.deserializer.emit('data', message);
-      setImmediate(() => {
-        _process.restore();
-        expect(_process.called).to.equal(true);
-        done();
-      });
-    });
-
     it('should log warnings on transport error', function(done) {
       abstractNode.transport.emit('error', new Error('Transport error'));
       setImmediate(() => {
@@ -78,18 +59,16 @@ describe('@class AbstractNode', function() {
       clock.tick(constants.T_RESPONSETIMEOUT);
     });
 
-    it('should repipe to the deserializer on error', function(done) {
-      let pipe = () => done();
-      abstractNode.rpc.deserializer.emit('unpipe', { pipe });
-    });
-
   });
 
   describe('@private _process', function() {
 
     it('should call receive with error arguments', function(done) {
       let _updateContact = sinon.stub(abstractNode, '_updateContact');
-      let write = sinon.stub(abstractNode.rpc.serializer, 'write');
+      let write = sinon.stub();
+      let emitter = new EventEmitter();
+      emitter.write = write;
+      let create = sinon.stub(abstractNode.rpc.serializer, 'create').returns(emitter);
       let receive = sinon.stub(abstractNode, 'receive')
         .callsFake(function(req, res) {
           receive.restore();
@@ -102,7 +81,7 @@ describe('@class AbstractNode', function() {
           expect(req.contact[1].hostname).to.equal('localhost');
           expect(req.contact[1].port).to.equal(8080);
           res.error('Error', 500);
-          write.restore();
+          create.restore();
           let writeArgs = write.args[0][0];
           expect(writeArgs[0].id).to.equal('message id');
           expect(writeArgs[0].error.message).to.equal('Error');
@@ -138,7 +117,10 @@ describe('@class AbstractNode', function() {
 
     it('should call receive with success arguments', function(done) {
       let _updateContact = sinon.stub(abstractNode, '_updateContact');
-      let write = sinon.stub(abstractNode.rpc.serializer, 'write');
+      let write = sinon.stub();
+      let emitter = new EventEmitter();
+      emitter.write = write;
+      let create = sinon.stub(abstractNode.rpc.serializer, 'create').returns(emitter);
       let receive = sinon.stub(abstractNode, 'receive')
         .callsFake(function(req, res) {
           receive.restore();
@@ -151,7 +133,7 @@ describe('@class AbstractNode', function() {
           expect(req.contact[1].hostname).to.equal('localhost');
           expect(req.contact[1].port).to.equal(8080);
           res.send([]);
-          write.restore();
+          create.restore();
           let writeArgs = write.args[0][0];
           expect(writeArgs[0].id).to.equal('message id');
           expect(writeArgs[0].result).to.have.lengthOf(0);
@@ -423,14 +405,17 @@ describe('@class AbstractNode', function() {
   describe('@method send', function() {
 
     it('should write to serializer and queue handler', function() {
-      let write = sinon.stub(abstractNode.rpc.serializer, 'write');
+      let write = sinon.stub();
+      let emitter = new EventEmitter();
+      emitter.write = write;
+      let create = sinon.stub(abstractNode.rpc.serializer, 'create').returns(emitter);
       let handler = sinon.stub();
       abstractNode.send('PING', [], ['000000', {
         hostname: 'localhost',
         port: 8080
       }], handler);
       let [calledWith] = write.args[0];
-      write.restore();
+      create.restore();
       expect(calledWith[0].method).to.equal('PING');
       expect(calledWith[0].params).to.have.lengthOf(0);
       expect(typeof calledWith[0].id).to.equal('string');
