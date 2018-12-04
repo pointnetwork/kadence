@@ -43,18 +43,6 @@ describe('@module kademlia/hibernate', function() {
       expect(hibernate.interval).to.equal(86400000);
     });
 
-    it('should append meter("outbound") to serializer', function() {
-      expect(node.rpc.serializer.append.args[0][0]).to.be.instanceOf(
-        stream.Transform
-      );
-    });
-
-    it('should pass detect method to node#use', function() {
-      expect(node.rpc.deserializer.prepend.args[0][0]).to.be.instanceOf(
-        stream.Transform
-      );
-    });
-
     it('should call HibernatePlugin#start', function() {
       expect(hibernate.accounting).to.not.equal(undefined);
     });
