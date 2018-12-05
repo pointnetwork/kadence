@@ -69,13 +69,19 @@ describe('@module kadence/quasar', function() {
       it('should node#send to each neighbor', function(done) {
         let plugin = new QuasarPlugin({ identity, router, use });
         plugin.node.send = sinon.stub().callsArg(3);
+        plugin.node.logger = {
+          warn: sinon.stub()
+        };
+        plugin.node.send.onCall(1).callsArgWith(3, new Error('Timeout'));
         plugin.quasarPublish('topic string', {
           some: 'data'
-        }, () => {
-          expect(plugin.node.send.callCount).to.equal(3);
+        }, (err, deliveries) => {
+          expect(plugin.node.send.callCount).to.equal(4);
           expect(
             plugin.node.send.calledWithMatch(QuasarPlugin.PUBLISH_METHOD)
           ).to.equal(true);
+          expect(deliveries).to.have.lengthOf(3);
+          expect(plugin.node.logger.warn.callCount).to.equal(1);
           let content = plugin.node.send.args[0][1];
           expect(typeof content.uuid).to.equal('string');
           expect(content.topic).to.equal('topic string');
