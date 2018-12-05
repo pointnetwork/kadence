@@ -50,6 +50,11 @@ module.exports = function(datadir) {
     TraverseReverseTunnelHostname: 'tunnel.bookch.in',
     TraverseReverseTunnelPort: '8443',
 
+    // Churn Filter
+    ChurnCoolDownBaseTimeout: '5M',
+    ChurnCoolDownMultiplier: '2',
+    ChurnCoolDownResetTime: '60M',
+
     // SSL Certificate
     SSLCertificatePath: join(datadir, 'kadence.crt'),
     SSLKeyPath: join(datadir, 'kadence.key'),
