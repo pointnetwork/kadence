@@ -412,6 +412,11 @@ async function init() {
     walletPath: config.EmbeddedWalletDirectory
   }));
   node.rolodex = node.plugin(kadence.rolodex(config.EmbeddedPeerCachePath));
+  node.blacklist = node.plugin(kadence.churnfilter({
+    cooldownBaseTimeout: config.ChurnCoolDownBaseTimeout,
+    cooldownMultiplier: parseInt(config.ChurnCoolDownMultiplier),
+    cooldownResetTime: config.ChurnCoolDownResetTime
+  }));
 
   logger.info('validating solutions in wallet, this can take some time');
   await node.wallet.validate();
