@@ -79,6 +79,9 @@ module.exports.contentaddress = require('./lib/plugin-contentaddress');
 /** {@link module:kadence/trust} */
 module.exports.trust = require('./lib/plugin-trust');
 
+/** {@link module:kadence/logger} */
+module.exports.logger = require('./lib/plugin-logger');
+
 /** {@link module:kadence/constants} */
 module.exports.constants = require('./lib/constants');
 
@@ -88,5 +91,4 @@ module.exports.version = require('./lib/version');
 /** {@link module:kadence/utils} */
 module.exports.utils = require('./lib/utils');
 
-/** {@link module:kadence/logger} */
-module.exports.logger = require('./lib/logger');
+
