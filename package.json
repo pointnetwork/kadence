@@ -1,6 +1,6 @@
 {
   "name": "@kadenceproject/kadence",
-  "version": "4.5.0",
+  "version": "5.0.0",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
@@ -12,6 +12,7 @@
     "doc": "doc"
   },
   "scripts": {
+    "start": "docker-compose up --build --force-recreate",
     "test": "npm run unit-tests && npm run integration-tests && npm run e2e-tests && npm run linter",
     "unit-tests": "mocha --exit test/*.unit.js",
     "integration-tests": "mocha --exit test/*.integration.js",

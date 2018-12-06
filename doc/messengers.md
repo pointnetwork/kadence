@@ -26,14 +26,14 @@ Below is an example of extended the message processing pipeline.
 const { Transform } = require('stream');
 const node = new kadence.KademliaNode(options);
 
-node.rpc.serializer.prepend(new Transform({
+node.rpc.serializer.prepend(() => new Transform({
   transform function(data, encoding, callback) {
 
   },
   objectMode: true
 }));
 
-node.rpc.deserializer.append(new Transform({
+node.rpc.deserializer.append(() => new Transform({
   transform: function(data, encoding, callback) {
 
   },

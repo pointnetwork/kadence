@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+#!/usr/bin/env sh
+':' //; exec "$(command -v nodejs || command -v node)" "$0" "$@"
 
 'use strict';
 
@@ -475,8 +476,7 @@ async function init() {
 
   // Use verbose logging if enabled
   if (!!parseInt(config.VerboseLoggingEnabled)) {
-    node.rpc.deserializer.append(new kadence.logger.IncomingMessage(logger));
-    node.rpc.serializer.prepend(new kadence.logger.OutgoingMessage(logger));
+    node.plugin(kadence.logger(logger));
   }
 
   // Cast network nodes to an array
