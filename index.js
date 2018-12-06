@@ -82,6 +82,9 @@ module.exports.trust = require('./lib/plugin-trust');
 /** {@link module:kadence/logger} */
 module.exports.logger = require('./lib/plugin-logger');
 
+/** {@link module:kadence/churnfilter} */
+module.exports.churnfilter = require('./lib/plugin-churnfilter');
+
 /** {@link module:kadence/constants} */
 module.exports.constants = require('./lib/constants');
 
