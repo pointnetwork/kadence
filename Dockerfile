@@ -1,8 +1,9 @@
-FROM debian:sid
+FROM debian:buster
 LABEL maintainer "gordonh@member.fsf.org"
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq upgrade
-RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install wget apt-transport-https gnupg curl libssl-dev git python build-essential nodejs npm
+RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install wget apt-transport-https gnupg curl libssl-dev git python build-essential nodejs npm tor
+ENV GRANAX_USE_SYSTEM_TOR="1"
 RUN git clone https://github.com/kadence/kadence /root/kadence; \
     git fetch --tags; \
     git checkout $(git describe --tags `git rev-list --tags --max-count=1`); \
