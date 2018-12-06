@@ -2,7 +2,6 @@
 
 const { expect } = require('chai');
 const sinon = require('sinon');
-const { createHash } = require('crypto');
 const ms = require('ms');
 const { ChurnFilterPlugin } = require('../lib/plugin-churnfilter');
 
