@@ -14,5 +14,5 @@ EXPOSE 5275
 ENV kadence_NodeListenAddress="0.0.0.0"
 ENV kadence_ControlSockEnabled="0"
 ENV kadence_ControlPortEnabled="1"
-ENTRYPOINT ["node", "/root/kadence/bin/kadence.js"]
+ENTRYPOINT ["/root/kadence/bin/kadence.js"]
 CMD []
