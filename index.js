@@ -79,6 +79,9 @@ module.exports.contentaddress = require('./lib/plugin-contentaddress');
 /** {@link module:kadence/trust} */
 module.exports.trust = require('./lib/plugin-trust');
 
+/** {@link module:kadence/logger} */
+module.exports.logger = require('./lib/plugin-logger');
+
 /** {@link module:kadence/churnfilter} */
 module.exports.churnfilter = require('./lib/plugin-churnfilter');
 
@@ -91,5 +94,4 @@ module.exports.version = require('./lib/version');
 /** {@link module:kadence/utils} */
 module.exports.utils = require('./lib/utils');
 
-/** {@link module:kadence/logger} */
-module.exports.logger = require('./lib/logger');
+

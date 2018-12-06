@@ -13,21 +13,10 @@ describe('@class Messenger', function() {
       let messenger = new Messenger({
         serializer: (obj, cb) => cb(null, 'SERIALIZED')
       });
-      messenger.serializer.once('data', (data) => {
+      messenger.serializer.create().once('data', (data) => {
         expect(data).to.equal('SERIALIZED');
         done();
       }).write({});
-    });
-
-    it('should bubble errors from the serializer', function(done) {
-      let messenger = new Messenger();
-      messenger.once('error', (err) => {
-        expect(err.message).to.equal('Some error');
-        done();
-      });
-      setImmediate(() => {
-        messenger.serializer.emit('error', new Error('Some error'));
-      });
     });
 
   });
@@ -38,7 +27,7 @@ describe('@class Messenger', function() {
       let messenger = new Messenger({
         deserializer: (obj, cb) => cb(null, 'DESERIALIZED')
       });
-      messenger.deserializer.once('data', (data) => {
+      messenger.deserializer.create().once('data', (data) => {
         expect(data).to.equal('DESERIALIZED');
         done();
       }).write(Buffer.from('test'));
@@ -48,11 +37,12 @@ describe('@class Messenger', function() {
       let messenger = new Messenger({
         deserializer: (obj, cb) => cb(null, 'DESERIALIZED')
       });
-      messenger.once('error', (err) => {
+      let deserializer = messenger.deserializer.create();
+      deserializer.once('error', (err) => {
         expect(err.message).to.equal('Cannot deserialize non-buffer chunk');
         done();
       });
-      setImmediate(() => messenger.deserializer.write({}));
+      setImmediate(() => deserializer.write({}));
     });
 
   });
