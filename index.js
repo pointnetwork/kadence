@@ -79,6 +79,9 @@ module.exports.contentaddress = require('./lib/plugin-contentaddress');
 /** {@link module:kadence/trust} */
 module.exports.trust = require('./lib/plugin-trust');
 
+/** {@link module:kadence/churnfilter} */
+module.exports.churnfilter = require('./lib/plugin-churnfilter');
+
 /** {@link module:kadence/constants} */
 module.exports.constants = require('./lib/constants');
 
