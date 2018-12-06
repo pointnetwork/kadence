@@ -2,7 +2,7 @@
 
 const { expect } = require('chai');
 const sinon = require('sinon');
-const logger = require('../lib/logger');
+const logger = require('../lib/plugin-logger');
 
 
 describe('@class logger#IncomingMessage', function() {
