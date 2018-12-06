@@ -56,6 +56,12 @@ called [Hashcash](https://en.wikipedia.org/wiki/Hash_cash) for relaying
 messages to prevent abuse and make large scale denial of service and spam 
 attacks cost prohibitive.
 
+### Churn Impact Reduction
+
+Kadence proactively evicts offline or misbehaving peers from its routing table 
+and uses an exponential cooldown time for allowing them back in to prevent 
+unreliable contacts from propagating through the network.
+
 ### Bandwidth Metering
 
 Kadence monitors bandwidth and enables end users to configure their maximum 
