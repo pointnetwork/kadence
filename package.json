@@ -1,6 +1,6 @@
 {
   "name": "@kadenceproject/kadence",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
@@ -47,7 +47,7 @@
   ],
   "license": "AGPL-3.0",
   "engines": {
-    "node": "^8.11.3"
+    "node": ">=10.x.x"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -80,7 +80,6 @@
     "npid": "^0.4.0",
     "pem": "^1.12.5",
     "rc": "^1.2.8",
-    "scrypt": "^6.0.3",
     "secp256k1": "^3.5.0",
     "semver": "^5.1.0",
     "socks": "^1.1.10",

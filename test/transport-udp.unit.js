@@ -79,8 +79,12 @@ describe('@class UDPTransport', function() {
       });
       setImmediate(() => {
         udpTransport.socket.emit('message', message);
-        udpTransport.socket.emit('message', message);
-        udpTransport.socket.emit('message', message);
+        setImmediate(() => {
+          udpTransport.socket.emit('message', message);
+          setImmediate(() => {
+            udpTransport.socket.emit('message', message);
+          });
+        });
       });
     });
 
