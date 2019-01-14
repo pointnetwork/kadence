@@ -56,6 +56,7 @@ module.exports = function(datadir) {
     ChurnCoolDownResetTime: '60M',
 
     // SSL Certificate
+    SSLEnabled: '0',
     SSLCertificatePath: join(datadir, 'kadence.crt'),
     SSLKeyPath: join(datadir, 'kadence.key'),
     SSLAuthorityPaths: [

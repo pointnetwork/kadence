@@ -141,7 +141,7 @@ async function _init() {
     process.exit();
   }
 
-  if (!fs.existsSync(config.SSLKeyPath)) {
+  if (parseInt(config.SSLEnabled) && !fs.existsSync(config.SSLKeyPath)) {
     await _generateSelfSignedCertificate();
   }
 
@@ -375,18 +375,24 @@ async function init() {
   // Initialize public contact data
   const contact = {
     hostname: config.NodePublicAddress,
-    protocol: 'https:',
+    protocol: parseInt(config.SSLEnabled) ? 'https:' : 'http:',
     port: parseInt(config.NodePublicPort),
     xpub: parentkey.publicExtendedKey,
     index: parseInt(config.ChildDerivationIndex),
     agent: kadence.version.protocol
   };
-  const key = fs.readFileSync(config.SSLKeyPath);
-  const cert = fs.readFileSync(config.SSLCertificatePath);
-  const ca = config.SSLAuthorityPaths.map(fs.readFileSync);
 
-  // Initialize transport adapter
-  const transport = new kadence.HTTPSTransport({ key, cert, ca });
+  let transport;
+
+  if (parseInt(config.SSLEnabled)) {
+    const key = fs.readFileSync(config.SSLKeyPath);
+    const cert = fs.readFileSync(config.SSLCertificatePath);
+    const ca = config.SSLAuthorityPaths.map(fs.readFileSync);
+
+    transport = new kadence.HTTPSTransport({ key, cert, ca });
+  } else {
+    transport = new kadence.HTTPTransport();
+  }
 
   // Initialize protocol implementation
   node = new kadence.KademliaNode({
