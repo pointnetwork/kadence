@@ -174,6 +174,12 @@ public internet.
 How long to keep the port mapping active on the router. The value `0` means 
 indefinitely (until revoked).
 
+#### SSLEnabled
+
+##### Default: `0`
+
+Flag to instruct the daemon to use SSL/TLS to secure communication. 
+
 #### SSLCertificatePath
 
 ##### Default: `$HOME/.config/kadence/kadence.crt`
