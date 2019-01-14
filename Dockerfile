@@ -2,7 +2,9 @@ FROM debian:buster
 LABEL maintainer "gordonh@member.fsf.org"
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq upgrade
-RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install wget apt-transport-https gnupg curl libssl-dev git python build-essential nodejs npm tor
+RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install wget apt-transport-https gnupg curl libssl-dev git python build-essential tor
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
 ENV GRANAX_USE_SYSTEM_TOR="1"
 RUN git clone https://github.com/kadence/kadence /root/kadence; \
     git fetch --tags; \
