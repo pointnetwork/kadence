@@ -1,6 +1,6 @@
 {
   "name": "@kadenceproject/kadence",
-  "version": "5.0.4",
+  "version": "6.0.0",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
@@ -12,7 +12,7 @@
     "doc": "doc"
   },
   "scripts": {
-    "start": "docker-compose up --build --force-recreate",
+    "start": "docker-compose up --build --force-recreate --always-recreate-deps",
     "test": "npm run unit-tests && npm run integration-tests && npm run e2e-tests && npm run linter",
     "unit-tests": "mocha --exit test/*.unit.js",
     "integration-tests": "mocha --exit test/*.integration.js",
@@ -26,7 +26,7 @@
     "type": "git",
     "url": "https://gitlab.com/kadence/kadence.git"
   },
-  "author": "Gordon Hall <gordonh@member.fsf.org>",
+  "author": "Gordyn Hall <gordon@leastauthority.com>",
   "contributors": [
     {
       "name": "omphalos",
@@ -61,7 +61,7 @@
     "daemon": "^1.1.0",
     "diglet": "^2.0.3",
     "encoding-down": "^4.0.0",
-    "hdkey": "^0.8.0",
+    "equihash": "github:digitalbazaar/equihash#f14491f",
     "hsv3": "^1.1.5",
     "ip": "^1.1.5",
     "json-stable-stringify": "^1.0.1",
@@ -70,7 +70,7 @@
     "leveldown": "^3.0.0",
     "levelup": "^2.0.1",
     "lru-cache": "^4.1.1",
-    "merge": "^1.2.0",
+    "merge": "^1.2.1",
     "metapipe": "^2.0.2",
     "mkdirp": "^0.5.1",
     "ms": "^2.1.1",
@@ -90,7 +90,7 @@
   "devDependencies": {
     "chai": "^2.2.0",
     "coveralls": "^3.0.1",
-    "eslint": "^3.14.0",
+    "eslint": "^5.14.1",
     "ink-docstrap": "git+https://gitlab.com/kadence/docstrap.git",
     "istanbul": "^1.1.0-alpha.1",
     "jsdoc": "^3.4.0",

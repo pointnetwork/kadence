@@ -241,7 +241,7 @@ describe('@class HTTPTransport', function() {
       let request = new EventEmitter();
       request.end = sinon.stub();
       let _createRequest = sinon.stub(httpTransport, '_createRequest')
-                             .returns(request);
+        .returns(request);
       httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
         hostname: 'localhost',
         port: 8080,
@@ -267,7 +267,7 @@ describe('@class HTTPTransport', function() {
       let request = new EventEmitter();
       request.end = sinon.stub();
       let _createRequest = sinon.stub(httpTransport, '_createRequest')
-                             .returns(request);
+        .returns(request);
       httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
         hostname: 'localhost',
         port: 8080,
@@ -294,7 +294,7 @@ describe('@class HTTPTransport', function() {
       let request = new EventEmitter();
       request.end = sinon.stub();
       let _createRequest = sinon.stub(httpTransport, '_createRequest')
-                             .returns(request);
+        .returns(request);
       httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
         hostname: 'localhost',
         port: 8080,
@@ -321,7 +321,7 @@ describe('@class HTTPTransport', function() {
       let request = new EventEmitter();
       request.end = sinon.stub();
       let _createRequest = sinon.stub(httpTransport, '_createRequest')
-                             .returns(request);
+        .returns(request);
       httpTransport.write(['test', Buffer.from('test'), ['RECEIVER', {
         hostname: 'localhost',
         port: 8080,

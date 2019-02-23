@@ -86,7 +86,7 @@ describe('@class KademliaNode', function() {
         'removeContactByNodeId'
       );
       kademliaNode._updateContact('ea48d3f07a5241291ed0b4cab6483fa8b8fcc128',
-                                  { hostname: 'localhost', port: 8080 });
+        { hostname: 'localhost', port: 8080 });
       setImmediate(() => {
         addContactByNodeId.restore();
         ping.restore();
@@ -117,7 +117,7 @@ describe('@class KademliaNode', function() {
         'removeContactByNodeId'
       );
       kademliaNode._updateContact('ea48d3f07a5241291ed0b4cab6483fa8b8fcc128',
-                                  { hostname: 'localhost', port: 8080 });
+        { hostname: 'localhost', port: 8080 });
       setImmediate(() => {
         addContactByNodeId.restore();
         ping.restore();
@@ -693,7 +693,7 @@ describe('@class KademliaNode', function() {
         }
       }));
       let iterativeStore = sandbox.stub(kademliaNode, 'iterativeStore')
-                             .callsArg(2);
+        .callsArg(2);
       kademliaNode.replicate((err) => {
         sandbox.restore();
         expect(err).to.equal(undefined);

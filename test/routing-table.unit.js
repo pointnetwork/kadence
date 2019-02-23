@@ -83,9 +83,9 @@ describe('@class RoutingTable', function() {
 
     it('shoulod add the contact to the appropriate bucket', function() {
       let identity = Buffer.from('ab61ae6158346ec83b178f389d1574589f86dd4e',
-                                 'hex');
+        'hex');
       let nodeId = Buffer.from('c22e091488e9502c09f7c9f8115f386253148a38',
-                               'hex');
+        'hex');
       let router = new RoutingTable(identity);
       let [bucketIndex] = router.addContactByNodeId(nodeId, {});
       expect(bucketIndex).to.equal(158);
@@ -111,7 +111,7 @@ describe('@class RoutingTable', function() {
 
     it('should return the contacts closest to the key', function() {
       let identity = Buffer.from('9e64985b4256a273614165ee75a26076ed8ee5df',
-                                 'hex');
+        'hex');
       let router = new RoutingTable(identity);
       let contacts = [
         'ca284a43d8e3028eefeb0fde889b4cab0953d799',
