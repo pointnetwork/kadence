@@ -305,7 +305,7 @@ describe('@class AbstractNode', function() {
 
     it('should call RoutingTable#addContactByNodeId', function() {
       let _addContactByNodeId = sinon.stub(abstractNode.router,
-                                           'addContactByNodeId');
+        'addContactByNodeId');
       abstractNode._updateContact('node id', {});
       _addContactByNodeId.restore();
       expect(
@@ -315,7 +315,7 @@ describe('@class AbstractNode', function() {
 
     it('should not call RoutingTable#addContactByNodeId', function() {
       let _addContactByNodeId = sinon.stub(abstractNode.router,
-                                           'addContactByNodeId');
+        'addContactByNodeId');
       abstractNode._updateContact(abstractNode.identity.toString('hex'), {});
       _addContactByNodeId.restore();
       expect(

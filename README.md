@@ -2,9 +2,6 @@
   <a href="https://kadence.gitlab.io"><img src="https://assets.gitlab-static.net/uploads/-/system/group/avatar/3071188/36767738.png"></a>
 </p>
 <p style="font-size:18px" align="center"><strong>Extensible, Hardened, and Secure Distributed Systems Framework</strong></p>
-<p align="center">
-  Join the discussion in <code>#kadence</code> on our <a href="https://chat.counterpoint.info/channel/kadence">Rocket.Chat</a>!
-</p>
 <div align="center">
   <a href="https://www.npmjs.com/package/@kadenceproject/kadence">
     <img src="https://img.shields.io/npm/v/@kadenceproject/kadence.svg?style=flat-square" alt="NPM Package">
@@ -86,7 +83,7 @@ transit.
 ### Sybil & Eclipse Mitigation
 
 Kadence employs a [proof of work system](https://en.wikipedia.org/wiki/Proof-of-work_system) 
-using [Scrypt](https://en.wikipedia.org/wiki/Scrypt) for generating valid
+using [Equihash](https://en.wikipedia.org/wiki/Equihash) for generating valid
 node identities and subsequent acceptance into the overlay network. This 
 forces nodes into sufficiently random sectors of the key space and makes 
 [Sybil](https://en.wikipedia.org/wiki/Sybil_attack) and 
@@ -99,7 +96,7 @@ Kadence supports multiple strategies for punching through
 [network address translation](https://en.wikipedia.org/wiki/Network_address_translation). 
 This enables peers behind even the strictest of firewalls to become addressable 
 and join the network. Fallback to secure reverse tunnels is supported through 
-the use of [Diglet](https://gitlab.com/bookchin/diglet) servers.
+the use of [Diglet](https://gitlab.com/gumdrop/diglet) servers.
 
 ### Multiple Network Transports
 
@@ -112,14 +109,6 @@ Plugin your own custom transport layer using using a simple interface.
 Kadence remembers peers between restarts so after you've joined the network once 
 subsequent joins are fast and automatically select the best initial peers for 
 bootstrapping.
-
-### Permissioned Entries
-
-Kadence grants write access to storage entries by verifying that the entry is 
-paired with a unique [proof-of-work](https://en.wikipedia.org/wiki/Proof_of_work) 
-solution using [Scrypt](https://en.wikipedia.org/wiki/Scrypt) that is derived 
-from a valid node identity and signature. Solutions are found through a "mining" 
-process and stored in a digital wallet for your use.
 
 ### Sender & Destination Anonymity
 

@@ -14,7 +14,6 @@ const { homedir } = require('os');
 const assert = require('assert');
 const async = require('async');
 const program = require('commander');
-const hdkey = require('hdkey');
 const kadence = require('../index');
 const bunyan = require('bunyan');
 const RotatingLogStream = require('bunyan-rotating-file-stream');
@@ -33,6 +32,7 @@ const ms = require('ms');
 const rc = require('rc');
 const ini = require('ini');
 const encoding = require('encoding-down');
+const secp256k1 = require('secp256k1');
 
 
 program.version(`
@@ -41,8 +41,7 @@ program.version(`
 `);
 
 program.description(`
-  Copyright (c) 2018 Counterpoint Hackerspace, Ltd
-  Copyright (c) 2018 Gordon Hall
+  Copyright (c) 2019 Gordon Hall
   Licensed under the GNU Affero General Public License Version 3
 `);
 
@@ -51,8 +50,8 @@ program.option('--config <file>', 'path to a kadence configuration file',
 program.option('--datadir <path>', 'path to the default data directory',
   path.join(homedir(), '.config/kadence'));
 program.option('--shutdown', 'sends the shutdown signal to the daemon');
+program.option('--testnet', 'runs with reduced identity difficulty');
 program.option('--daemon', 'sends the kadence daemon to the background');
-program.option('--solvers <cpus>', 'run the solver and generate kadence', '1');
 program.option('--rpc <method> [params]', 'send a command to the daemon');
 program.parse(process.argv);
 
@@ -63,11 +62,12 @@ if (program.datadir) {
   program.config = argv.config;
 }
 
-const { HD_KEY_DERIVATION_PATH } = kadence.constants;
-const solvers = [];
+if (program.testnet) {
+  process.env.kadence_TestNetworkEnabled = '1';
+}
 
 let config = rc('kadence', options(program.datadir), argv);
-let xprivkey, parentkey, childkey, identity, logger, controller, node, wallet;
+let privkey, identity, logger, controller, node, nonce, proof;
 
 
 // Handle certificate generation
@@ -108,7 +108,6 @@ logger = bunyan.createLogger({
 if (parseInt(config.TestNetworkEnabled)) {
   logger.info('kadence is running in test mode, difficulties are reduced');
   process.env.kadence_TestNetworkEnabled = config.TestNetworkEnabled;
-  kadence.constants.SOLUTION_DIFFICULTY = kadence.constants.TESTNET_DIFFICULTY;
   kadence.constants.IDENTITY_DIFFICULTY = kadence.constants.TESTNET_DIFFICULTY;
 }
 
@@ -119,14 +118,17 @@ if (parseInt(config.TraverseNatEnabled) && parseInt(config.OnionEnabled)) {
 }
 
 async function _init() {
-  let index = parseInt(config.ChildDerivationIndex);
-
   // Generate a private extended key if it does not exist
-  if (!fs.existsSync(config.PrivateExtendedKeyPath)) {
-    fs.writeFileSync(
-      config.PrivateExtendedKeyPath,
-      kadence.utils.toHDKeyFromSeed().privateExtendedKey
-    );
+  if (!fs.existsSync(config.PrivateKeyPath)) {
+    fs.writeFileSync(config.PrivateKeyPath, kadence.utils.generatePrivateKey());
+  }
+
+  if (fs.existsSync(config.IdentityProofPath)) {
+    proof = fs.readFileSync(config.IdentityProofPath);
+  }
+
+  if (fs.existsSync(config.IdentityNoncePath)) {
+    nonce = parseInt(fs.readFileSync(config.IdentityNoncePath).toString());
   }
 
   if (program.shutdown) {
@@ -174,56 +176,20 @@ async function _init() {
   });
 
   // Initialize private extended key
-  xprivkey = fs.readFileSync(config.PrivateExtendedKeyPath).toString();
+  privkey = fs.readFileSync(config.PrivateKeyPath);
   identity = new kadence.eclipse.EclipseIdentity(
-    xprivkey,
-    index,
-    HD_KEY_DERIVATION_PATH
+    secp256k1.publicKeyCreate(privkey),
+    nonce,
+    proof
   );
 
   // If identity is not solved yet, start trying to solve it
   if (!identity.validate()) {
-    logger.warn(`identity derivation not yet solved - ${index} is invalid`);
-
-    let events = new EventEmitter();
-    let opts = options(program.datadir);
-    let start = Date.now(), time;
-    let attempts = 0;
-    let status = setInterval(() => {
-      logger.info('still solving identity, ' +
-        `currently ${attempts} of ${kadence.constants.MAX_NODE_INDEX} ` +
-        `possible indices tested in the last ${ms(Date.now() - start)}`);
-    }, 60000);
-
-    logger.info(`solving identity derivation index with ${program.solvers} ` +
-      'solver processes, this can take a while');
-
-    events.on('attempt', () => attempts++);
-
-    try {
-      index = await spawnDerivationProcesses(xprivkey, events);
-      time = Date.now() - start;
-    } catch (err) {
-      logger.error(err.message.toLowerCase());
-      logger.info(`delete/move ${config.PrivateExtendedKeyPath} and restart`);
-      process.exit(1);
-    }
-
-    events.removeAllListeners();
-    clearInterval(status);
-    logger.info(`solved identity derivation index ${index} in ${ms(time)}`);
-    opts.ChildDerivationIndex = index;
-    fs.writeFileSync(program.config, ini.stringify(opts));
-    config = rc('kadence', opts, argv);
+    logger.warn(`identity proof not yet solved, this can take a while`);
+    await identity.solve();
+    fs.writeFileSync(config.IdentityNoncePath, identity.nonce.toString());
+    fs.writeFileSync(config.IdentityProofPath, identity.proof);
   }
-
-  // Start initializing identity keys
-  parentkey = hdkey.fromExtendedKey(xprivkey);
-  childkey = parentkey
-    .derive(HD_KEY_DERIVATION_PATH)
-    .deriveChild(parseInt(config.ChildDerivationIndex));
-  identity = kadence.utils.toPublicKeyHash(childkey.publicKey)
-    .toString('hex');
 
   init();
 }
@@ -237,7 +203,6 @@ function killChildrenAndExit() {
     controller.server.close();
   }
 
-  solvers.forEach(s => s.kill('SIGTERM'));
   process.exit(0);
 }
 
@@ -259,116 +224,6 @@ function registerControlInterface() {
   }
 }
 
-function spawnSolverProcesses() {
-  const cpus = parseInt(program.solvers);
-
-  if (cpus === 0) {
-    return logger.info('there are no solver processes running');
-  }
-
-  if (os.cpus().length < cpus) {
-    return logger.error('refusing to start more solvers than cpu cores');
-  }
-
-  for (let c = 0; c < cpus; c++) {
-    forkIdentitySolver(c);
-  }
-}
-
-function forkIdentitySolver(c) {
-  logger.info(`forking solver process ${c}`);
-
-  let solver = fork(path.join(__dirname, 'workers', 'solver.js'), [], {
-    stdio: [0, 1, 2, 'ipc'],
-    env: process.env
-  });
-
-  solver.on('message', msg => {
-    if (msg.error) {
-      return logger.error(`solver ${c} error, ${msg.error}`);
-    }
-
-    logger.info(`solver ${c} found solution ` +
-      `in ${msg.result.attempts} attempts (${ms(msg.result.time)})`);
-
-    const solution = new kadence.permission.PermissionSolution(
-      Buffer.from(msg.result.solution, 'hex')
-    );
-
-    node.wallet.put(solution);
-  });
-
-  solver.on('error', err => {
-    logger.error(`solver ${c} error, ${err.message}`);
-  });
-
-  solver.send({ privateKey: node.spartacus.privateKey.toString('hex') });
-  solvers.push(solver);
-}
-
-function spawnDerivationProcesses(xprivkey, events) {
-  const cpus = parseInt(program.solvers);
-
-  if (cpus === 0) {
-    return logger.info('there are no derivation processes running');
-  }
-
-  if (os.cpus().length < cpus) {
-    return logger.error('refusing to start more solvers than cpu cores');
-  }
-
-  for (let c = 0; c < cpus; c++) {
-    let index = Math.floor(kadence.constants.MAX_NODE_INDEX / cpus) * c;
-    let solver = forkDerivationSolver(c, xprivkey, index, events);
-
-    solvers.push(solver);
-    solver.once('exit', code => {
-      if (code === 0) {
-        logger.info(`derivation solver ${c} exited normally`);
-      } else {
-        logger.error(`derivation solver ${c} exited with code ${code}`);
-      }
-    });
-  }
-
-  return new Promise((resolve, reject) => {
-    events.once('index', i => {
-      events.removeAllListeners();
-      solvers.forEach(s => s.kill('SIGTERM'));
-      resolve(i);
-    });
-  })
-}
-
-function forkDerivationSolver(c, xprv, index, events) {
-  logger.info(`forking derivation process ${c}`);
-
-  let solver = fork(path.join(__dirname, 'workers', 'identity.js'), [], {
-    stdio: [0, 1, 2, 'ipc'],
-    env: process.env
-  });
-
-  solver.on('message', msg => {
-    if (msg.error) {
-      return logger.error(`derivation ${c} error, ${msg.error}`);
-    }
-
-    if (msg.attempts) {
-      return events.emit('attempt');
-    }
-
-    events.emit('index', msg.index);
-  });
-
-  solver.on('error', err => {
-    logger.error(`derivation ${c} error, ${err.message}`);
-  });
-
-  solver.send([xprv, index]);
-
-  return solver;
-}
-
 async function init() {
   logger.info('initializing kadence');
 
@@ -376,10 +231,7 @@ async function init() {
   const contact = {
     hostname: config.NodePublicAddress,
     protocol: parseInt(config.SSLEnabled) ? 'https:' : 'http:',
-    port: parseInt(config.NodePublicPort),
-    xpub: parentkey.publicExtendedKey,
-    index: parseInt(config.ChildDerivationIndex),
-    agent: kadence.version.protocol
+    port: parseInt(config.NodePublicPort)
   };
 
   let transport;
@@ -407,25 +259,20 @@ async function init() {
     difficulty: 8
   }));
   node.quasar = node.plugin(kadence.quasar());
-  node.spartacus = node.plugin(kadence.spartacus(
-    xprivkey,
-    parseInt(config.ChildDerivationIndex),
-    HD_KEY_DERIVATION_PATH
-  ));
-  node.eclipse = node.plugin(kadence.eclipse());
-  node.permission = node.plugin(kadence.permission({
-    privateKey: node.spartacus.privateKey,
-    walletPath: config.EmbeddedWalletDirectory
+  node.spartacus = node.plugin(kadence.spartacus(privkey, {
+    checkPublicKeyHash: false
   }));
+  node.eclipse = node.plugin(kadence.eclipse(identity));
   node.rolodex = node.plugin(kadence.rolodex(config.EmbeddedPeerCachePath));
-  node.blacklist = node.plugin(kadence.churnfilter({
-    cooldownBaseTimeout: config.ChurnCoolDownBaseTimeout,
-    cooldownMultiplier: parseInt(config.ChurnCoolDownMultiplier),
-    cooldownResetTime: config.ChurnCoolDownResetTime
-  }));
 
-  logger.info('validating solutions in wallet, this can take some time');
-  await node.wallet.validate();
+  // Check if we need to enable the churn filter plugin (experimental)
+  if (parseInt(config.ChurnFilterEnabled)) {
+    node.blacklist = node.plugin(kadence.churnfilter({
+      cooldownBaseTimeout: config.ChurnCoolDownBaseTimeout,
+      cooldownMultiplier: parseInt(config.ChurnCoolDownMultiplier),
+      cooldownResetTime: config.ChurnCoolDownResetTime
+    }));
+  }
 
   // Hibernate when bandwidth thresholds are reached
   if (!!parseInt(config.BandwidthAccountingEnabled)) {
@@ -469,7 +316,7 @@ async function init() {
         remoteAddress: config.TraverseReverseTunnelHostname,
         remotePort: parseInt(config.TraverseReverseTunnelPort),
         privateKey: node.spartacus.privateKey,
-        secureLocalConnection: true,
+        secureLocalConnection: parseInt(config.SSLEnabled),
         verboseLogging: parseInt(config.VerboseLoggingEnabled)
       })
     ]));
@@ -532,7 +379,6 @@ async function init() {
       `and exposed at https://${node.contact.hostname}:${node.contact.port}`
     );
     registerControlInterface();
-    spawnSolverProcesses();
     async.retry({
       times: Infinity,
       interval: 60000

@@ -67,9 +67,6 @@ module.exports.traverse = require('./lib/plugin-traverse');
 /** {@link module:kadence/eclipse} */
 module.exports.eclipse = require('./lib/plugin-eclipse');
 
-/** {@link module:kadence/permission} */
-module.exports.permission = require('./lib/plugin-permission');
-
 /** {@link module:kadence/rolodex} */
 module.exports.rolodex = require('./lib/plugin-rolodex');
 
