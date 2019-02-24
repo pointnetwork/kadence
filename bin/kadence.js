@@ -262,6 +262,9 @@ async function init() {
   node.spartacus = node.plugin(kadence.spartacus(privkey, {
     checkPublicKeyHash: false
   }));
+  node.content = node.plugin(kadence.contentaddress({
+    valueEncoding: 'hex'
+  }));
   node.eclipse = node.plugin(kadence.eclipse(identity));
   node.rolodex = node.plugin(kadence.rolodex(config.EmbeddedPeerCachePath));
 
@@ -376,7 +379,8 @@ async function init() {
   node.listen(parseInt(config.NodeListenPort), () => {
     logger.info(
       `node listening on local port ${config.NodeListenPort} ` +
-      `and exposed at https://${node.contact.hostname}:${node.contact.port}`
+      `and exposed at ${node.contact.protocol}//${node.contact.hostname}` +
+      `:${node.contact.port}`
     );
     registerControlInterface();
     async.retry({
