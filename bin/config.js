@@ -45,7 +45,7 @@ module.exports = function(datadir) {
     BandwidthAccountingReset: '24HR',
 
     // NAT Traversal
-    TraverseNatEnabled: '0',
+    TraverseNatEnabled: '1',
     TraversePortForwardTTL: '0',
     TraverseReverseTunnelHostname: 'tunnel.bookch.in',
     TraverseReverseTunnelPort: '8443',

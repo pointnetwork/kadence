@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "docker-compose up --build --force-recreate --always-recreate-deps",
+    "clean": "docker rm $(docker ps -a -q --filter 'network=kadence_default')",
     "test": "npm run unit-tests && npm run integration-tests && npm run e2e-tests && npm run linter",
     "unit-tests": "mocha --exit test/*.unit.js",
     "integration-tests": "mocha --exit test/*.integration.js",
