@@ -9,7 +9,6 @@
 // NB: identified by public key hashes and verified by signatures.
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-const { EventEmitter } = require('events');
 const { homedir } = require('os');
 const assert = require('assert');
 const async = require('async');
