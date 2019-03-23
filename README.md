@@ -1,23 +1,17 @@
-<p align="center" class="docstrap-hideme">
-  <a href="https://kadence.gitlab.io"><img src="https://assets.gitlab-static.net/uploads/-/system/group/avatar/3071188/36767738.png"></a>
-</p>
-<p style="font-size:18px" align="center"><strong>Extensible, Hardened, and Secure Distributed Systems Framework</strong></p>
+<p style="font-size:18px" align="center"><strong>Kadence: An Extensible, Hardened, and Secure Distributed Systems Framework</strong></p>
 <div align="center">
-  <a href="https://www.npmjs.com/package/@kadenceproject/kadence">
-    <img src="https://img.shields.io/npm/v/@kadenceproject/kadence.svg?style=flat-square" alt="NPM Package">
+  <a href="https://www.npmjs.com/package/@deadcanaries/kadence">
+    <img src="https://img.shields.io/npm/v/@deadcanaries/kadence.svg?style=flat-square" alt="NPM Package">
   </a> | 
-  <a href="https://hub.docker.com/r/kadence/kadence">
-    <img src="https://img.shields.io/docker/pulls/kadence/kadence.svg?style=flat-square" alt="Docker Hub">
+  <a href="https://hub.docker.com/r/deadcanaries/kadence">
+    <img src="https://img.shields.io/docker/pulls/deadcanaries/kadence.svg?style=flat-square" alt="Docker Hub">
   </a> | 
-  <a href="https://gitlab.com/kadence/kadence/raw/master/LICENSE">
+  <a href="https://gitlab.com/deadcanaries/kadence/raw/master/LICENSE">
     <img src="https://img.shields.io/badge/license-AGPLv3-blue.svg?style=flat-square" alt="AGPL-3.0 License">
   </a>
 </div>
 
 ---
-
-Kadence
-=======
 
 The Kadence Project is a complete implementation of the 
 [Kademlia](http://www.scs.stanford.edu/%7Edm/home/papers/kpos.pdf) distributed 
@@ -30,7 +24,7 @@ providing a complete reference implementation of a Kadence network.
 Ready to get started?
 
 ```
-$ npm install -g @kadenceproject/kadence
+$ npm install -g @deadcanaries/kadence
 $ kadence --help
 ```
 
@@ -145,20 +139,20 @@ notable papers!
 License
 -------
 
-    Kadence - Extensible, Hardened, and Secure Distributed Systems Framework  
-    Copyright (C) 2014 - 2018 Gordon Hall
+Kadence - Extensible, Hardened, and Secure Distributed Systems Framework  
+Copyright (C) 2019 Dead Canaries, Inc.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
 
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
