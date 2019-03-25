@@ -301,7 +301,7 @@ describe('ReverseTunnelStrategy', function() {
       tunnel.open = sinon.stub();
       tunnel.url = 'https://nodeid.tunnel.bookch.in:443';
       let { ReverseTunnelStrategy } = proxyquire('../lib/plugin-traverse', {
-        diglet: {
+        '@deadcanaries/diglet': {
           Tunnel: function(opts) {
             expect(opts.localAddress).to.equal('127.0.0.1');
             expect(opts.localPort).to.equal(8080);
