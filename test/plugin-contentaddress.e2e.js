@@ -38,8 +38,8 @@ describe('@module kadence/contentaddress + @class UDPTransport', function() {
     node2.iterativeStore(
       createHash('rmd160').update(Buffer.from('fail')).digest('hex'),
       data,
-      (err, stored) => {
-        expect(stored).to.equal(0);
+      (err) => {
+        expect(err.message).to.equal('Item failed validation check');
         done();
       }
     );

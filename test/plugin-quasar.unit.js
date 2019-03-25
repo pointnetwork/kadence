@@ -209,6 +209,7 @@ describe('@module kadence/quasar', function() {
           callback(null, remote.toHexArray());
         };
         plugin.pullFilterFrom([], (err, filter) => {
+          expect(err).to.equal(null);
           expect(filter[0].has('some topic')).to.equal(true);
           done();
         });
@@ -315,8 +316,8 @@ describe('@module kadence/quasar', function() {
 
       it('should return a random contact', function() {
         let plugin = new QuasarPlugin({ identity, router, use });
-        let firstResult = plugin._getRandomContact();
-        expect(firstResult[0]).to.not.equal(plugin._getRandomContact()[0]);
+        let result = plugin._getRandomContact();
+        expect(result).to.have.lengthOf(2);
       });
 
     });
@@ -430,7 +431,7 @@ describe('@module kadence/quasar', function() {
         });
         let id = uuid.v4();
         let _relayPublication = sinon.stub(rules, '_relayPublication')
-                                  .callsArg(2);
+          .callsArg(2);
         let msg = {
           uuid: id,
           topic: 'test',
@@ -469,7 +470,7 @@ describe('@module kadence/quasar', function() {
         });
         let id = uuid.v4();
         let _relayPublication = sinon.stub(rules, '_relayPublication')
-                                  .callsArg(2);
+          .callsArg(2);
         let msg = {
           uuid: id,
           topic: 'test',
@@ -515,7 +516,7 @@ describe('@module kadence/quasar', function() {
         shouldRelayPublication.onCall(0).returns(false);
         let id = uuid.v4();
         let _relayPublication = sinon.stub(rules, '_relayPublication')
-                                  .callsArg(2);
+          .callsArg(2);
         let msg = {
           uuid: id,
           topic: 'test',
