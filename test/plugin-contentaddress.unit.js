@@ -9,7 +9,8 @@ const { ContentAddressPlugin } = require('../lib/plugin-contentaddress');
 describe('@class ContentAddressPlugin', function() {
 
   let node = {
-    use: sinon.stub()
+    use: sinon.stub(),
+    iterativeStore: sinon.stub()
   };
   let content = null;
 

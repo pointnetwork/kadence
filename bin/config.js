@@ -18,13 +18,13 @@ module.exports = function(datadir) {
     DaemonPidFilePath: join(datadir, 'kadence.pid'),
 
     // Identity/Cryptography
-    PrivateExtendedKeyPath: join(datadir, 'kadence.prv'),
-    ChildDerivationIndex: '0',
+    PrivateKeyPath: join(datadir, 'kadence.prv'),
+    IdentityNoncePath: join(datadir, 'nonce'),
+    IdentityProofPath: join(datadir, 'proof'),
 
     // Database
     EmbeddedDatabaseDirectory: join(datadir, 'kadence.dht'),
     EmbeddedPeerCachePath: join(datadir, 'peercache'),
-    EmbeddedWalletDirectory: join(datadir, 'wallet.dat'),
 
     // Node Options
     NodePublicPort: '5274',
@@ -51,6 +51,7 @@ module.exports = function(datadir) {
     TraverseReverseTunnelPort: '8443',
 
     // Churn Filter
+    ChurnFilterEnabled: '0',
     ChurnCoolDownBaseTimeout: '5M',
     ChurnCoolDownMultiplier: '2',
     ChurnCoolDownResetTime: '60M',
@@ -87,10 +88,6 @@ module.exports = function(datadir) {
   if (!existsSync(join(datadir, 'config'))) {
     mkdirp.sync(datadir);
     writeFileSync(join(datadir, 'config'), ini.stringify(options));
-  }
-
-  if (!existsSync(join(datadir, 'wallet.dat'))) {
-    mkdirp.sync(join(datadir, 'wallet.dat'));
   }
 
   if (!existsSync(join(datadir, 'kadence.dht'))) {

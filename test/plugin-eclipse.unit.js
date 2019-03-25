@@ -4,87 +4,50 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const eclipse = require('../lib/plugin-eclipse');
 const constants = require('../lib/constants');
-const hdkey = require('hdkey');
-const version = require('../lib/version');
 const utils = require('../lib/utils');
-const xprv = 'xprv9s21ZrQH143K2GRHtx45ZAuUjFnt6X58k37hYun7mTRdwX3R2u1JRDxMD6z' +
-  'ZiTudK3QzgZozxhG6x8mpgAsUSojhqU3LeMhxAzAoSG55bai';
+const secp256k1 = require('secp256k1');
 
 
-constants.IDENTITY_DIFFICULTY = 4;
+constants.IDENTITY_DIFFICULTY = constants.TESTNET_DIFFICULTY;
 
 describe('@module kadence/eclipse', function() {
 
-  describe('@class EclipseIdentity', function() {
-
-    it('should solve the index', function(done) {
-      this.timeout(20000);
-      const ident = new eclipse.EclipseIdentity(
-        xprv,
-        0,
-        constants.HD_KEY_DERIVATION_PATH
-      );
-      ident.solve().then(i => {
-        expect(i).to.equal(10)
-        done();
-      }, done).catch(done);
-    });
-
-  });
-
   describe('@class EclipseRules', function() {
 
-    const keys = hdkey.fromExtendedKey(xprv);
+    const prv = utils.generatePrivateKey();
+    const pub = secp256k1.publicKeyCreate(prv);
 
-    it('should validate the derivation index', function(done) {
+    it('should validate the contact', function(done) {
       const rules = new eclipse.EclipseRules({});
-      rules.validate({
-        contact: [
-          utils.toPublicKeyHash(keys.publicKey).toString('hex'),
-          {
-            agent: version.protocol,
-            xpub: keys.publicExtendedKey,
-            index: 10
-          }
-        ]
-      }, {}, err => {
-        expect(err).to.equal(undefined);
-        done();
+      const ident = new eclipse.EclipseIdentity(pub);
+      ident.solve().then(() => {
+        rules.validate({
+          contact: [
+            ident.fingerprint.toString('hex'),
+            {
+              pubkey: pub.toString('hex'),
+              nonce: ident.nonce,
+              proof: ident.proof.toString('hex')
+            }
+          ]
+        }, {}, err => {
+          expect(err).to.equal(undefined);
+          done();
+        });
       });
     });
 
-    it('should invalidate the derivation index', function(done) {
+    it('should invalidate the request', function(done) {
       const rules = new eclipse.EclipseRules({});
       rules.validate({
         contact: [
-          utils.toPublicKeyHash(keys.publicKey).toString('hex'),
-          {
-            agent: version.protocol,
-            xpub: keys.publicExtendedKey,
-            index: 9
-          }
+          utils.toPublicKeyHash(pub).toString('hex'),
+          {}
         ]
       }, {}, err => {
         expect(err.message).to.equal(
-          'Identity key does not satisfy the network difficulty'
+          'Fingerprint does not match the proof hash'
         );
-        done();
-      });
-    });
-
-    it('should invalidate the agent', function(done) {
-      const rules = new eclipse.EclipseRules({});
-      rules.validate({
-        contact: [
-          utils.toPublicKeyHash(keys.publicKey).toString('hex'),
-          {
-            agent: '0.0.0',
-            xpub: keys.publicExtendedKey,
-            index: 14
-          }
-        ]
-      }, {}, err => {
-        expect(err.message).to.equal('Unsupported protocol version 0.0.0');
         done();
       });
     });
@@ -93,9 +56,13 @@ describe('@module kadence/eclipse', function() {
 
   describe('@class EclipsePlugin', function() {
 
+    const prv = utils.generatePrivateKey();
+    const pub = secp256k1.publicKeyCreate(prv);
+    const ident = new eclipse.EclipseIdentity(pub);
+
     it('should call AbstractNode#use', function() {
       const use = sinon.stub();
-      eclipse()({ use });
+      eclipse(ident)({ use, contact: {} });
       expect(use.called).to.equal(true);
     });
 
