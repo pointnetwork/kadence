@@ -4,10 +4,10 @@
   },
   "templates": {
     "systemName": "Kadence",
-    "copyright":  "Copyright 2014 - 2018 Gordon Hall",
+    "copyright":  "Copyright 2019 Dead Canaries, Inc.",
     "includeDate": false,
     "navType": "vertical",
-    "logoFile": "img/logo-header-space.png",
+    "logoFile": "img/kadence.png",
     "theme": "kadence",
     "linenums": false,
     "collapseSymbols": false,

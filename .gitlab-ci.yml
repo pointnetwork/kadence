@@ -9,6 +9,17 @@ before_script:
 
 stages:
   - test
+  - docs
+
+pages:
+  stage: docs
+  script:
+    - npm run generate-docs
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
 
 run_tests:
   stage: test

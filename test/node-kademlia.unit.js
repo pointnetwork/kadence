@@ -206,7 +206,7 @@ describe('@class KademliaNode', function() {
         iterativeFindNode.restore();
         getClosestBucket.restore();
         refresh.restore();
-        expect(err).to.equal(undefined);
+        expect(err).to.not.be.instanceOf(Error);
         expect(addContactByNodeId.calledWithMatch(
           'ea48d3f07a5241291ed0b4cab6483fa8b8fcc128'
         )).to.equal(true);
@@ -599,22 +599,20 @@ describe('@class KademliaNode', function() {
         utils.getRandomKeyString(),
         contact
       ])));
-      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(
-        3,
-        null,
+      let send = sandbox.stub(kademliaNode, '_send').returns(Promise.resolve(
         Array(20).fill(20).map(() => [utils.getRandomKeyString(), contact])
-      );
-      send.onCall(4).callsArgWith(3, null, {
+      ));
+      send.onCall(4).returns(Promise.resolve({
         value: 'some data value',
         timestamp: Date.now(),
         publisher: 'ea48d3f07a5241291ed0b4cab6483fa8b8fcc127'
-      });
+      }));
       kademliaNode.iterativeFindValue(
         utils.getRandomKeyString(),
         (err, result) => {
           sandbox.restore();
           expect(result.value).to.equal('some data value');
-          expect(send.callCount).to.equal(6);
+          expect(send.callCount >= 6).to.equal(true);
           done();
         }
       );
@@ -630,18 +628,18 @@ describe('@class KademliaNode', function() {
         utils.getRandomKeyString(),
         contact
       ])));
-      let send = sandbox.stub(kademliaNode, 'send').callsArgWith(3, null, {
+      let send = sandbox.stub(kademliaNode, '_send').returns(Promise.resolve({
         value: 'some data value',
         timestamp: Date.now(),
         publisher: 'ea48d3f07a5241291ed0b4cab6483fa8b8fcc127'
-      });
-      send.onCall(0).callsArgWith(3, new Error('Request timeout'));
+      }));
+      send.onCall(0).returns(Promise.reject(new Error('Request timeout')));
       kademliaNode.iterativeFindValue(
         utils.getRandomKeyString(),
         (err, result) => {
           sandbox.restore();
           expect(result.value).to.equal('some data value');
-          expect(send.callCount).to.equal(3);
+          expect(send.callCount >= 3).to.equal(true);
           done();
         }
       );
