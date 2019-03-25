@@ -7,6 +7,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
 ENV GRANAX_USE_SYSTEM_TOR="1"
 RUN git clone https://gitlab.com/deadcanaries/kadence /root/kadence; \
+    cd /root/kadence; \
     git fetch --tags; \
     git checkout $(git describe --tags `git rev-list --tags --max-count=1`); \
     cd /root/kadence && npm install --unsafe-perm --production

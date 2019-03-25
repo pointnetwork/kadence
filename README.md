@@ -1,4 +1,7 @@
 <p style="font-size:18px" align="center"><strong>Kadence: An Extensible, Hardened, and Secure Distributed Systems Framework</strong></p>
+<p align="center">
+  Join our <a href="https://keybase.io/team/deadcanaries.kadence">Keybase team</a> to chat!
+</p>
 <div align="center">
   <a href="https://www.npmjs.com/package/@deadcanaries/kadence">
     <img src="https://img.shields.io/npm/v/@deadcanaries/kadence.svg?style=flat-square" alt="NPM Package">
