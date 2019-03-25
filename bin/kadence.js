@@ -40,7 +40,7 @@ program.version(`
 `);
 
 program.description(`
-  Copyright (c) 2019 Gordon Hall
+  Copyright (c) 2019 Dead Canaries, Inc.
   Licensed under the GNU Affero General Public License Version 3
 `);
 
