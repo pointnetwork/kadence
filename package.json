@@ -51,6 +51,7 @@
     "node": ">=10.x.x"
   },
   "dependencies": {
+    "@deadcanaries/diglet": "^2.0.3",
     "@deadcanaries/hsv3": "^1.1.5",
     "async": "^2.6.0",
     "atbf": "^1.1.0",
@@ -61,7 +62,6 @@
     "commander": "^2.9.0",
     "concat-stream": "^1.6.0",
     "daemon": "^1.1.0",
-    "diglet": "^2.0.3",
     "encoding-down": "^6.0.1",
     "equihash": "github:digitalbazaar/equihash#f14491f",
     "ip": "^1.1.5",
@@ -75,7 +75,7 @@
     "metapipe": "^2.0.2",
     "mkdirp": "^0.5.1",
     "ms": "^2.1.1",
-    "nat-pmp": "git+https://gitlab.com/deadcanaries/node-nat-pmp#ffeda3dee8fd7103f368b4d2448ed0a861f662a5",
+    "nat-pmp": "git+https://gitlab.com/deadcanaries/depends/node-nat-pmp#ffeda3dee8fd7103f368b4d2448ed0a861f662a5",
     "nat-upnp": "^1.1.1",
     "network": "^0.4.1",
     "npid": "^0.4.0",
@@ -92,7 +92,7 @@
     "chai": "^2.2.0",
     "coveralls": "^3.0.1",
     "eslint": "^5.14.1",
-    "ink-docstrap": "git+https://gitlab.com/deadcanaries/docstrap.git",
+    "ink-docstrap": "git+https://gitlab.com/deadcanaries/depends/docstrap.git",
     "istanbul": "^1.1.0-alpha.1",
     "jsdoc": "^3.4.0",
     "memdown": "^2.0.0",
