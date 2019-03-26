@@ -1,6 +1,6 @@
 {
   "name": "@deadcanaries/kadence",
-  "version": "6.0.2",
+  "version": "6.1.0",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
@@ -85,7 +85,6 @@
     "semver": "^5.1.0",
     "socks": "^1.1.10",
     "split": "^1.0.1",
-    "tiny": "^0.0.10",
     "uuid": "^3.2.1"
   },
   "devDependencies": {

@@ -19,7 +19,8 @@ describe('@module kadence/rolodex', function() {
     logger: {
       warn: sinon.stub(),
       info: sinon.stub(),
-      debug: sinon.stub()
+      debug: sinon.stub(),
+      error: sinon.stub()
     }
   };
 
@@ -74,7 +75,7 @@ describe('@module kadence/rolodex', function() {
       it('should set the internal peer info', function(done) {
         plugin.setInternalPeerInfo(nodeid1, {
           reputation: 95
-        }).then(done, done);
+        }).then(() => done(), done);
       });
 
     });
