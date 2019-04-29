@@ -1,12 +1,12 @@
 ### Version 3.0 (March 3, 2018)
 
-Gordon Hall (gordonh@member.fsf.org)  
+Emery Rose Hall (emery@deadcanaries.org)  
 
 ---
 
 ### 0    License
 
-Copyright (C) 2018 Gordon Hall  
+Copyright (C) 2018 Emery Rose Hall  
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3
@@ -24,47 +24,18 @@ future specification.
 
 ### 2    Identities
 
-Every node (host computer speaking the Kadence protocol) on the network 
-possesses a unique cryptographic identity. This identity is used to derive a 
-special 160 bit identifier for the purpose of organizaing the overlay structure 
-and routing messages _(3.1: Kademlia)_. In order for a node to join the network 
-it must generate an identity.
+Every node (host computer speaking the Kadence protocol) on the network possesses 
+a unique cryptographic identity. This identity is used to derive a special 
+160 bit identifier for the purpose of organizaing the overlay structure and 
+routing messages _(3.1: Kademlia)_. In order for a node to join the network it 
+must generate an identity.
 
-Identities are described as **hierarchically deterministic** and serve the 
-purpose of running a cluster of nodes that can all share the same parent 
-identity and act on behalf of each other in the network. The specification 
-extends Bitcoin ECDSA derivation standard 
-[BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki) and 
-[BIP43](https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki).
-
-Key derivation must match the specification of Bitcoin Hierarchical 
-Deterministic Wallets (BIP32) with the purpose field described in Bitcoin 
-Purpose Field for Deterministic Wallets (BIP43).
-
-We define the following levels in BIP32 path:
-
-```
-m / purpose' / group_index' / node_index
-```
-
-The apostrophe in the path indicates that BIP32 hardened derivation is used. 
-Purpose is a constant set to 3000, so as to not collide with any bitcoin 
-related proposals which recommends to use the BIP number.
-
-```
-m / 3000' / group_index' / node_index
-```
-
-The `group_index` for all purposes will be 0. The `node_index` can be a number 
-from 0 through 2 ^ 31 - 1, so that it's using a non-hardened paths and it's 
-always possible to derive the public key for a node using the 
-`m / 3000' / group_index'` derived extended public key. This gives a total of 
-2.147 billion possible nodes to run in a group cluster.
-
-> As noted in BIP32, a compromised private key at the `node_index` level in 
-> combination with the extended public key at the `group_index` level will 
-> compromise all descending private keys derived from the `group_index` level, 
-> this is the rationale for a hardened path for the `group_index`.
+Identities are the RMD160 hash of an Equihash proof where the node's public 
+key is the proof input. Messages are signed with the corresponding private key.
+This is designed to provide some resilience against sybil and, in particular, 
+eclipse attacks. An eclipse attack is a type of censorship by which an attacker 
+is able to manipulate the network's routing tables such that the attacker is 
+able to "surround" a target without their knowledge.
 
 In every message exchanged on the network, each party will include a tuple 
 structure which includes enough information to locate and authenticate each 
@@ -74,34 +45,18 @@ party.
 ["<node_id>", { /* <contact> */ }]
 ```
 
-#### 2.1    Node ID Generation
-
-Once a HD identity has been generated, a child identity should be derived and 
-used for a single node. The resulting public key from that child identity is 
-used to derive the Node ID. The node's identifier is the 
-`RIPEMD160( SHA256( CHILD_PUBLIC_KEY ) )` encoded in hexidecimal. This value 
-is inserted as the first item in the identity tuple.
-
-```
-["705e93f855e60847fda4c48adff0dc1b1f7c40ef", { /* <contact> */ }]
-```
-
-> Note that the `xpub` and `index` properties of the contact object must yield 
-> a public key that hashes to produce a valid difficulty if 
-> {@link module:kadence/eclipse} is in use.
-
-#### 2.2    Contact Hash Map
+#### 2.1    Contact Hash Map
 
 The second entry in the identity tuple contains additional information specific 
 to addressing the node on the network. This includes:
 
 ```
 {
-  "hostname": "ip.address.or.domain.name",
-  "port": 8443,
-  "protocol": "https:",
-  "xpub": "<public_extended_key>",
-  "index": "<child_identity_derivation_index>"
+  "hostname": "xxxxxxxx.onion",
+  "port": 80,
+  "protocol": "http:",
+  "pubkey": "...",
+  "proof": "..."
 }
 ```
 
@@ -119,26 +74,24 @@ by the work on [S/Kademlia](http://www.tm.uka.de/doc/SKademlia_2007.pdf).
 
 #### 3.1    Kademlia
 
-Once a Kadence node has completed generating its identity, it bootstraps its 
+Once an Kadence node has completed generating its identity, it bootstraps its 
 routing table by following the Kademlia "join" procedure. This involves 
 querying a single known "seed" node for contact information about other nodes 
 that possess a Node ID that is close (XOR distance) to its own 
-_(4.4 FIND_NODE)_. This is done iteratively, sending the same query to the 
+_(`4.4 FIND_NODE`)_. This is done iteratively, sending the same query to the 
 `ALPHA` (3) results that are closest, until the further queries no longer 
 yield results that are closer or the routing table is sufficiently 
 bootstrapped.
 
 #### 3.2    Transport
 
-Kadence operates by default entirely over HTTPS. In general this means that 
-certificates are self-signed and you must accept them in order to communicate 
-with others on the network. 
+The Kadence network operates over HTTP and exclusively over 
+[Tor](https://torproject.org).
 
-Each Kadence node exposes an endpoint to other nodes  for receiving RPC 
-messages _(4. Remote Procedure Calls). Requests sent to the RPC endpoint 
+Each Kadence node exposes a V3 hidden service to other nodes for receiving RPC 
+messages _(4. Remote Procedure Calls)_. Requests sent to the RPC endpoint 
 require a special HTTP header `x-kad-message-id` to be included that matches 
-the `id` parameter in the associated RPC message 
-_(4.1 Structure and Authentication)_.
+the `id` parameter in the associated RPC message _(4.1 Structure and Authentication)_.
 
 ### 4    Remote Procedure Calls
 
@@ -172,13 +125,8 @@ Together, these objects provide the recipient with information regarding the
 identity and addressing information of the sender as well as a cryptographic 
 signature to authenticate the payload.
 
-At position 3, if the individual RPC method being invoked requires it, a 
-hashcash proof-of-work stamp (see {@link module:kadence/hashcash}) must 
-be included. This is to prevent spam and denial of service attacks from 
-flooding segments of the network with queries.
-
-> Positions 4 and beyond in this structure are reserved for future protocol 
-> extensions related to global message processing.
+For `STORE` message, an additional `HASHCASH` message is included in the 
+payload to prevent spam.
 
 ##### Example: Request
 
@@ -194,13 +142,13 @@ flooding segments of the network with queries.
     "jsonrpc": "2.0",
     "method": "IDENTIFY",
     "params": [
-      "<public_key_hash>", 
+      "<proof_hash>", 
       {
-        "hostname": "sender.hostname",
-        "port": 8443,
-        "protocol": "https:",
-        "xpub": "<public_extended_key>",
-        "index": "<child_key_derivation_index>"
+        "hostname": "sender.onion",
+        "port": 80,
+        "protocol": "http:",
+        "pubkey": "...",
+        "proof": "..."
       }
     ]
   },
@@ -209,14 +157,8 @@ flooding segments of the network with queries.
     "method": "AUTHENTICATE",
     "params": [
       "<payload_signature>",
-      "<child_public_key>",
-      ["<public_extended_key>", "<child_key_derivation_index>"]
+      "<public_key>"
     ]
-  },
-  {
-    "jsonrpc": "2.0",
-    "method": "HASHCASH",
-    "params": ["<hashcash_stamp>"]
   }
 ]
 ```
@@ -234,13 +176,13 @@ flooding segments of the network with queries.
     "jsonrpc": "2.0",
     "method": "IDENTIFY",
     "params": [
-      "<public_key_hash>", 
+      "<proof_hash>", 
       {
-        "hostname": "receiver.hostname",
-        "port": 8443,
-        "protocol": "https:",
-        "xpub": "<public_extended_key>",
-        "index": "<child_key_derivation_index>"
+        "hostname": "receiver.onion",
+        "port": 80,
+        "protocol": "http:",
+        "pubkey": "...",
+        "proof": "..."
       }
     ]
   },
@@ -249,20 +191,24 @@ flooding segments of the network with queries.
     "method": "AUTHENTICATE",
     "params": [
       "<payload_signature>",
-      "<child_public_key>",
-      ["<public_extended_key>", "<child_key_derivation_index>"]
+      "<public_key>"
     ]
   }
 ]
 ```
 
-In the examples above, `public_key_hash` and `child_public_key` must be encoded 
-as hexidecimal strings, `public_extended_key` must be encoded as a base58 
-string (in accordance with BIP32), and `payload_signature` must be encoded as a
+In the examples above, `proof_hash` and `public_key` must be encoded 
+as hexidecimal string and `payload_signature` must be encoded as a
 base64 string which is the concatenation of the public key recovery number with 
 the actual signature of the payload - excluding the object at index 2 
 (`AUTHENTICATE`). This means that the message to be signed is 
 `[rpc, identify]`.
+
+> Note the exclusion of a timestamp or incrementing nonce in the payload means 
+> that a man-in-the-middle could carry out a replay attack. To combat this, it 
+> is urged that the `id` parameter of the RPC message (which is a universally 
+> unique identifier) be stored for a reasonable period of time and nodes should 
+> reject messages that attempt to use a duplicate UUID.
 
 The rest of this section describes each individual method in the base protocol 
 and defines the parameter and result signatures that are expected. If any RPC 
@@ -314,25 +260,29 @@ Results: `{ timestamp, publisher, value }` or `[...contactN]`
 
 The sender of the `STORE` RPC provides a key and a block of data and requires 
 that the recipient store the data and make it available for later retrieval by 
-that key.
+that key. Kadence **requires** that the key is the RMD160 hash of the supplied blob 
+and that the blob is *exactly* equal to 2MiB in size and encoded as base64.
 
-Parameters: `[key_160_hex, { timestamp, publisher, value }]`  
-Results: `[key_160_hex, { timestamp, publisher, value }]`
+Parameters: `[key_160_hex, 2mib_value_base64]`  
+Results: `[key_160_hex, 2mib_value_base64]`
 
-### 6    Kadence Controller API
+An additional `HASHCASH` payload is appended to this message.
 
-The Kadence daemon exposes a local RPC server via UNIX domain socket and will 
-accept JSON-RPC payloads as newline terminated strings. The use of domain 
-sockets allows for improved security, leveraging POSIX file ownership and 
-users to prevent unauthorized control of the daemon from other users or 
-processes on the same system and prevents remote intrusion. The JSON-RPC 
-message format is the same as described in _4: Remote Procedure Calls_.
+```
+{
+  "jsonrpc": "2.0",
+  "method": "HASHCASH",
+  "params": ["<hashcash_stamp>"]
+}
+```
 
-See {@link Control} for more detailed information.
+The stamp follows the hashcash specification. The resource segment of the stamp
+is the sender identity, target identity, and method name concatenated. The 
+difficulty may be adjusted by community consensus to account for potential 
+attacks.
 
-### 7    References
+### 9    References
 
-* BIP32 (`https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki`)
-* BIP43 (`https://github.com/bitcoin/bips/blob/master/bip-0043.mediawiki`)
 * Kademlia (`http://www.scs.stanford.edu/~dm/home/papers/kpos.pdf`)
 * S/Kademlia (`http://www.tm.uka.de/doc/SKademlia_2007.pdf`)
+
