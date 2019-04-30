@@ -206,7 +206,8 @@ describe('@class AbstractNode', function() {
           expect(result).to.equal(null);
           expect(err.message).to.equal('Error response');
           done();
-        }
+        },
+        fingerprint: 'SENDERID'
       });
       abstractNode._process([
         {
@@ -243,7 +244,8 @@ describe('@class AbstractNode', function() {
           expect(result).to.have.lengthOf(0);
           expect(err).to.equal(null);
           done();
-        }
+        },
+        fingerprint: 'SENDERID'
       });
       abstractNode._process([
         {
@@ -267,7 +269,80 @@ describe('@class AbstractNode', function() {
         }
       ]);
       _updateContact.restore();
+    });
 
+    it('should error with unexpected fingerprint', function(done) {
+      let _updateContact = sinon.stub(abstractNode, '_updateContact');
+      abstractNode._pending.set('message id', {
+        timestamp: Date.now(),
+        handler: (err, result) => {
+          expect(result).to.equal(null);
+          expect(err.message).to.equal(
+            'Response fingerprint differs from request destination'
+          );
+          done();
+        },
+        fingerprint: 'SENDERID1'
+      });
+      abstractNode._process([
+        {
+          type: 'success',
+          payload: {
+            id: 'message id',
+            result: []
+          }
+        },
+        {
+          type: 'notification',
+          payload: {
+            params: [
+              'SENDERID2',
+              {
+                hostname: 'localhost',
+                port: 8080
+              }
+            ]
+          }
+        }
+      ]);
+      _updateContact.restore();
+
+    });
+
+
+    it('should execute the expected handler with data', function(done) {
+      let _updateContact = sinon.stub(abstractNode, '_updateContact');
+      abstractNode._pending.set('message id', {
+        timestamp: Date.now(),
+        handler: (err, result) => {
+          expect(result).to.have.lengthOf(0);
+          expect(err).to.equal(null);
+          done();
+        },
+        fingerprint: Buffer.alloc(20, 0).toString('hex')
+      });
+      abstractNode._process([
+        {
+          type: 'success',
+          payload: {
+            id: 'message id',
+            result: []
+          }
+        },
+        {
+          type: 'notification',
+          payload: {
+            params: [
+              'SENDERID',
+              {
+                hostname: 'localhost',
+                port: 8080
+              }
+            ]
+          }
+        }
+      ]);
+      _updateContact.restore();
     });
 
   });
