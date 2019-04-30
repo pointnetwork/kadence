@@ -1,5 +1,5 @@
 FROM debian:buster
-LABEL maintainer "gordyn@deadcanaries.org"
+LABEL maintainer "emery@deadcanaries.org"
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq upgrade
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install wget apt-transport-https gnupg curl libssl-dev git python build-essential tor
