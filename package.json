@@ -51,7 +51,7 @@
     "node": ">=10.x.x"
   },
   "dependencies": {
-    "@deadcanaries/diglet": "^2.0.3",
+    "@deadcanaries/diglet": "^2.0.5",
     "@deadcanaries/hsv3": "^1.1.5",
     "async": "^2.6.0",
     "atbf": "^1.1.0",
@@ -81,7 +81,7 @@
     "npid": "^0.4.0",
     "pem": "^1.13.2",
     "rc": "^1.2.8",
-    "secp256k1": "^3.5.0",
+    "secp256k1": "=3.2.2",
     "semver": "^5.1.0",
     "socks": "^1.1.10",
     "split": "^1.0.1",
@@ -93,7 +93,7 @@
     "eslint": "^5.14.1",
     "ink-docstrap": "git+https://gitlab.com/deadcanaries/depends/docstrap.git",
     "istanbul": "^1.1.0-alpha.1",
-    "jsdoc": "^3.4.0",
+    "jsdoc": "^3.6.1",
     "memdown": "^2.0.0",
     "mocha": "^5.2.0",
     "proxyquire": "^1.8.0",
