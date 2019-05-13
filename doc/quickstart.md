@@ -35,7 +35,7 @@ $ npm init
 Then install Kadence and save the dependency to your `package.json` file.
 
 ```
-$ npm install @kadenceproject/kadence --save
+$ npm install @deadcanaries/kadence --save
 ```
 
 #### Creating a Node
@@ -53,7 +53,7 @@ For this example we'll be using the {@link UDPTransport} and a LevelDB database
 provided by the `levelup` and `leveldown` packages.
 
 ```js
-const kadence = require('@kadenceproject/kadence');
+const kadence = require('@deadcanaries/kadence');
 const levelup = require('levelup');
 const leveldown = require('leveldown');
 const encode = require('encoding-down');

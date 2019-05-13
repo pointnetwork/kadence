@@ -1,7 +1,7 @@
 Make sure you have the following prerequisites installed:
 
 * [Git](https://git-scm.org)
-* [Node.js LTS + NPM (8.9.x)](https://nodejs.org)
+* [Node.js LTS + NPM (10.15.x)](https://nodejs.org)
 * Python 2.7
 * GCC/G++/Make
 
@@ -58,7 +58,7 @@ npm install -g windows-build-tools
 This package exposes the program `kadence`. To install, use the `--global` flag.
 
 ```
-npm install -g @kadenceproject/kadence
+npm install -g @deadcanaries/kadence
 ```
 
 ### Core Library
@@ -68,11 +68,11 @@ of the protocol. To use it in your project, from your project's root
 directory, install as a dependency.
 
 ```
-npm install @kadenceproject/kadence --save
+npm install @deadcanaries/kadence --save
 ```
 
 Then you can require the library with:
 
 ```
-const kadence = require('@kadenceproject/kadence');
+const kadence = require('@deadcanaries/kadence');
 ```
