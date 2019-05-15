@@ -47,7 +47,7 @@ module.exports = function(datadir) {
     // NAT Traversal
     TraverseNatEnabled: '1',
     TraversePortForwardTTL: '0',
-    TraverseReverseTunnelHostname: 'tunnel.bookch.in',
+    TraverseReverseTunnelHostname: 'tunnel.deadcanaries.org',
     TraverseReverseTunnelPort: '8443',
 
     // Churn Filter
