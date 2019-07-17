@@ -17,7 +17,10 @@ describe('@module kademlia/hibernate', function() {
         prepend: sinon.stub()
       }
     },
-    use: sinon.stub()
+    use: sinon.stub(),
+    logger: {
+      warn: sinon.stub()
+    }
   };
   let hibernate = null;
 
