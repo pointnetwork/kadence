@@ -1,6 +1,6 @@
 {
   "name": "@deadcanaries/kadence",
-  "version": "6.1.7",
+  "version": "6.1.8",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
@@ -75,7 +75,7 @@
     "metapipe": "^2.0.2",
     "mkdirp": "^0.5.1",
     "ms": "^2.1.1",
-    "nat-pmp": "git+https://gitlab.com/deadcanaries/depends/node-nat-pmp#ffeda3dee8fd7103f368b4d2448ed0a861f662a5",
+    "nat-pmp": "git+https://gitlab.com/deadcanaries/depends/node-nat-pmp#7029e2b0ab11073df0d71b6d9da4a2aefeb5723d",
     "nat-upnp": "^1.1.1",
     "network": "^0.4.1",
     "npid": "^0.4.0",
