@@ -25,17 +25,17 @@ extension for Kadence that aims to satisfy this use case.
 
 ### Routing Issues
 
-The primary routing table is maintained according the Kademlia's bucket 
+The primary routing table is maintained according to Kademlia's bucket 
 sorting, refresh, and eviction rules. Because of the nature of that design, 
 many discovered peers do not make it into an individual node's table. This is 
 because the number of nodes that are XOR furthest from any given node is 
 exponentially higher than those that are the next closest bucket. 
 
-This means that any given node may at some point become aware of all or most 
-nodes in the network, after K(=20) contacts are placed in a bucket, none of 
-them will be evicted until they have been unresponsive for some time. If we 
-were to deliver a message to every node in our routing table, we'd still fail 
-to deliver our message to more and more participants the bigger our network
+This means that even though any given node may at some point become aware of 
+all or most nodes in the network, after K(=20) contacts are placed in a bucket, 
+none of them will be evicted until they have been unresponsive for some time. 
+If we were to deliver a message to every node in our routing table, we'd still 
+fail to deliver our message to more and more participants the bigger our network
 grows.
 
 One possible approach to this might be to maintain a secondary peer list that 
@@ -67,7 +67,7 @@ as many as B\*K(=3200)).
 This new `FLOOD` message should be sent to all known contacts using a 
 parallelism degree equal to ALPHA(=3). Upon receipt of a `FLOOD` message, a 
 node must check if they have received/relayed the message already. If they 
-have, they must do nothing aside from ACK receipt. If the nodes has never 
+have, they must do nothing aside from ACK receipt. If the node has never 
 received/relayed the message, they must ACK receipt *and* forward contents. 
 The relayed message is sent as a `FLOOD` message to K(=20) nodes that are 
 *further than recipient from the origin*.
@@ -83,13 +83,14 @@ achieved with Quasar.
 ### Message Structure
 
 The message format follows the same envelope structure as all other Kadence 
-messages. Its payload includes an `origin` - the which is a 
-{@link Bucket~contact}, `content` - which can be any JSON-serializable data, 
-and `signature` - a secp256k1 signature of `{origin, content}`.  Validity 
-checks are performed on the `FLOOD` messages before handling to ensure they 
-have not been tampered with.
+messages. Its payload includes an `origin` - which is a {@link Bucket~contact}, 
+`content` - which can be any JSON-serializable data, and `signature` - a 
+secp256k1 signature of `{origin, content}`.  Validity checks are performed on 
+the `FLOOD` messages before handling to ensure they have not been tampered with.
 
 ### Example Usage
+
+> This API is not finalized
 
 ```js
 const node = new kadence.KademliaNode({
@@ -99,13 +100,17 @@ const node = new kadence.KademliaNode({
   storage
 });
 
-node.plugin(kadence.flood({
+function onReceiveFloodMessage(content, origin) {
+  // handle flooded messages
+}
+
+node.plugin(kadence.flood(onReceiveFloodMessage, {
   sign: function(origin, content) {
-    // pluggable integrity checking
+    // optional pluggable integrity checking
   },
   verify: function(origin, content, signature) {
-    // pluggable integrity checking
-  }
+    // optional pluggable integrity checking
+  },
 }));
 
 node.floodBroadcast({ any, json, content});
