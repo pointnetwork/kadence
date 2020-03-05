@@ -73,7 +73,7 @@ let privkey, identity, logger, controller, node, nonce, proof;
 function _generateSelfSignedCertificate() {
   return new Promise((resolve, reject) => {
     pem.createCertificate({
-      days: 365,
+      days: 3650,
       selfSigned: true
     }, (err, keys) => {
       if (err) {

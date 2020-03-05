@@ -62,7 +62,7 @@ describe('@module kadence/eclipse', function() {
 
     it('should call AbstractNode#use', function() {
       const use = sinon.stub();
-      eclipse(ident)({ use, contact: {} });
+      eclipse(ident)({ use, contact: {}, router: {} });
       expect(use.called).to.equal(true);
     });
 
