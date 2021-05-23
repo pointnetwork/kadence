@@ -6,7 +6,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install wget apt-transport-https 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs
 ENV GRANAX_USE_SYSTEM_TOR="1"
-RUN git clone https://github.com/deadcanaries/kadence /root/kadence; \
+RUN git clone https://github.com/pointnetwork/kadence /root/kadence; \
     cd /root/kadence; \
     git fetch --tags; \
     git checkout $(git describe --tags `git rev-list --tags --max-count=1`); \

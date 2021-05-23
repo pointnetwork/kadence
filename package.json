@@ -1,6 +1,6 @@
 {
-  "name": "@deadcanaries/kadence",
-  "version": "6.1.12",
+  "name": "@pointnetwork/kadence",
+  "version": "6.1.13",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
@@ -25,7 +25,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/deadcanaries/kadence"
+    "url": "https://github.com/pointnetwork/kadence"
   },
   "author": "Emery Rose Hall <emery@deadcanaries.org>",
   "contributors": [
@@ -51,8 +51,8 @@
     "node": "10.x.x"
   },
   "dependencies": {
-    "@deadcanaries/diglet": "^2.0.5",
-    "@deadcanaries/hsv3": "^1.1.5",
+    "@pointnetwork/diglet": "^2.0.5",
+    "@pointnetwork/hsv3": "^1.1.5",
     "async": "^2.6.0",
     "atbf": "^1.1.0",
     "boscar": "^2.0.0",
@@ -75,7 +75,7 @@
     "metapipe": "^2.0.2",
     "mkdirp": "^0.5.1",
     "ms": "^2.1.1",
-    "nat-pmp": "git+https://github.com/deadcanaries/depends-node-nat-pmp#7029e2b0ab11073df0d71b6d9da4a2aefeb5723d",
+    "nat-pmp": "git+https://github.com/pointnetwork/depends-node-nat-pmp#7029e2b0ab11073df0d71b6d9da4a2aefeb5723d",
     "nat-upnp": "^1.1.1",
     "network": "^0.4.1",
     "npid": "^0.4.0",
@@ -91,7 +91,7 @@
     "chai": "^2.2.0",
     "coveralls": "^3.0.1",
     "eslint": "^5.14.1",
-    "ink-docstrap": "git+https://github.com/deadcanaries/depends-docstrap.git",
+    "ink-docstrap": "git+https://github.com/pointnetwork/depends-docstrap.git",
     "istanbul": "^1.1.0-alpha.1",
     "jsdoc": "^3.6.3",
     "memdown": "^2.0.0",
