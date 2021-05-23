@@ -1,6 +1,5 @@
 'use strict';
 
-const bunyan = require('bunyan');
 const levelup = require('levelup');
 const memdown = require('memdown');
 const kadence = require('../..');
@@ -12,11 +11,12 @@ let startPort = 65000;
 module.exports = function(numNodes, Transport) {
 
   const nodes = [];
-
-  const logger = bunyan.createLogger({
-    levels: ['fatal'],
-    name: 'node-kademlia'
-  });
+  const logger = {
+    error() {},
+    warn() {},
+    info() {},
+    debug() {}
+  };
   const storage = levelup(encoding(memdown()));
 
   function createNode() {

@@ -1,0 +1,40 @@
+name: Automated Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install OS Dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get -qq install -y python2.7 python2.7-dev build-essential make gcc g++ libicu-dev
+    - name: Install Node.js Dependencies
+      run: npm ci
+      env:
+        GRANAX_USE_SYSTEM_TOR: 1
+    - name: Run unit tests
+      run: npm run unit-tests
+    - name: Run integration tests
+      run: npm run integration-tests
+      ## Github doesn't like our e2e tests seemingly due to resource consumption
+      #    - name: Run end-to-end tests
+      #      run: npm run e2e-tests
+    - name: Run linter
+      run: npm run linter

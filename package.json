@@ -1,6 +1,6 @@
 {
   "name": "@deadcanaries/kadence",
-  "version": "6.1.11",
+  "version": "6.1.12",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
@@ -25,7 +25,7 @@
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/deadcanaries/kadence.git"
+    "url": "https://github.com/deadcanaries/kadence"
   },
   "author": "Emery Rose Hall <emery@deadcanaries.org>",
   "contributors": [
@@ -48,7 +48,7 @@
   ],
   "license": "AGPL-3.0",
   "engines": {
-    "node": ">=10.x.x"
+    "node": "10.x.x"
   },
   "dependencies": {
     "@deadcanaries/diglet": "^2.0.5",
@@ -75,7 +75,7 @@
     "metapipe": "^2.0.2",
     "mkdirp": "^0.5.1",
     "ms": "^2.1.1",
-    "nat-pmp": "git+https://gitlab.com/deadcanaries/depends/node-nat-pmp#7029e2b0ab11073df0d71b6d9da4a2aefeb5723d",
+    "nat-pmp": "git+https://github.com/deadcanaries/depends-node-nat-pmp#7029e2b0ab11073df0d71b6d9da4a2aefeb5723d",
     "nat-upnp": "^1.1.1",
     "network": "^0.4.1",
     "npid": "^0.4.0",
@@ -91,11 +91,11 @@
     "chai": "^2.2.0",
     "coveralls": "^3.0.1",
     "eslint": "^5.14.1",
-    "ink-docstrap": "git+https://gitlab.com/deadcanaries/depends/docstrap.git",
+    "ink-docstrap": "git+https://github.com/deadcanaries/depends-docstrap.git",
     "istanbul": "^1.1.0-alpha.1",
     "jsdoc": "^3.6.3",
     "memdown": "^2.0.0",
-    "mocha": "^5.2.0",
+    "mocha": "^8.2.0",
     "proxyquire": "^1.8.0",
     "rimraf": "^2.6.1",
     "sinon": "^2.4.1"

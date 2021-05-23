@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const kadence= require('..');
 const network = require('./fixtures/node-generator');
 const async = require('async');
-const TOTAL_NODES = 50;
+const TOTAL_NODES = 20;
 
 
 function registerEndToEndSuite(transportName, transportAdapter) {
@@ -63,7 +63,8 @@ function registerEndToEndSuite(transportName, transportAdapter) {
         }, function(err) {
           expect(err).to.equal(null);
           nodes.forEach((node) => {
-            expect(node.router.size >= kadence.constants.K).to.equal(true);
+            expect(node.router.size >= kadence.constants.K ||
+              node.router.size === TOTAL_NODES - 1).to.equal(true);
           });
           done();
         });
