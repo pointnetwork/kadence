@@ -75,7 +75,7 @@
     "metapipe": "^2.0.2",
     "mkdirp": "^0.5.1",
     "ms": "^2.1.1",
-    "nat-pmp": "git+https://github.com/pointnetwork/depends-node-nat-pmp#7029e2b0ab11073df0d71b6d9da4a2aefeb5723d",
+    "nat-pmp": "^1.0.0",
     "nat-upnp": "^1.1.1",
     "network": "^0.4.1",
     "npid": "^0.4.0",
