@@ -1,6 +1,6 @@
 {
   "name": "@pointnetwork/kadence",
-  "version": "6.1.15",
+  "version": "6.1.16",
   "description": "extensible, hardened, and flexible distributed systems framework",
   "main": "index.js",
   "bin": {
