@@ -62,6 +62,7 @@
     "commander": "^8.1.0",
     "concat-stream": "^2.0.0",
     "daemon": "^1.1.0",
+    "debug": ">=2.6.9",
     "encoding-down": "^7.0.0",
     "ip": "^1.1.5",
     "json-stable-stringify": "^1.0.1",
