@@ -47,9 +47,6 @@
     }
   ],
   "license": "AGPL-3.0",
-  "engines": {
-    "node": "10.x.x"
-  },
   "dependencies": {
     "diglet": "git+https://github.com/pointnetwork/diglet.git",
     "hsv3": "git+https://github.com/pointnetwork/hsv3.git",
