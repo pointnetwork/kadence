@@ -48,8 +48,8 @@
   ],
   "license": "AGPL-3.0",
   "dependencies": {
-    "diglet": "git+https://github.com/pointnetwork/diglet.git",
-    "hsv3": "git+https://github.com/pointnetwork/hsv3.git",
+    "diglet": "https://github.com/pointnetwork/diglet.git",
+    "hsv3": "https://github.com/pointnetwork/hsv3.git",
     "async": "^3.2.1",
     "atbf": "^1.1.0",
     "boscar": "^2.0.0",
